@@ -94,11 +94,10 @@
   - 결제 금액만큼 금액 충천. 
 
 ## ERD
-![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/7c129b9c-75f9-4fdb-b132-e4a48f1095ad)
-
 
 
 ## Trouble Shooting
+![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/5c4daefa-711a-44ff-bee9-afa70f9ccb5b)
 
 ## Tech Stack
 - Programming <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white"/>
