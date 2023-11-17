@@ -15,23 +15,33 @@
 ⭐회원 정보 조회
   - 본인의 회원 정보와 등록한 상품 & 상품의 펀딩 정보 확인 가능.
 
+⭐회원 정보 수정
+  - 회원정보 수정 가능.
+
 ⭐사용자 검색
   - 이메일을 통해 사용자 검색
   -> ES 이용한 구현
     
 ⭐친구 추가 요청
-  - 기존 친구가 아닌 사용자에 대해 친구 추가 요청을 보낼 수 있음.
-  - 현재 친구 추가 요청을 보내지 않은 사용자에 대해 요청을 보낼 수 있음.
+  - 기존에 친구가 아닌 사용자에 대해 친구 추가 요청을 보낼 수 있음.
+  - 현재 자신이 친구 추가 요청을 보내지 않은 사용자에게만 요청을 보낼 수 있음.
+    ex) A(id 1) -> B(id 2)에게 친구 요청 시
+    - 친구 목록 테이블에 1 2 등록일시 WAIT 1 레코드 생성.
     
 ⭐친구요청 목록 조회
   - 현재 자신에게 들어온 친구 추가 요청 목록을 확인.
+    - 회원 아이디가 자신이고 WAIT 상태의 요청들을 확인.
 
 ⭐친구요청 수락/거절
-  - 친구 요청을 수락하면 요청테이블에서 친구 목록 테이블로 이동.
-  - 거절하면 요청테이블에서 삭제.
-
+  - 친구 요청을 수락하면 요청자, 대상자  모두 업데이트.
+    ex)  1 2 등록일시 WAIT 1 레코드에서 B가 요청 수락시 WAIT -> ACCEPT로 바뀜.
+         B의 친구목록을 조회할 때 A가 떠야하므로 2 1 등록일시 ACCEPT null 이런 형태의 레코드 함께 삽입.
+  
+  - 거절하면(DENIED) 하루 뒤 테이블에서 삭제.
+    
 ⭐친구목록 조회
-  - 친구인 사용자들의 목록 조회
+  - 친구인 사용자들(상태가 ACCEPT인)의 목록 조회
+  - 친구로 등록된 사용자 삭제 가능.
     
 ### [상품]
 ⭐전체 상품 목록 조회
@@ -57,7 +67,7 @@
 ⭐ 후원하기
   - 상대방이 등록해놓은 펀딩 상품에 대해 후원할 금액을 입력해서 지갑에서 금액 감소 후 후원완료.
   - 지갑의 돈은 펀딩 금액보다 커야함. (작을 시 미리 충전해서 사용)
-    -> 동시성 이슈 
+    -> 동시성 이슈 해결문제
     
 ⭐ 후원취소
   - 후원 진행 후 1시간 이내의 건에 대해서만 취소 가능.
@@ -84,7 +94,18 @@
   - 결제 금액만큼 금액 충천. 
 
 ## ERD
+![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/7c129b9c-75f9-4fdb-b132-e4a48f1095ad)
+
+
 
 ## Trouble Shooting
 
 ## Tech Stack
+- Programming <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white"/>
+- Framework  <img src="https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white"/>
+- Database <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+- security <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white"/>
+- search engine <img src="https://img.shields.io/badge/elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white"/>
+- Cache & Concurrency <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"/>
+- release <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/> <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"/> 
+- Configuration Management <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"/> <img src="https://img.shields.io/badge/sourcetree-0052CC?style=for-the-badge&logo=sourcetree&logoColor=white"/>
