@@ -1,6 +1,7 @@
 package com.soeun.GiftFunding.service;
 
 import com.soeun.GiftFunding.dto.Signup;
+import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.repository.UserRepository;
@@ -22,14 +23,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public Signup.Response singUp(Signup.Request request) {
         //validation
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserException(ErrorCode.USER_DUPLICATED);
-        }
+        validateDuplicated(request);
+
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = userRepository.save(request.toEntity());
 
         log.info(request.getEmail() + " 회원가입");
 
         return Signup.Response.toResponse(user.getUserName());
+    }
+
+    private void validateDuplicated(Request request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new UserException(ErrorCode.USER_DUPLICATED);
+        }
     }
 }

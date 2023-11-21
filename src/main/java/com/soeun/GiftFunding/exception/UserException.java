@@ -1,7 +1,9 @@
 package com.soeun.GiftFunding.exception;
 
 import com.soeun.GiftFunding.type.ErrorCode;
+import lombok.Getter;
 
+@Getter
 public class UserException extends RuntimeException{
     private final ErrorCode errorCode;
     private final String errorMessage;
