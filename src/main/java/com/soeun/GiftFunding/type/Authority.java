@@ -1,5 +1,5 @@
 package com.soeun.GiftFunding.type;
 
-public class Authority {
-
+public enum Authority {
+  ROLE_USER
 }

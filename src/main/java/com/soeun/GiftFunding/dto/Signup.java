@@ -1,9 +1,10 @@
 package com.soeun.GiftFunding.dto;
 
+import com.soeun.GiftFunding.entity.User;
+import com.soeun.GiftFunding.type.Authority;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -11,8 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 public class Signup {
 
@@ -54,13 +53,34 @@ public class Signup {
             }
             return true;
         }
+
+        public User toEntity() {
+            return User.builder()
+                .userName(this.getUserName())
+                .phone(this.getPhone())
+                .email(this.getEmail())
+                .password(this.getPassword()) //인코딩해서 넣어야함
+                .address(this.getAddress())
+                .birthDay(LocalDate.parse(this.getBirthDay()))
+                .role(Authority.ROLE_USER)
+                .build();
+        }
     }
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     public static class Response {
+        private String userName;
+        private String message;
+        public static Response toResponse(String userName) {
 
+            return Response.builder()
+                .userName(userName)
+                .message("님 회원가입이 완료되었습니다.")
+                .build();
+        }
     }
 }

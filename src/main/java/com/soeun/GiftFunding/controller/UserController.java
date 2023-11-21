@@ -1,6 +1,7 @@
 package com.soeun.GiftFunding.controller;
 
 import com.soeun.GiftFunding.dto.Signup;
+import com.soeun.GiftFunding.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
+
     @PostMapping("/signup")
     public ResponseEntity<Signup.Response> signUp(
         @RequestBody @Valid Signup.Request request) {
 
-        return null;
+        return ResponseEntity.ok(
+            userService.singUp(request));
     }
 }
