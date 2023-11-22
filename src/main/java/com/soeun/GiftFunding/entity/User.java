@@ -54,7 +54,10 @@ public class User {
     private Authority role;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+
 }
