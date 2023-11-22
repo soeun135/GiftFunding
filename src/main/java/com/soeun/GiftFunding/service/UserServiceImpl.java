@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = userRepository.save(request.toEntity());
 
-        log.info(request.getEmail() + " 회원가입");
+        log.info("{} 회원가입", request.getEmail());
 
         return Signup.Response.toResponse(user.getUserName());
     }
