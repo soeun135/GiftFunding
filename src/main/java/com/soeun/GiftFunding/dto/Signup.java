@@ -27,6 +27,7 @@ public class Signup {
         @NotBlank(message = "전화번호는 필수 항목입니다.")
         private String phone;
 
+        @NotBlank(message = "이메일은 필수 항목입니다.")
         @Email(message = "이메일 형식에 맞춰야합니다.")
         private String email;
 
