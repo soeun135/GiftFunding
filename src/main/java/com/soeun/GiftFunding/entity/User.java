@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.entity;
 
-import com.soeun.GiftFunding.type.Authority;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,13 +14,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.build.Plugin.Factory.Simple;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -41,7 +39,7 @@ public class User implements UserDetails{
     private Long id;
 
     @Column
-    private String userName;
+    private String name;
 
     @Column
     private String phone;
@@ -58,10 +56,8 @@ public class User implements UserDetails{
     @Column
     private LocalDate birthDay;
 
-    @Enumerated(EnumType.STRING)
-    private Authority role;
-
     @Column
+    @Enumerated(EnumType.STRING)
     private OAuthProvider oAuthProvider;
 
     @CreatedDate
@@ -73,10 +69,7 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(
-            Collections.singleton(
-                new SimpleGrantedAuthority(this.role.name()))
-        );
+        return null;
     }
 
     @Override

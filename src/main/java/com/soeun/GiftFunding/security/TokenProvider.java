@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class TokenProvider {
     private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
-    private static final String KEY_ROLE = "role";
 
     private final UserService userService;
     @Value("${spring.jwt.secret}")
@@ -31,10 +30,8 @@ public class TokenProvider {
             .signWith(SignatureAlgorithm.HS512, secretKey)
             .compact();
     }
-    public String generateToken(String mail,
-        String role) {
+    public String generateToken(String mail) {
         Claims claims = Jwts.claims().setSubject(mail);
-        claims.put(KEY_ROLE, role);
 
         Date now = new Date();
         Date expiredDate = new Date(now.getTime()

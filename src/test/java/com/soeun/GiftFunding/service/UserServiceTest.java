@@ -6,12 +6,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.Signup.Response;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.repository.UserRepository;
-import com.soeun.GiftFunding.type.Authority;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +17,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,7 +34,7 @@ class UserServiceTest {
     void successSignup() {
         //given
         Request request = Request.builder()
-            .userName("soni")
+            .name("soni")
             .phone("01011111111")
             .email("test@naver.com")
             .password("1111") //인코딩해서 넣어야함
@@ -48,13 +45,12 @@ class UserServiceTest {
         given(userRepository.save(any()))
             .willReturn(User
                 .builder()
-                .userName("soni")
+                .name("soni")
                 .phone("01011111111")
                 .email("test@naver.com")
                 .password("1111") //인코딩해서 넣어야함
                 .address("경기도")
                 .birthDay(LocalDate.parse("2000-01-28"))
-                .role(Authority.ROLE_USER)
                 .build());
         //when
         ArgumentCaptor<User> captor =
@@ -65,8 +61,8 @@ class UserServiceTest {
         //then
         verify(userRepository, times(1))
             .save(captor.capture());
-        assertEquals(request.getUserName(),response.getUserName());
-        assertEquals(request.getUserName(),captor.getValue().getUserName());
+        assertEquals(request.getName(),response.getName());
+        assertEquals(request.getName(),captor.getValue().getName());
 
      }
 }

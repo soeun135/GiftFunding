@@ -1,34 +1,26 @@
 package com.soeun.GiftFunding.controller;
 
 import static com.soeun.GiftFunding.type.ErrorCode.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.Signup.Response;
 import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.service.UserService;
-import com.soeun.GiftFunding.type.Authority;
-import com.soeun.GiftFunding.type.ErrorCode;
-import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
@@ -46,7 +38,7 @@ class UserControllerTest {
     void successSignup() throws Exception{
         //given
         Request request = Request.builder()
-            .userName("soni")
+            .name("soni")
             .phone("01011111111")
             .email("test@naver.com")
             .password("1111") //인코딩해서 넣어야함
@@ -56,7 +48,7 @@ class UserControllerTest {
 
         given(userService.singUp(any()))
             .willReturn(Response.builder()
-                .userName(request.getUserName())
+                .name(request.getName())
                 .message("님 회원가입이 완료되었습니다.")
                 .build());
         //when
@@ -65,7 +57,7 @@ class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.userName").value(request.getUserName()))
+            .andExpect(jsonPath("$.userName").value(request.getName()))
             //.andExpect(content().string(request.getUserName()+"님 회원가입이 완료되었습니다."))
             .andDo(print());
      }
@@ -75,7 +67,7 @@ class UserControllerTest {
      void failSignup() throws Exception {
          //given
          Request request = Request.builder()
-             .userName("soni")
+             .name("soni")
              .phone("01011111111")
              .email("test@naver.com")
              .password("1111") //인코딩해서 넣어야함

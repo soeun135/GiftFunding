@@ -1,7 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
 import com.soeun.GiftFunding.entity.User;
-import com.soeun.GiftFunding.type.Authority;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ public class Signup {
     @AllArgsConstructor
     public static class Request {
         @NotBlank(message = "이름은 필수 항목입니다.")
-        private String userName;
+        private String name;
 
         @NotBlank(message = "전화번호는 필수 항목입니다.")
         private String phone;
@@ -40,30 +39,14 @@ public class Signup {
         @NotBlank(message = "생일은 필수 항목입니다.")
         private String birthDay;
 
-        public boolean validBirthDay() {
-            String format = "yyyyMMdd";
-            if (this.birthDay.length() != 8) {
-                return false;
-            }
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat(format);
-                sdf.setLenient(false);
-                sdf.parse(this.birthDay);
-            } catch (ParseException e) {
-                return false;
-            }
-            return true;
-        }
-
         public User toEntity() {
             return User.builder()
-                .userName(this.getUserName())
+                .name(this.getName())
                 .phone(this.getPhone())
                 .email(this.getEmail())
                 .password(this.getPassword()) //인코딩해서 넣어야함
                 .address(this.getAddress())
                 .birthDay(LocalDate.parse(this.getBirthDay()))
-                .role(Authority.ROLE_USER)
                 .build();
         }
     }
@@ -74,12 +57,12 @@ public class Signup {
     @AllArgsConstructor
     @Builder
     public static class Response {
-        private String userName;
+        private String name;
         private String message;
-        public static Response toResponse(String userName) {
+        public static Response toResponse(String name) {
 
             return Response.builder()
-                .userName(userName)
+                .name(name)
                 .message("님 회원가입이 완료되었습니다.")
                 .build();
         }

@@ -35,7 +35,7 @@ public class UserController {
         Response response = userService.signIn(request);
 
         return ResponseEntity.ok(
-            this.tokenProvider.generateToken(response.getUserName(), response.getRole())
+            this.tokenProvider.generateToken(response.getUserName())
         );
     }
 

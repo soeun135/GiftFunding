@@ -31,6 +31,5 @@ public class Signin {
     @Builder
     public static class Response {
         private String userName;
-        private String role;
     }
 }

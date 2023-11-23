@@ -11,10 +11,6 @@ import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.repository.UserRepository;
-import com.soeun.GiftFunding.security.TokenProvider;
-import com.soeun.GiftFunding.type.ErrorCode;
-import java.time.LocalDate;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUserName(username)
+        return userRepository.findByName(username)
             .orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
     @Override
@@ -46,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         log.info("{} 회원가입", request.getEmail());
 
-        return Signup.Response.toResponse(request.getUserName());
+        return Signup.Response.toResponse(request.getName());
     }
 
     private void validateDuplicated(Request request) {
@@ -66,8 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
         return Response.builder()
-            .userName(user.getUsername())
-            .role(user.getRole().name())
+            .userName(user.getName())
             .build();
     }
 

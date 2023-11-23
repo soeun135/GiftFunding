@@ -23,12 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/user/signup", "/user/signin")
             .permitAll()
-            .antMatchers("/oauth/kakao")
-            .permitAll()
+            .antMatchers("/oauth/kakao", "/kakao")
+            .permitAll();
             /// TODO: 2023-11-23  
             //상품 검색에 대해서는 로그인 안 한 사용자도 가능하도록 옵션추가
-
-            .anyRequest().hasRole("USER");
     }
 
     @Override
