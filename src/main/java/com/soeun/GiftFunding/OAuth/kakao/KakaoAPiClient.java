@@ -22,15 +22,19 @@ public class KakaoAPiClient implements OAuthApiClient {
     private static final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.kakao.url.auth}")
-    private String authUrl;
+    private static String authUrl;
 
     @Value("${oauth.kakao.url.api}")
-    private String apiUrl;
+    private static String apiUrl;
 
     @Value("${oauth.kakao.client-id}")
     private String clientId;
 
     private final RestTemplate restTemplate;
+
+    private static final String ACCESS_TOKEN_URL = "/oauth/token";
+
+    private static final String OAUTH_INFO_URL = "/v2/user/me";
 
     @Override
     public OAuthProvider oAuthProvider() {
@@ -39,7 +43,7 @@ public class KakaoAPiClient implements OAuthApiClient {
 
     @Override
     public String requestAccessToken(OAuthLoginParams params) {
-        String url = authUrl + "/oauth/token";
+        String url = authUrl + ACCESS_TOKEN_URL;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -61,7 +65,7 @@ public class KakaoAPiClient implements OAuthApiClient {
      */
     @Override
     public OAuthInfoResponse requestOauthInfo(String accessToken) {
-        String url = apiUrl + "/v2/user/me";
+        String url = apiUrl + OAUTH_INFO_URL;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

@@ -16,19 +16,17 @@ public class OAuthLoginService {
         OAuthInfoResponse oAuthInfoResponse =
             requestOAuthInfoService.request(params);
         String name = findOrCreateMember(
-            oAuthInfoResponse, params);
+            oAuthInfoResponse, params).getName();
 
         return authTokensGenerator.generate(name);
     }
 
-    private String findOrCreateMember(OAuthInfoResponse oAuthInfoResponse,OAuthLoginParams params) {
-        System.out.println("응답객체 " + oAuthInfoResponse);
+    private User findOrCreateMember(OAuthInfoResponse oAuthInfoResponse,OAuthLoginParams params) {
         return userRepository.findByName(oAuthInfoResponse.getNickname())
-            .map(User::getName)
             .orElseGet(() -> newMember(oAuthInfoResponse, params));
     }
 
-    private String newMember(OAuthInfoResponse oAuthInfoResponse,
+    private User newMember(OAuthInfoResponse oAuthInfoResponse,
         OAuthLoginParams params) {
         User user = User.builder()
             .name(oAuthInfoResponse.getNickname())
@@ -39,6 +37,6 @@ public class OAuthLoginService {
 
         user = params.makeUserEntity(user, oAuthInfoResponse);
 
-        return userRepository.save(user).getName();
+        return userRepository.save(user);
     }
 }
