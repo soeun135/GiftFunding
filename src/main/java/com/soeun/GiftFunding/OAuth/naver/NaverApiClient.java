@@ -1,8 +1,11 @@
 package com.soeun.GiftFunding.OAuth.naver;
 
+import static com.soeun.GiftFunding.type.ErrorCode.OAUTH_ERROR;
+
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @RequiredArgsConstructor
 public class NaverApiClient implements OAuthApiClient {
+
     private static final String GRANT_TYPE = "authorization_code";
 
     private final RestTemplate restTemplate;
@@ -58,7 +62,9 @@ public class NaverApiClient implements OAuthApiClient {
 
         NaverTokens response = restTemplate.postForObject(url, request, NaverTokens.class);
 
-        assert response != null;
+        if (response == null) {
+            throw new UserException(OAUTH_ERROR);
+        }
         return response.getAccessToken();
     }
 

@@ -1,8 +1,11 @@
 package com.soeun.GiftFunding.OAuth.kakao;
 
+import static com.soeun.GiftFunding.type.ErrorCode.OAUTH_ERROR;
+
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -54,7 +58,9 @@ public class KakaoAPiClient implements OAuthApiClient {
 
         KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class);
 
-        assert response != null;
+        if (response == null) {
+            throw new UserException(OAUTH_ERROR);
+        }
         return response.getAccessToken();
     }
 
