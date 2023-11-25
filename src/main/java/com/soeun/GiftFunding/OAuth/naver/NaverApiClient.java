@@ -1,8 +1,8 @@
 package com.soeun.GiftFunding.OAuth.naver;
 
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
-import com.soeun.GiftFunding.OAuth.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.OAuthLoginParams;
+import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,14 +33,18 @@ public class NaverApiClient implements OAuthApiClient {
     @Value("${oauth.naver.url.api}")
     private String apiUrl;
 
+    private static final String ACCESS_TOKEN_URL = "/oauth2.0/token";
+
+    private static final String OAUTH_INFO_URL = "/v1/nid/me";
+
     @Override
     public OAuthProvider oAuthProvider() {
         return OAuthProvider.NAVER;
     }
 
     @Override
-    public String requestAccessToken(OAuthLoginParams params) {
-        String url = authUrl + "/oauth2.0/token";
+    public String requestAccessToken(OAuthLoginRequest params) {
+        String url = authUrl + ACCESS_TOKEN_URL;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -60,7 +64,7 @@ public class NaverApiClient implements OAuthApiClient {
 
     @Override
     public OAuthInfoResponse requestOauthInfo(String accessToken) {
-        String url = apiUrl + "/v1/nid/me";
+        String url = apiUrl + OAUTH_INFO_URL;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

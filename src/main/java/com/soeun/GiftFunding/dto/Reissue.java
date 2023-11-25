@@ -1,31 +1,24 @@
 package com.soeun.GiftFunding.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-public class Signin {
+public class Reissue {
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
     public static class Request {
-
-        @NotBlank(message = "이메일은 필수 항목입니다.")
-        @Email(message = "이메일 형식에 맞춰야합니다.")
-        private String email;
-
-        @NotBlank(message = "비밀번호는 필수 항목입니다.")
-        private String password;
+        private String refreshToken;
     }
 
     @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder

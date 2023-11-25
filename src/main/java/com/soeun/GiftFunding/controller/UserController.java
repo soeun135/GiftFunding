@@ -1,14 +1,16 @@
 package com.soeun.GiftFunding.controller;
 
+import com.soeun.GiftFunding.dto.Reissue;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.dto.Signin.Response;
 import com.soeun.GiftFunding.dto.Signup;
+import com.soeun.GiftFunding.exception.TokenException;
 import com.soeun.GiftFunding.security.TokenProvider;
 import com.soeun.GiftFunding.service.UserService;
+import com.soeun.GiftFunding.type.ErrorCode;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +32,14 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(
+    public ResponseEntity<Signin.Response> signIn(
         @RequestBody @Valid Signin.Request request) {
-        Response response = userService.signIn(request);
-
-        return ResponseEntity.ok(
-            this.tokenProvider.generateToken(response.getUserName())
-        );
+        return ResponseEntity.ok(userService.signIn(request));
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<Reissue.Response> reissue(
+        @RequestBody @Valid Reissue.Request request) {
+        return ResponseEntity.ok(userService.reissue(request));
+    }
 }

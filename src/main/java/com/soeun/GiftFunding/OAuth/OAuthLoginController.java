@@ -1,7 +1,8 @@
 package com.soeun.GiftFunding.OAuth;
 
-import com.soeun.GiftFunding.OAuth.kakao.KakaoLoginParams;
-import com.soeun.GiftFunding.OAuth.naver.NaverLoginParams;
+import com.soeun.GiftFunding.OAuth.kakao.KakaoLoginRequest;
+import com.soeun.GiftFunding.OAuth.naver.NaverLoginRequest;
+import com.soeun.GiftFunding.dto.Signin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +18,17 @@ public class OAuthLoginController {
     private final OAuthLoginService oAuthLoginService;
 
     @PostMapping("/oauth/kakao")
-    public ResponseEntity<AuthTokens> loginKakao(
-        @RequestBody KakaoLoginParams params) {
+    public ResponseEntity<Signin.Response> kakaoLogin(
+        @RequestBody KakaoLoginRequest requset) {
 
-        return ResponseEntity.ok(oAuthLoginService.login(params));
+        return ResponseEntity.ok(oAuthLoginService.login(requset));
     }
 
     @PostMapping("/oauth/naver")
-    public ResponseEntity<AuthTokens> loginNaver(
-        @RequestBody NaverLoginParams params) {
+    public ResponseEntity<Signin.Response> naverLogin(
+        @RequestBody NaverLoginRequest request) {
 
-        return ResponseEntity.ok(oAuthLoginService.login(params));
+        return ResponseEntity.ok(oAuthLoginService.login(request));
     }
     @GetMapping("/kakao/callback?code={code}")
     public String kakoCallback(@RequestParam String code) {

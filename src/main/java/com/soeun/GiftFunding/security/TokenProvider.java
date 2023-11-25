@@ -1,71 +1,93 @@
 package com.soeun.GiftFunding.security;
 
-import com.soeun.GiftFunding.service.UserService;
+import static com.soeun.GiftFunding.type.ErrorCode.INVALID_TOKEN;
+import static com.soeun.GiftFunding.type.ErrorCode.TOKEN_EXPIRED;
+import static com.soeun.GiftFunding.type.ErrorCode.USER_DUPLICATED;
+
+import com.soeun.GiftFunding.exception.TokenException;
+import com.soeun.GiftFunding.exception.UserException;
+import com.soeun.GiftFunding.redis.RefreshToken;
+import com.soeun.GiftFunding.redis.RefreshTokenRepository;
+import com.soeun.GiftFunding.type.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TokenProvider {
-    private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
 
-    private final UserService userService;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L; //1분
+
+    private final RefreshTokenRepository refreshTokenRepository;
+
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public String generate(String subject, Date expiredAt) {
-        return Jwts.builder()
-            .setSubject(subject)
-            .setExpiration(expiredAt)
-            .signWith(SignatureAlgorithm.HS512, secretKey)
+    public String generateRefreshToken(String mail) {
+        String token = Jwts.builder()
+            .setSubject(mail)
+            .setIssuedAt(new Date())
+            .signWith(SignatureAlgorithm.HS512, this.secretKey)
             .compact();
-    }
-    public String generateToken(String mail) {
-        Claims claims = Jwts.claims().setSubject(mail);
 
+        refreshTokenRepository.save(
+            new RefreshToken(token, mail)
+        );
+        return token;
+    }
+
+    public String generateAccessToken(String mail) {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime()
-            + TOKEN_EXPIRE_TIME);
+            + ACCESS_TOKEN_EXPIRE_TIME);
 
         return Jwts.builder()
-            .setClaims(claims)
+            .setSubject(mail)
             .setIssuedAt(now)
             .setExpiration(expiredDate)
-            .signWith(SignatureAlgorithm.HS512,
-                this.secretKey)
+            .signWith(SignatureAlgorithm.HS512, this.secretKey)
             .compact();
     }
 
-    public Authentication getAuthentication(String jwt) {
-        UserDetails userDetails =
-            this.userService.loadUserByUsername(
-                this.getUsername(jwt));
+    public String reIssueAccessToken(String refreshToken) {
+        RefreshToken token =
+            refreshTokenRepository.findByMail(refreshToken)
+                .orElseThrow(
+                    () -> new TokenException(INVALID_TOKEN));
 
-        return new UsernamePasswordAuthenticationToken(
-            userDetails, "",
-            userDetails.getAuthorities());
+        return this.generateAccessToken(token.getMail());
     }
 
-    public String getUsername(String jwt) {
+    public String getMail(String jwt) {
         return this.parseClaims(jwt).getSubject();
     }
+
     public boolean validateToken(String token) {
-        if (!StringUtils.hasText(token)) return false;
+        if (!StringUtils.hasText(token)) {
+            throw new TokenException(INVALID_TOKEN);
+        }
 
         Claims claims = this.parseClaims(token);
-        return !claims.getExpiration()
-            .before(new Date());
+
+        log.info(String.valueOf(claims.getExpiration()));
+
+        if (!claims.getExpiration().before(new Date())) {
+            return true;
+        } else {
+            throw new TokenException(ErrorCode.TOKEN_EXPIRED);
+        }
     }
+
     private Claims parseClaims(String jwt) {
         try {
             return Jwts.parser()

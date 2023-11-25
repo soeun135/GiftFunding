@@ -24,6 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
 
+    private final GetAuthentication getAuthentication;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -34,11 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(token) &&
             this.tokenProvider.validateToken(token)) {
-            Authentication auth = this.tokenProvider.getAuthentication(token);
+            Authentication auth = getAuthentication.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             log.info("[{}] -> {}"
-                , this.tokenProvider.getUsername(token)
+                , this.tokenProvider.getMail(token)
                 , request.getRequestURI());
         }
 

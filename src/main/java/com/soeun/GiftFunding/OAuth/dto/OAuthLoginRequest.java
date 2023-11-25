@@ -1,4 +1,4 @@
-package com.soeun.GiftFunding.OAuth;
+package com.soeun.GiftFunding.OAuth.dto;
 
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.type.OAuthProvider;
@@ -9,7 +9,7 @@ import org.springframework.util.MultiValueMap;
  * 컨트롤러의 요청 값으로 구현해서 사용
  */
 
-public interface OAuthLoginParams {
+public interface OAuthLoginRequest {
     User makeUserEntity(User user, OAuthInfoResponse oAuthInfoResponse);
     OAuthProvider oAuthProvider();
     MultiValueMap<String, String> makeBody();

@@ -1,7 +1,11 @@
 package com.soeun.GiftFunding.OAuth;
 
+import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.repository.UserRepository;
+import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,25 +13,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OAuthLoginService {
     private final UserRepository userRepository;
-    private final AuthTokensGenerator authTokensGenerator;
     private final RequestOAuthInfoService requestOAuthInfoService;
+    private final TokenProvider tokenProvider;
 
-    public AuthTokens login(OAuthLoginParams params) {
+    public Signin.Response login(OAuthLoginRequest request) {
         OAuthInfoResponse oAuthInfoResponse =
-            requestOAuthInfoService.request(params);
-        String name = findOrCreateMember(
-            oAuthInfoResponse, params).getName();
+            requestOAuthInfoService.request(request);
+        String mail = findOrCreateMember(
+            oAuthInfoResponse, request).getEmail();
 
-        return authTokensGenerator.generate(name);
+        String accessToken = tokenProvider.generateAccessToken(mail);
+        String refreshToken = tokenProvider.generateRefreshToken(mail);
+
+        return Signin.Response.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 
-    private User findOrCreateMember(OAuthInfoResponse oAuthInfoResponse,OAuthLoginParams params) {
+    private User findOrCreateMember(OAuthInfoResponse oAuthInfoResponse, OAuthLoginRequest request) {
         return userRepository.findByName(oAuthInfoResponse.getNickname())
-            .orElseGet(() -> newMember(oAuthInfoResponse, params));
+            .orElseGet(() -> newMember(oAuthInfoResponse, request));
     }
 
     private User newMember(OAuthInfoResponse oAuthInfoResponse,
-        OAuthLoginParams params) {
+        OAuthLoginRequest request) {
         User user = User.builder()
             .name(oAuthInfoResponse.getNickname())
             .email(oAuthInfoResponse.getEmail())
@@ -35,7 +45,7 @@ public class OAuthLoginService {
             .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
             .build();
 
-        user = params.makeUserEntity(user, oAuthInfoResponse);
+        user = request.makeUserEntity(user, oAuthInfoResponse);
 
         return userRepository.save(user);
     }

@@ -1,7 +1,7 @@
 package com.soeun.GiftFunding.OAuth.kakao;
 
-import com.soeun.GiftFunding.OAuth.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.OAuthLoginParams;
+import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import org.springframework.util.MultiValueMap;
  * 카카오 로그인에서 Request 객체로 사용.
  * 카카오 API 요청에 필요한 authorizationCode 를 갖고 있는 클래스
  */
-public class KakaoLoginParams implements OAuthLoginParams {
+public class KakaoLoginRequest implements OAuthLoginRequest {
 
     private String authorizationCode;
     private String email;

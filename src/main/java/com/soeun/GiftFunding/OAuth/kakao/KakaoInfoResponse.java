@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.OAuth.kakao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.soeun.GiftFunding.OAuth.OAuthInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.Getter;
 

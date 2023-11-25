@@ -1,10 +1,8 @@
 package com.soeun.GiftFunding.OAuth.kakao;
 
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
-import com.soeun.GiftFunding.OAuth.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.OAuthLoginParams;
-import com.soeun.GiftFunding.OAuth.kakao.KakaoTokens;
-import com.soeun.GiftFunding.OAuth.kakao.KakaoInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,10 +20,10 @@ public class KakaoAPiClient implements OAuthApiClient {
     private static final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.kakao.url.auth}")
-    private static String authUrl;
+    private String authUrl;
 
     @Value("${oauth.kakao.url.api}")
-    private static String apiUrl;
+    private String apiUrl;
 
     @Value("${oauth.kakao.client-id}")
     private String clientId;
@@ -42,7 +40,7 @@ public class KakaoAPiClient implements OAuthApiClient {
     }
 
     @Override
-    public String requestAccessToken(OAuthLoginParams params) {
+    public String requestAccessToken(OAuthLoginRequest params) {
         String url = authUrl + ACCESS_TOKEN_URL;
 
         HttpHeaders httpHeaders = new HttpHeaders();
