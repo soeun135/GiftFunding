@@ -14,16 +14,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
             .httpBasic().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .csrf().disable()
+            .sessionManagement()
+            .sessionCreationPolicy(
+                SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/**").permitAll();
+            .antMatchers("/user/signup", "/user/signin")
+            .permitAll()
+            .antMatchers("/oauth/kakao", "/kakao")
+            .permitAll();
+            /// TODO: 2023-11-23  
+            //상품 검색에 대해서는 로그인 안 한 사용자도 가능하도록 옵션추가
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/user/**");
+        web.ignoring().antMatchers("/css/**");
     }
 }
