@@ -81,11 +81,10 @@ public class TokenProvider {
 
         log.info(String.valueOf(claims.getExpiration()));
 
-        if (!claims.getExpiration().before(new Date())) {
-            return true;
-        } else {
+        if (claims.getExpiration().before(new Date())) {
             throw new TokenException(ErrorCode.TOKEN_EXPIRED);
         }
+        return true;
     }
 
     private Claims parseClaims(String jwt) {
