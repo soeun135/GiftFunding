@@ -1,14 +1,11 @@
 package com.soeun.GiftFunding.security;
 
-import static com.soeun.GiftFunding.type.ErrorCode.INVALID_TOKEN;
-import static com.soeun.GiftFunding.type.ErrorCode.TOKEN_EXPIRED;
-import static com.soeun.GiftFunding.type.ErrorCode.USER_DUPLICATED;
+import static com.soeun.GiftFunding.type.ErrorType.INVALID_TOKEN;
 
 import com.soeun.GiftFunding.exception.TokenException;
-import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.redis.RefreshToken;
 import com.soeun.GiftFunding.redis.RefreshTokenRepository;
-import com.soeun.GiftFunding.type.ErrorCode;
+import com.soeun.GiftFunding.type.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Component
@@ -62,8 +58,8 @@ public class TokenProvider {
     public String reIssueAccessToken(String refreshToken) {
         RefreshToken token =
             refreshTokenRepository.findByMail(refreshToken)
-                .orElseThrow(
-                    () -> new TokenException(INVALID_TOKEN));
+                .orElseThrow(() ->
+                    new TokenException(INVALID_TOKEN));
 
         return this.generateAccessToken(token.getMail());
     }
@@ -82,7 +78,7 @@ public class TokenProvider {
         log.info(String.valueOf(claims.getExpiration()));
 
         if (claims.getExpiration().before(new Date())) {
-            throw new TokenException(ErrorCode.TOKEN_EXPIRED);
+            throw new TokenException(ErrorType.TOKEN_EXPIRED);
         }
         return true;
     }

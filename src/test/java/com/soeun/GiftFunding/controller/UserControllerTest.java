@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.controller;
 
-import static com.soeun.GiftFunding.type.ErrorCode.*;
+import static com.soeun.GiftFunding.type.ErrorType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

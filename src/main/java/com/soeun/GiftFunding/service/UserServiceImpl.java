@@ -1,8 +1,8 @@
 package com.soeun.GiftFunding.service;
 
-import static com.soeun.GiftFunding.type.ErrorCode.PASSWORD_UNMATCHED;
-import static com.soeun.GiftFunding.type.ErrorCode.USER_DUPLICATED;
-import static com.soeun.GiftFunding.type.ErrorCode.USER_NOT_FOUND;
+import static com.soeun.GiftFunding.type.ErrorType.PASSWORD_UNMATCHED;
+import static com.soeun.GiftFunding.type.ErrorType.USER_DUPLICATED;
+import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 
 import com.soeun.GiftFunding.dto.Reissue;
 import com.soeun.GiftFunding.dto.Signin;
@@ -12,7 +12,6 @@ import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.exception.UserException;
 import com.soeun.GiftFunding.repository.UserRepository;
-import com.soeun.GiftFunding.security.GetAuthentication;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
