@@ -1,5 +1,8 @@
 package com.soeun.GiftFunding.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soeun.GiftFunding.dto.ErrorResponse;
+import com.soeun.GiftFunding.type.ErrorType;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -8,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -19,13 +21,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
 
     private final TokenProvider tokenProvider;
 
     private final GetAuthentication getAuthentication;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

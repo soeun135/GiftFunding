@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.type.ErrorCode;
+import com.soeun.GiftFunding.type.ErrorType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +13,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ErrorResponse {
-    private ErrorCode errorCode;
+    private ErrorType errorCode;
     private String errorMessage;
+    private int statusCode;
+
+    public static ErrorResponse of(ErrorType errorType, String msg, int statusCode) {
+        return ErrorResponse.builder()
+            .errorCode(errorType)
+            .errorMessage(msg)
+            .statusCode(statusCode)
+            .build();
+    }
 }

@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.OAuth.naver;
 
-import static com.soeun.GiftFunding.type.ErrorCode.OAUTH_ERROR;
+import static com.soeun.GiftFunding.type.ErrorType.OAUTH_ERROR;
 
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;

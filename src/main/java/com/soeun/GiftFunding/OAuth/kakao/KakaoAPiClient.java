@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.OAuth.kakao;
 
-import static com.soeun.GiftFunding.type.ErrorCode.OAUTH_ERROR;
+import static com.soeun.GiftFunding.type.ErrorType.OAUTH_ERROR;
 
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 @Component
