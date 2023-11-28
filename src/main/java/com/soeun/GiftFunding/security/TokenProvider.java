@@ -11,6 +11,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +70,9 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
+        log.info(token);
         if (!StringUtils.hasText(token)) {
+            log.info("token없습");
             throw new TokenException(INVALID_TOKEN);
         }
 
@@ -78,6 +81,7 @@ public class TokenProvider {
         log.info(String.valueOf(claims.getExpiration()));
 
         if (claims.getExpiration().before(new Date())) {
+            log.info("토큰 만료 예외 발생");
             throw new TokenException(ErrorType.TOKEN_EXPIRED);
         }
         return true;
