@@ -2,7 +2,6 @@ package com.soeun.GiftFunding.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soeun.GiftFunding.dto.ErrorResponse;
-import com.soeun.GiftFunding.exception.TokenException;
 import com.soeun.GiftFunding.type.ErrorType;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -36,21 +35,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         String token = this.resolveTokenFromRequest(request);
-        log.info(token);
 
-        try {
-            if (this.tokenProvider.validateToken(token)) {
-                Authentication auth = getAuthentication.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
+        if (StringUtils.hasText(token) &&
+            this.tokenProvider.validateToken(token)) {
+            Authentication auth = getAuthentication.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
 
-                log.info("[{}] -> {}"
-                    , this.tokenProvider.getMail(token)
-                    , request.getRequestURI());
-            }
-        } catch (TokenException e) {
-            request.setAttribute("exception", e.getErrorCode());
+            log.info("[{}] -> {}"
+                , this.tokenProvider.getMail(token)
+                , request.getRequestURI());
         }
-
 
         filterChain.doFilter(request, response);
     }
