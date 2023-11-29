@@ -78,6 +78,7 @@ public class TokenProvider {
         log.info(String.valueOf(claims.getExpiration()));
 
         if (claims.getExpiration().before(new Date())) {
+            log.info("토큰 만료 예외 발생");
             throw new TokenException(ErrorType.TOKEN_EXPIRED);
         }
         return true;
