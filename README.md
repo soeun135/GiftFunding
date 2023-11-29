@@ -94,7 +94,8 @@
   - 결제 금액만큼 금액 충천. 
 
 ## ERD
-![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/9aba1c99-ceb4-4cb2-b850-f960afc72144)
+![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/d9d3da0c-cca2-40cb-bb8d-0024d9bf34c7)
+
 
 
 ## Trouble Shooting
