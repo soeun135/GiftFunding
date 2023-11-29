@@ -1,15 +1,20 @@
 package com.soeun.GiftFunding.controller;
 
-import com.soeun.GiftFunding.dto.Reissue;
+import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.dto.Signup;
+import com.soeun.GiftFunding.dto.UpdateInfo;
+import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.security.TokenProvider;
 import com.soeun.GiftFunding.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +40,23 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<Reissue.Response> reissue(
-        @RequestBody @Valid Reissue.Request request) {
+    public ResponseEntity<ReissueResponse> reissue(
+        @RequestHeader("Authorization") String request) {
         return ResponseEntity.ok(userService.reissue(request));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<UserInfoResponse> userInfo(
+        @RequestHeader("Authorization") String token) {
+
+        return ResponseEntity.ok(userService.userInfo(token));
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<UpdateInfo.Response> update(
+        @RequestBody UpdateInfo.Request request,
+        @RequestHeader ("Authorization") String token) {
+
+        return ResponseEntity.ok(userService.update(request, token));
     }
 }

@@ -38,7 +38,7 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    private Long amount;
+    private Long transactionAmount;
 
     @CreatedDate
     private LocalDateTime createdAt;

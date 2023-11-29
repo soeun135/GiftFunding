@@ -28,11 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/user/signup", "/user/signin")
-            .permitAll()
-            .antMatchers("/oauth/kakao", "/kakao")
-            .permitAll()
-
+            .antMatchers("/user/signup", "/user/signin").permitAll()
+            .antMatchers("/oauth/kakao", "/kakao").permitAll()
+            .anyRequest().authenticated()
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
@@ -42,6 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers();
     }
 }

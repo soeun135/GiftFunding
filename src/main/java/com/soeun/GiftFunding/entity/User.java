@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -95,5 +96,15 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public UpdateInfo.Response toDto() {
+        return UpdateInfo.Response.builder()
+            .name(this.getName())
+            .email(this.getEmail())
+            .phone(this.getPhone())
+            .address(this.getAddress())
+            .birthDay(this.getBirthDay())
+            .build();
     }
 }
