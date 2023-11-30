@@ -23,6 +23,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -92,7 +94,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             .refreshToken(refreshToken)
             .build();
     }
+    private String resolveTokenFromRequest(String token) {
 
+        if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
+            token = token.substring("Bearer ".length());
+        }
+
+        return token;
+    }
     @Override
     public UserInfoResponse userInfo(String token) {
         //헤더에서 토큰 꺼내오기 + 토큰에서 메일 꺼내오기
@@ -115,26 +124,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UpdateInfo.Response update(UpdateInfo.Request request, String token) {
         String mail = tokenProvider.getMail(
             this.resolveTokenFromRequest(token));
         User user = userRepository.findByEmail(mail)
             .orElseThrow(() -> new UserException(USER_NOT_FOUND));
 
-        user.setName(request.getName());
-        user.setPhone(request.getPhone());
-        user.setAddress(request.getAddress());
-        user.setBirthDay(request.getBirthDay());
+        updateCheck(request, user);
 
-        return userRepository.save(user).toDto();
+        return user.toDto();
     }
 
-    private String resolveTokenFromRequest(String token) {
-
-        if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
-            token = token.substring("Bearer ".length());
+    private void updateCheck(UpdateInfo.Request request, User user) {
+        if (StringUtils.hasText(request.getName())) {
+            user.setName(request.getName());
         }
-
-        return token;
+        if (StringUtils.hasText(request.getPhone())) {
+            user.setPhone(request.getPhone());
+        }
+        if (StringUtils.hasText(request.getAddress())) {
+            user.setAddress(request.getAddress());
+        }
+        if (!ObjectUtils.isEmpty(request.getBirthDay())) {
+            user.setBirthDay(request.getBirthDay());
+        }
     }
+
+
 }
