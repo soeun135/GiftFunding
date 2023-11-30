@@ -1,10 +1,13 @@
 package com.soeun.GiftFunding.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soeun.GiftFunding.dto.ErrorResponse;
+
+import static com.soeun.GiftFunding.type.ErrorType.INVALID_TOKEN;
+import static com.soeun.GiftFunding.type.ErrorType.TOKEN_EXPIRED;
+
 import com.soeun.GiftFunding.exception.TokenException;
-import com.soeun.GiftFunding.type.ErrorType;
+import io.jsonwebtoken.Claims;
 import java.io.IOException;
+import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,15 +40,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = this.resolveTokenFromRequest(request);
         try {
-            if (StringUtils.hasText(token) &&
-                this.tokenProvider.validateToken(token)) {
-                Authentication auth = getAuthentication.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-
-                log.info("[{}] -> {}"
-                    , this.tokenProvider.getMail(token)
-                    , request.getRequestURI());
+            if (!StringUtils.hasText(token)) {
+                throw new TokenException(INVALID_TOKEN);
             }
+
+            Claims claims = tokenProvider.parseClaims(token);
+            String requestURI = request.getRequestURI();
+            String tokenType = tokenProvider.getTokenType(claims);
+
+            if ("RTK".equals(tokenType) &&
+                !"/user/reissue".equals(requestURI)) {
+                throw new TokenException(INVALID_TOKEN);
+            }
+
+            if ("ATK".equals(tokenType)) {
+                if (claims.getExpiration().before(new Date())) {
+                    log.info("토큰 만료 예외 발생");
+                    throw new TokenException(TOKEN_EXPIRED);
+                }
+            }
+            Authentication auth = getAuthentication.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            log.info("[{}] -> {}"
+                , this.tokenProvider.getMail(token)
+                , request.getRequestURI());
+
         } catch (TokenException e) {
             request.setAttribute("exception", e.getErrorCode());
         }

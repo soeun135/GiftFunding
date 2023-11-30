@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.config;
 
-import com.soeun.GiftFunding.exception.CustomAccessDeniedHandler;
 import com.soeun.GiftFunding.exception.CustomAuthenticationEntryPoint;
 import com.soeun.GiftFunding.security.JwtAuthenticationFilter;
 import com.soeun.GiftFunding.security.JwtExceptionFilter;
@@ -19,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtExceptionFilter jwtExceptionFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,13 +29,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/user/signup", "/user/signin").permitAll()
-            .antMatchers("/oauth/kakao", "/kakao").permitAll()
+            .antMatchers("/user/signup", "/user/signin", "/oauth/**").permitAll()
+            .antMatchers("/oauth/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
             .authenticationEntryPoint(authenticationEntryPoint)
-            .accessDeniedHandler(accessDeniedHandler)
 
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

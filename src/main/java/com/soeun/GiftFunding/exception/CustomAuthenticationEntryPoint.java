@@ -26,13 +26,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         Object exception = request.getAttribute("exception");
         log.info("인증 실패");
+
         if (exception instanceof ErrorType) {
+            log.info("예외 타입" + exception);
+
             ErrorType errorType = (ErrorType) exception;
             sendResponse(response, errorType);
 
             return;
         }
-
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 

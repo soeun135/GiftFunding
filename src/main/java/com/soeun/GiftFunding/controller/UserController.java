@@ -59,4 +59,9 @@ public class UserController {
 
         return ResponseEntity.ok(userService.update(request, token));
     }
+
+    @GetMapping("/access/token")
+    public String test() {
+        return "정상토큰 접근";
+    }
 }
