@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class TokenProvider {
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L; //1분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L * 60L; //1분
     private static final String TOKEN_TYPE = "token_type";
     private final RefreshTokenRepository refreshTokenRepository;
 

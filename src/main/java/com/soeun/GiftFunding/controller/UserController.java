@@ -4,12 +4,16 @@ import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.UpdateInfo;
+import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
+import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.security.TokenProvider;
 import com.soeun.GiftFunding.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
@@ -47,17 +52,17 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponse> userInfo(
-        @RequestHeader("Authorization") String token) {
-
-        return ResponseEntity.ok(userService.userInfo(token));
+        @AuthenticationPrincipal UserAdapter userAdapter) {
+        log.info(userAdapter.getAddress());
+        return ResponseEntity.ok(userService.userInfo(userAdapter));
     }
 
     @PatchMapping("/update")
     public ResponseEntity<UpdateInfo.Response> update(
         @RequestBody UpdateInfo.Request request,
-        @RequestHeader ("Authorization") String token) {
+        @AuthenticationPrincipal UserAdapter userAdapter) {
 
-        return ResponseEntity.ok(userService.update(request, token));
+        return ResponseEntity.ok(userService.update(request, userAdapter));
     }
 
     @GetMapping("/access/token")

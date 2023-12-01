@@ -10,6 +10,7 @@ import com.soeun.GiftFunding.dto.Signin.Response;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
+import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.entity.User;
 import com.soeun.GiftFunding.exception.UserException;
@@ -39,8 +40,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        return userRepository.findByEmail(mail)
+        User user = userRepository.findByEmail(mail)
             .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+
+        return new UserAdapter(user);
     }
 
     @Override
@@ -104,32 +107,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return token;
     }
     @Override
-    public UserInfoResponse userInfo(String token) {
-        //헤더에서 토큰 꺼내오기 + 토큰에서 메일 꺼내오기
-        String mail = tokenProvider.getMail(
-            this.resolveTokenFromRequest(token));
-
-        //꺼내온 메일로 USER 조회
-        User user = userRepository.findByEmail(mail)
-            .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+    public UserInfoResponse userInfo(UserAdapter userAdapter) {
 
         //user 정보 + 해당 user의 펀딩 상품을 조회해서 dto객체로 리턴
         return UserInfoResponse.builder()
-            .name(user.getName())
-            .phone(user.getPhone())
-            .email(user.getEmail())
-            .address(user.getAddress())
-            .birthDay(user.getBirthDay())
-            .fundingProductList(fundingProductRepository.findByUserId(user.getId()))
+            .name(userAdapter.getName())
+            .phone(userAdapter.getPhone())
+            .email(userAdapter.getEmail())
+            .address(userAdapter.getAddress())
+            .birthDay(userAdapter.getBirthDay())
+            .fundingProductList(fundingProductRepository.findByUserId(userAdapter.getId()))
             .build();
     }
 
     @Override
     @Transactional
-    public UpdateInfo.Response update(UpdateInfo.Request request, String token) {
-        String mail = tokenProvider.getMail(
-            this.resolveTokenFromRequest(token));
-        User user = userRepository.findByEmail(mail)
+    public UpdateInfo.Response update(UpdateInfo.Request request,
+        UserAdapter userAdapter) {
+        User user = userRepository.findByEmail(userAdapter.getEmail())
             .orElseThrow(() -> new UserException(USER_NOT_FOUND));
 
         updateCheck(request, user);

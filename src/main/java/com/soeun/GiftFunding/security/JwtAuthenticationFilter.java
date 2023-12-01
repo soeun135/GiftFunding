@@ -3,8 +3,10 @@ package com.soeun.GiftFunding.security;
 
 import static com.soeun.GiftFunding.type.ErrorType.INVALID_TOKEN;
 import static com.soeun.GiftFunding.type.ErrorType.TOKEN_EXPIRED;
+import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 
 import com.soeun.GiftFunding.exception.TokenException;
+import com.soeun.GiftFunding.exception.UserException;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Date;
@@ -57,6 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (claims.getExpiration().before(new Date())) {
                     log.info("토큰 만료 예외 발생");
                     throw new TokenException(TOKEN_EXPIRED);
+                }
+                if (ObjectUtils.isEmpty(tokenProvider.getMail(token))) {
+                    throw new UserException(USER_NOT_FOUND);
                 }
             }
             Authentication auth = getAuthentication.getAuthentication(token);
