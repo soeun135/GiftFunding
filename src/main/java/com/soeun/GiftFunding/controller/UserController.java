@@ -53,7 +53,6 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponse> userInfo(
         @AuthenticationPrincipal UserAdapter userAdapter) {
-        
         return ResponseEntity.ok(userService.userInfo(userAdapter));
     }
 
