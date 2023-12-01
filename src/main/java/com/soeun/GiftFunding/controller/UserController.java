@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponse> userInfo(
         @AuthenticationPrincipal UserAdapter userAdapter) {
-        log.info(userAdapter.getAddress());
+        
         return ResponseEntity.ok(userService.userInfo(userAdapter));
     }
 
