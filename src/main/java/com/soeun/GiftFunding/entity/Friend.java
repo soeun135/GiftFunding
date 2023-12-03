@@ -33,12 +33,12 @@ public class Friend {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToOne
-    @JoinColumn(name = "user_req_id")
-    private User userReqId;
+    @JoinColumn(name = "member_req_id")
+    private Member memberReqId;
 
     @Enumerated(EnumType.STRING)
     private FriendState friendState;

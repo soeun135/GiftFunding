@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserException.class)
-    public ErrorResponse handleUseException(UserException e) {
+    @ExceptionHandler(MemberException.class)
+    public ErrorResponse handleUseException(MemberException e) {
         log.error("{} is occurred", e.getErrorCode());
 
         return new ErrorResponse(

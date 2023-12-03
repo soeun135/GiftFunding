@@ -6,7 +6,7 @@ import static com.soeun.GiftFunding.type.ErrorType.TOKEN_EXPIRED;
 import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 
 import com.soeun.GiftFunding.exception.TokenException;
-import com.soeun.GiftFunding.exception.UserException;
+import com.soeun.GiftFunding.exception.MemberException;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
 import java.util.Date;
@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     throw new TokenException(TOKEN_EXPIRED);
                 }
                 if (ObjectUtils.isEmpty(tokenProvider.getMail(token))) {
-                    throw new UserException(USER_NOT_FOUND);
+                    throw new MemberException(USER_NOT_FOUND);
                 }
             }
             Authentication auth = getAuthentication.getAuthentication(token);

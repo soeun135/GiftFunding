@@ -10,12 +10,12 @@ import com.soeun.GiftFunding.dto.Signin.Response;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
-import com.soeun.GiftFunding.entity.User;
-import com.soeun.GiftFunding.exception.UserException;
+import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
-import com.soeun.GiftFunding.repository.UserRepository;
+import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,19 +31,19 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class MemberServiceImpl implements MemberService, UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final FundingProductRepository fundingProductRepository;
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(mail)
-            .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        Member user = memberRepository.findByEmail(mail)
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        return new UserAdapter(user);
+        return new MemberAdapter(user);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         validateDuplicated(request);
 
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        userRepository.save(request.toEntity());
+        memberRepository.save(request.toEntity());
 
         log.info("{} 회원가입", request.getEmail());
 
@@ -60,15 +60,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private void validateDuplicated(Request request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserException(USER_DUPLICATED);
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new MemberException(USER_DUPLICATED);
         }
     }
 
     @Override
     public Response signIn(Signin.Request request) {
-        User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        Member user = memberRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         validatedPassword(request, user);
 
@@ -80,9 +80,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             .build();
     }
 
-    private void validatedPassword(Signin.Request request, User user) {
+    private void validatedPassword(Signin.Request request, Member user) {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new UserException(PASSWORD_UNMATCHED);
+            throw new MemberException(PASSWORD_UNMATCHED);
         }
     }
 
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return token;
     }
     @Override
-    public UserInfoResponse userInfo(UserAdapter userAdapter) {
+    public UserInfoResponse userInfo(MemberAdapter userAdapter) {
 
         //user 정보 + 해당 user의 펀딩 상품을 조회해서 dto객체로 리턴
         return UserInfoResponse.builder()
@@ -123,16 +123,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UpdateInfo.Response update(UpdateInfo.Request request,
-        UserAdapter userAdapter) {
-        User user = userRepository.findByEmail(userAdapter.getEmail())
-            .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        MemberAdapter userAdapter) {
+        Member user = memberRepository.findByEmail(userAdapter.getEmail())
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         updateCheck(request, user);
 
         return user.toDto();
     }
 
-    private void updateCheck(UpdateInfo.Request request, User user) {
+    private void updateCheck(UpdateInfo.Request request, Member user) {
         if (StringUtils.hasText(request.getName())) {
             user.setName(request.getName());
         }

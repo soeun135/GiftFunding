@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.OAuth.dto;
 
-import com.soeun.GiftFunding.entity.User;
+import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import org.springframework.util.MultiValueMap;
 
@@ -10,7 +10,7 @@ import org.springframework.util.MultiValueMap;
  */
 
 public interface OAuthLoginRequest {
-    User makeUserEntity(User user, OAuthInfoResponse oAuthInfoResponse);
+    Member makeUserEntity(Member member, OAuthInfoResponse oAuthInfoResponse);
     OAuthProvider oAuthProvider();
     MultiValueMap<String, String> makeBody();
 }

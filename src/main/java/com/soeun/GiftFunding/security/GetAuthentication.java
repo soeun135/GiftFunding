@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.security;
 
-import com.soeun.GiftFunding.service.UserService;
+import com.soeun.GiftFunding.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class GetAuthentication {
-    private final UserService userService;
+    private final MemberService userService;
     private final TokenProvider tokenProvider;
 
     public Authentication getAuthentication(String jwt) {

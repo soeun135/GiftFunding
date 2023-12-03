@@ -4,11 +4,11 @@ import com.soeun.GiftFunding.type.ErrorType;
 import lombok.Getter;
 
 @Getter
-public class UserException extends RuntimeException{
+public class MemberException extends RuntimeException{
     private final ErrorType errorCode;
     private final String errorMessage;
 
-    public UserException(ErrorType errorCode) {
+    public MemberException(ErrorType errorCode) {
         this.errorCode = errorCode;
         this.errorMessage = errorCode.getDescription();
     }

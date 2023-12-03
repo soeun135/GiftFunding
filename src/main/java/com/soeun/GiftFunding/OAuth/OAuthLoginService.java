@@ -3,8 +3,8 @@ package com.soeun.GiftFunding.OAuth;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.dto.Signin;
-import com.soeun.GiftFunding.entity.User;
-import com.soeun.GiftFunding.repository.UserRepository;
+import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class OAuthLoginService {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final TokenProvider tokenProvider;
 
@@ -31,22 +31,22 @@ public class OAuthLoginService {
             .build();
     }
 
-    private User findOrCreateMember(OAuthInfoResponse oAuthInfoResponse, OAuthLoginRequest request) {
-        return userRepository.findByName(oAuthInfoResponse.getNickname())
+    private Member findOrCreateMember(OAuthInfoResponse oAuthInfoResponse, OAuthLoginRequest request) {
+        return memberRepository.findByName(oAuthInfoResponse.getNickname())
             .orElseGet(() -> newMember(oAuthInfoResponse, request));
     }
 
-    private User newMember(OAuthInfoResponse oAuthInfoResponse,
+    private Member newMember(OAuthInfoResponse oAuthInfoResponse,
         OAuthLoginRequest request) {
-        User user = User.builder()
+        Member member = Member.builder()
             .name(oAuthInfoResponse.getNickname())
             .email(oAuthInfoResponse.getEmail())
             .phone(oAuthInfoResponse.getMobile())
             .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
             .build();
 
-        user = request.makeUserEntity(user, oAuthInfoResponse);
+        member = request.makeUserEntity(member, oAuthInfoResponse);
 
-        return userRepository.save(user);
+        return memberRepository.save(member);
     }
 }
