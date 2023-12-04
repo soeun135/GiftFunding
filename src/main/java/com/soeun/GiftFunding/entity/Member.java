@@ -1,11 +1,10 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -19,11 +18,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -33,7 +32,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails{
+@DynamicUpdate
+public class Member implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -95,5 +95,15 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public UpdateInfo.Response toDto() {
+        return UpdateInfo.Response.builder()
+            .name(this.getName())
+            .email(this.getEmail())
+            .phone(this.getPhone())
+            .address(this.getAddress())
+            .birthDay(this.getBirthDay())
+            .build();
     }
 }

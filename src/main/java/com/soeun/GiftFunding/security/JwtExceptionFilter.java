@@ -25,8 +25,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (TokenException e){
-            log.info("로그 던지기");
-            request.setAttribute("exception", ErrorType.INVALID_TOKEN);
+            log.info("필터 내 예외처리");
+            request.setAttribute("exception", e.getErrorCode());
         }
     }
 }

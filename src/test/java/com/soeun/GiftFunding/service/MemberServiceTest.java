@@ -8,9 +8,11 @@ import static org.mockito.Mockito.verify;
 
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.Signup.Response;
-import com.soeun.GiftFunding.entity.User;
-import com.soeun.GiftFunding.repository.UserRepository;
+import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.repository.FundingProductRepository;
+import com.soeun.GiftFunding.repository.MemberRepository;
 import java.time.LocalDate;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -20,15 +22,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class MemberServiceTest {
     @Mock
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
+
+    @Mock
+    private FundingProductRepository fundingProductRepository;
 
     @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @InjectMocks
-    private UserServiceImpl userServiceimpl;
+    private MemberServiceImpl memberServiceImpl;
 
     @Test
     void successSignup() {
@@ -42,8 +47,8 @@ class UserServiceTest {
             .birthDay("2000-01-28")
             .build();
 
-        given(userRepository.save(any()))
-            .willReturn(User
+        given(memberRepository.save(any()))
+            .willReturn(Member
                 .builder()
                 .name("soni")
                 .phone("01011111111")
@@ -53,16 +58,24 @@ class UserServiceTest {
                 .birthDay(LocalDate.parse("2000-01-28"))
                 .build());
         //when
-        ArgumentCaptor<User> captor =
-            ArgumentCaptor.forClass(User.class);
+        ArgumentCaptor<Member> captor =
+            ArgumentCaptor.forClass(Member.class);
 
-        Response response = userServiceimpl.singUp(request);
+        Response response = memberServiceImpl.singUp(request);
 
         //then
-        verify(userRepository, times(1))
+        verify(memberRepository, times(1))
             .save(captor.capture());
         assertEquals(request.getName(),response.getName());
         assertEquals(request.getName(),captor.getValue().getName());
-
      }
+
+     @Test
+     @DisplayName("로그인 성공 테스트")
+     void successSignin() {
+         //given
+         //given()
+         //when
+         //then
+      }
 }

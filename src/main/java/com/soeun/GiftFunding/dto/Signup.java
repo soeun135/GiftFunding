@@ -1,8 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.User;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.soeun.GiftFunding.entity.Member;
 import java.time.LocalDate;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -39,8 +37,8 @@ public class Signup {
         @NotBlank(message = "생일은 필수 항목입니다.")
         private String birthDay;
 
-        public User toEntity() {
-            return User.builder()
+        public Member toEntity() {
+            return Member.builder()
                 .name(this.getName())
                 .phone(this.getPhone())
                 .email(this.getEmail())

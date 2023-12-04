@@ -10,7 +10,7 @@ public enum ErrorType {
 
     INVALID_TOKEN(400, "유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(400, "토큰 유효시간이 경과했습니다."),
-
+    REFRESHTOKEN_EXPIRED(400, "리프레시 토큰의 유효기간이 경과했습니다. 재로그인 하세요."),
     OAUTH_ERROR(400, "OAUTH 인증에서 문제가 발생했습니다."),
 
     USER_DUPLICATED(400, "중복된 이메일입니다."),

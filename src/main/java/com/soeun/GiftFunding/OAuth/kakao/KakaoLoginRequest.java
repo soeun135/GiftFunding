@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.OAuth.kakao;
 
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
-import com.soeun.GiftFunding.entity.User;
+import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -26,12 +26,12 @@ public class KakaoLoginRequest implements OAuthLoginRequest {
     private String address;
     private String birthDay;
 
-    public User makeUserEntity(User user, OAuthInfoResponse oAuthInfoResponse) {
-        user.setEmail(this.email);
-        user.setAddress(this.address);
-        user.setPhone(this.phone);
-        user.setBirthDay((LocalDate.parse(this.birthDay)));
-        return user;
+    public Member makeUserEntity(Member member, OAuthInfoResponse oAuthInfoResponse) {
+        member.setEmail(this.email);
+        member.setAddress(this.address);
+        member.setPhone(this.phone);
+        member.setBirthDay((LocalDate.parse(this.birthDay)));
+        return member;
     }
 
     @Override

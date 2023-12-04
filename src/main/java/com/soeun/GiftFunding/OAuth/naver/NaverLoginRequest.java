@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.OAuth.naver;
 
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
-import com.soeun.GiftFunding.entity.User;
+import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -22,10 +22,10 @@ public class NaverLoginRequest implements OAuthLoginRequest {
     private String state;
     private String address;
 
-    public User makeUserEntity(User user, OAuthInfoResponse oAuthInfoResponse) {
-        user.setAddress(this.address);
-        user.setBirthDay(LocalDate.parse(oAuthInfoResponse.getBirthYear()+"-"+oAuthInfoResponse.getBirthDay()));
-        return user;
+    public Member makeUserEntity(Member member, OAuthInfoResponse oAuthInfoResponse) {
+        member.setAddress(this.address);
+        member.setBirthDay(LocalDate.parse(oAuthInfoResponse.getBirthYear()+"-"+oAuthInfoResponse.getBirthDay()));
+        return member;
     }
 
     @Override

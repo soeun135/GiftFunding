@@ -5,7 +5,7 @@ import static com.soeun.GiftFunding.type.ErrorType.OAUTH_ERROR;
 import com.soeun.GiftFunding.OAuth.OAuthApiClient;
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
-import com.soeun.GiftFunding.exception.UserException;
+import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +58,7 @@ public class KakaoAPiClient implements OAuthApiClient {
         KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class);
 
         if (response == null) {
-            throw new UserException(OAUTH_ERROR);
+            throw new MemberException(OAUTH_ERROR);
         }
         return response.getAccessToken();
     }
