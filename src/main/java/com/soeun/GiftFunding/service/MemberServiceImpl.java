@@ -10,7 +10,7 @@ import com.soeun.GiftFunding.dto.Signin.Response;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.MemberAdapter;
+import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.exception.MemberException;
@@ -39,23 +39,27 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final FundingProductRepository fundingProductRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        Member user = memberRepository.findByEmail(mail)
+    public UserDetails loadUserByUsername(String mail)
+        throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(mail)
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        return new MemberAdapter(user);
+        return new UserAdapter(
+            member, member.getEmail(), member.getPassword());
+
     }
 
     @Override
-    public Signup.Response singUp(Signup.Request request) {
+    public String signUp(Signup.Request request) {
 
         validateDuplicated(request);
 
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        request.setPassword(passwordEncoder.encode(
+            request.getPassword()));
         memberRepository.save(request.toEntity());
 
         log.info("{} 회원가입", request.getEmail());
-
+        log.info(request.getName());
         return Signup.Response.toResponse(request.getName());
     }
 
@@ -107,43 +111,42 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         return token;
     }
     @Override
-    public UserInfoResponse userInfo(MemberAdapter userAdapter) {
-
+    public UserInfoResponse userInfo(UserAdapter userAdapter) {
+        Member member = userAdapter.getMember();
         //user 정보 + 해당 user의 펀딩 상품을 조회해서 dto객체로 리턴
         return UserInfoResponse.builder()
-            .name(userAdapter.getName())
-            .phone(userAdapter.getPhone())
-            .email(userAdapter.getEmail())
-            .address(userAdapter.getAddress())
-            .birthDay(userAdapter.getBirthDay())
-            .fundingProductList(fundingProductRepository.findByUserId(userAdapter.getId()))
+            .name(member.getName())
+            .phone(member.getPhone())
+            .email(member.getEmail())
+            .address(member.getAddress())
+            .birthDay(member.getBirthDay())
+            .fundingProductList(fundingProductRepository.findByMemberId(member.getId()))
             .build();
     }
 
     @Override
     @Transactional
     public UpdateInfo.Response update(UpdateInfo.Request request,
-        MemberAdapter userAdapter) {
-        Member user = memberRepository.findByEmail(userAdapter.getEmail())
-            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
+        UserAdapter userAdapter) {
+        Member member = userAdapter.getMember();
 
-        updateCheck(request, user);
+        updateCheck(request, member);
 
-        return user.toDto();
+        return member.toDto();
     }
 
-    private void updateCheck(UpdateInfo.Request request, Member user) {
+    private void updateCheck(UpdateInfo.Request request, Member member) {
         if (StringUtils.hasText(request.getName())) {
-            user.setName(request.getName());
+            member.setName(request.getName());
         }
         if (StringUtils.hasText(request.getPhone())) {
-            user.setPhone(request.getPhone());
+            member.setPhone(request.getPhone());
         }
         if (StringUtils.hasText(request.getAddress())) {
-            user.setAddress(request.getAddress());
+            member.setAddress(request.getAddress());
         }
         if (!ObjectUtils.isEmpty(request.getBirthDay())) {
-            user.setBirthDay(request.getBirthDay());
+            member.setBirthDay(request.getBirthDay());
         }
     }
 
