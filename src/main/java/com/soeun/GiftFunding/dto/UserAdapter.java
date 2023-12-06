@@ -6,18 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserAdapter implements UserDetails {
-    private final Member member; //인증 완료된 Member 객체
     private final String username; //인증완료된 Member ID
     private final String password; //인증완료된 Member 패스워드
 
-    public UserAdapter(Member member, String username, String password) {
-        this.member = member;
+    public UserAdapter(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public Member getMember() {
-        return this.member;
     }
 
     @Override

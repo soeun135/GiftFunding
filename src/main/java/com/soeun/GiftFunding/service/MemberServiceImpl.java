@@ -19,6 +19,7 @@ import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CORBA.UserException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,8 +45,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Member member = memberRepository.findByEmail(mail)
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        return new UserAdapter(
-            member, member.getEmail(), member.getPassword());
+        return new UserAdapter(member.getEmail(), member.getPassword());
 
     }
 
@@ -112,7 +112,9 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
     @Override
     public UserInfoResponse userInfo(UserAdapter userAdapter) {
-        Member member = userAdapter.getMember();
+        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
+
         //user 정보 + 해당 user의 펀딩 상품을 조회해서 dto객체로 리턴
         return UserInfoResponse.builder()
             .name(member.getName())
@@ -128,7 +130,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Transactional
     public UpdateInfo.Response update(UpdateInfo.Request request,
         UserAdapter userAdapter) {
-        Member member = userAdapter.getMember();
+        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         updateCheck(request, member);
 
