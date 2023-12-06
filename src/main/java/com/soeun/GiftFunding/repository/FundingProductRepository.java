@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {
-    List<FundingProduct> findByUserId(Long id);
+    List<FundingProduct> findByMemberId(Long id);
 }
