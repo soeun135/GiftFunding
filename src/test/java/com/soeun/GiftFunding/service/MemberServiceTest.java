@@ -61,12 +61,12 @@ class MemberServiceTest {
         ArgumentCaptor<Member> captor =
             ArgumentCaptor.forClass(Member.class);
 
-        Response response = memberServiceImpl.singUp(request);
+        String response = memberServiceImpl.signUp(request);
 
         //then
         verify(memberRepository, times(1))
             .save(captor.capture());
-        assertEquals(request.getName(),response.getName());
+       // assertEquals(request.getName(),response.getName());
         assertEquals(request.getName(),captor.getValue().getName());
      }
 
