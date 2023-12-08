@@ -1,0 +1,17 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "productName": {
+      "type": "text",
+      "analyzer": "my_analyzer"
+    },
+    "price": {
+      "type": "long"
+    },
+    "ranking": {
+      "type": "integer"
+    }
+  }
+}
