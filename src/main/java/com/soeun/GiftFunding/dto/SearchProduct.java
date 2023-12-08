@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.ProductDocument;
+import com.soeun.GiftFunding.entity.document.ProductDocument;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

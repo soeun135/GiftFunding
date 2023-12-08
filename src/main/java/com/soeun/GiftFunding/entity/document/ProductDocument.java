@@ -1,5 +1,6 @@
-package com.soeun.GiftFunding.entity;
+package com.soeun.GiftFunding.entity.document;
 
+import com.soeun.GiftFunding.entity.Product;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

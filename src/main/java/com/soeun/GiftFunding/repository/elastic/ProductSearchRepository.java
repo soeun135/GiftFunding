@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.repository.elastic;
 
-import com.soeun.GiftFunding.entity.ProductDocument;
+import com.soeun.GiftFunding.entity.document.ProductDocument;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;

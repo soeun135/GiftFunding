@@ -4,7 +4,7 @@ import com.soeun.GiftFunding.dto.SaveProduct;
 import com.soeun.GiftFunding.dto.SearchProduct;
 import com.soeun.GiftFunding.dto.SearchProduct.Response;
 import com.soeun.GiftFunding.entity.Product;
-import com.soeun.GiftFunding.entity.ProductDocument;
+import com.soeun.GiftFunding.entity.document.ProductDocument;
 import com.soeun.GiftFunding.repository.ProductRepository;
 import com.soeun.GiftFunding.repository.elastic.ProductSearchRepository;
 import java.util.List;
