@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.type.FriendState;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -48,4 +49,12 @@ public class Friend {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    public FriendRequestList toDto() {
+        return FriendRequestList.builder()
+            .memberName(this.memberReqId.getName())
+            .memberEmail(this.memberReqId.getEmail())
+            .createdAt(this.createdAt)
+            .build();
+    }
 }

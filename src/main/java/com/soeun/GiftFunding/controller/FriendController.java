@@ -1,11 +1,14 @@
 package com.soeun.GiftFunding.controller;
 
 import com.soeun.GiftFunding.dto.FriendRequest;
+import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.service.FriendService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +25,12 @@ public class FriendController {
         @AuthenticationPrincipal UserAdapter userAdapter) {
 
         return ResponseEntity.ok(friendService.request(request, userAdapter));
+    }
+
+    @GetMapping("/request")
+    public ResponseEntity<List<FriendRequestList>> requestList(
+        @AuthenticationPrincipal UserAdapter userAdapter) {
+
+        return ResponseEntity.ok(friendService.requestList(userAdapter));
     }
 }
