@@ -10,6 +10,8 @@ import com.soeun.GiftFunding.repository.elastic.ProductSearchRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,13 @@ public class ProductService {
             ProductDocument.from(productEntity));
     }
 
-    public List<SearchProduct.Response> findByProductName(
+    public Page<Response> findByProductName(
         SearchProduct.Request request, Pageable pageable) {
-        return productSearchRepository.findByProductName(
+
+        return new PageImpl<>(productSearchRepository.findByProductName(
                 request.getProductName(), pageable)
             .stream()
             .map(Response::from)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
     }
 }

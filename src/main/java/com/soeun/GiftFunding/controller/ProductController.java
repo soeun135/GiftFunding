@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -27,17 +28,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ProductController {
     private final ProductService productService;
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<Void> save(@RequestBody SaveProduct saveProduct) {
         productService.saveProduct(saveProduct);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<Response>> search(
+    public ResponseEntity<Page<Response>> search(
         @RequestBody SearchProduct.Request request,
         Pageable pageable) {
 
+        //todo PageRequest
         return ResponseEntity.ok(
             productService.findByProductName(request, pageable));
     }
