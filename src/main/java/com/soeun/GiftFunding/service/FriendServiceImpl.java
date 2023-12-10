@@ -13,14 +13,11 @@ import com.soeun.GiftFunding.repository.FriendRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
-import java.awt.print.Pageable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 

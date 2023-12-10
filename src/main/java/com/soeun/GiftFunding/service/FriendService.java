@@ -3,9 +3,8 @@ package com.soeun.GiftFunding.service;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.UserAdapter;
-import java.awt.print.Pageable;
-import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FriendService {
     /**
