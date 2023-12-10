@@ -40,6 +40,16 @@ public class GlobalExceptionHandler {
             e.getErrorCode().getCode());
     }
 
+    @ExceptionHandler(FundingException.class)
+    public ErrorResponse handleMemberException(FundingException e) {
+        log.error("{} is occurred", e.getErrorCode());
+
+        return new ErrorResponse(
+            e.getErrorCode(),
+            e.getErrorMessage(),
+            e.getErrorCode().getCode());
+    }
+
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleException(Exception e) {
         log.error("Exception is occurred", e);

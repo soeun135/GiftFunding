@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.repository;
 
-import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import java.util.List;
@@ -10,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {
     List<FundingProduct> findByMember(Member Member);
+
 
 }
