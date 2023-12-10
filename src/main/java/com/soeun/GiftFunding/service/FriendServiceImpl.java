@@ -13,10 +13,14 @@ import com.soeun.GiftFunding.repository.FriendRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
+import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -53,7 +57,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     private void validateRequest(Member sendMember, Member receiveMember) {
-        if (sendMember.getEmail() == receiveMember.getEmail()) {
+        if (Objects.equals(sendMember.getEmail(), receiveMember.getEmail())) {
             throw new FriendException(NOT_ALLOWED_YOURSELF);
         }
 
@@ -71,14 +75,16 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public List<FriendRequestList> requestList(UserAdapter userAdapter) {
+    public Page<FriendRequestList> requestList(UserAdapter userAdapter, Pageable pageable) {
         Member member = memberRepository.findByEmail(userAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
-        return friendRepository.findByMember(member)
-            .stream()
-            .filter(friend -> friend.getFriendState().equals(FriendState.WAIT))
-            .map(Friend::toDto)
-            .collect(Collectors.toList());
+        return friendRepository.findByMember(member, pageable)
+            .map(friend -> {
+                    if (friend.getFriendState().equals(FriendState.WAIT)) {
+                        friend.toDto();
+                    }
+                    return null;
+                });
     }
 }

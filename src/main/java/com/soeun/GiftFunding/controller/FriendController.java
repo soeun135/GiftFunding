@@ -4,8 +4,10 @@ import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.service.FriendService;
+import java.awt.print.Pageable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +30,10 @@ public class FriendController {
     }
 
     @GetMapping("/request")
-    public ResponseEntity<List<FriendRequestList>> requestList(
-        @AuthenticationPrincipal UserAdapter userAdapter) {
+    public ResponseEntity<Page<FriendRequestList>> requestList(
+        @AuthenticationPrincipal UserAdapter userAdapter,
+        Pageable pageable) {
 
-        return ResponseEntity.ok(friendService.requestList(userAdapter));
+        return ResponseEntity.ok(friendService.requestList(userAdapter, pageable));
     }
 }
