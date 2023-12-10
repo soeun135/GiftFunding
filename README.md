@@ -10,6 +10,7 @@
 
 ⭐로그인 (JWT + Redis)
   - JWT의 보안강화를 위해 Refresh Token을 Redis에 저장하는 방식으로 구현.
+  - AccessToken 만료시 Refresh Token으로 Access Token 재발급.
 
 ### [회원 관련 기능]
 ⭐회원 정보 조회
@@ -37,10 +38,10 @@
     ex)  1 2 등록일시 WAIT 1 레코드에서 B가 요청 수락시 WAIT -> ACCEPT로 바뀜.
          B의 친구목록을 조회할 때 A가 떠야하므로 2 1 등록일시 ACCEPT null 이런 형태의 레코드 함께 삽입.
   
-  - 거절하면(DENIED) 하루 뒤 테이블에서 삭제.
+  - 거절하면(DENIED) 하루 뒤 테이블에서 삭제. (스켸줄러 구현)
     
 ⭐친구목록 조회
-  - 친구인 사용자들(상태가 ACCEPT인)의 목록 조회
+  - 친구인 사용자들(상태가 ACCEPT인)의 목록 조회 + 친구가 등록한 펀딩 상품도 조
   - 친구로 등록된 사용자 삭제 가능.
     
 ### [상품]
@@ -94,7 +95,7 @@
   - 결제 금액만큼 금액 충천. 
 
 ## ERD
-![선물하기 펀딩 프로젝트 (1)](https://github.com/soeun135/GiftFunding/assets/84930396/d9dd0ae9-f104-4cfb-996b-8c119fb88449)
+![선물하기 펀딩 프로젝트](https://github.com/soeun135/GiftFunding/assets/84930396/1915781b-433d-4c26-82c5-494dc7511b3d)
 
 
 
