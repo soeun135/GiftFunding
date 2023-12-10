@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.SearchProduct;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,4 +23,12 @@ public class Product {
     private String productName;
     private Long price;
     private int ranking;
+
+    public SearchProduct.Response toDto() {
+        return SearchProduct.Response.builder()
+            .productName(this.productName)
+            .price(this.price)
+            .ranking(this.ranking)
+            .build();
+    }
 }
