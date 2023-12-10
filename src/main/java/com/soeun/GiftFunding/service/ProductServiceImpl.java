@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductSearchRepository productSearchRepository;
@@ -33,11 +33,8 @@ public class ProductServiceImpl implements ProductService{
     public Page<Response> findByProductName(
         SearchProduct.Request request, Pageable pageable) {
 
-        return new PageImpl<>(productSearchRepository.findByProductName(
-                request.getProductName(), pageable)
-            .stream()
-            .map(Response::from)
-            .collect(Collectors.toList()));
+        return productSearchRepository.findByProductName(request.getProductName(), pageable)
+            .map(Response::from);
     }
 
     @Override
@@ -45,7 +42,7 @@ public class ProductServiceImpl implements ProductService{
 
         return new PageImpl<>(
             productRepository.findAll(
-                Sort.by("ranking").ascending())
+                    Sort.by("ranking").ascending())
                 .stream()
                 .map(Product::toDto)
                 .collect(Collectors.toList()));
