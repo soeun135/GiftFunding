@@ -6,6 +6,7 @@ import static com.soeun.GiftFunding.type.ErrorType.REQUEST_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
 import static com.soeun.GiftFunding.type.FriendState.WAIT;
+import static com.soeun.GiftFunding.type.FundingState.ONGOING;
 
 import com.soeun.GiftFunding.dto.FriendListResponse;
 import com.soeun.GiftFunding.dto.FriendRequest;
@@ -157,6 +158,8 @@ public class FriendServiceImpl implements FriendService {
             .map(friend -> friend.toFriendDto(
                 fundingProductRepository.findByMember(friend.getMemberReqId())
                     .stream()
+                    .filter(fundingProduct ->
+                        ONGOING.equals(fundingProduct.getFundingState()))
                     .map(FundingProduct::toDto)
                     .collect(Collectors.toList()
             )))
