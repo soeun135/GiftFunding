@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public String signUp(Signup.Request request) {
+    public Signup.Response signUp(Signup.Request request) {
 
         validateDuplicated(request);
 
@@ -58,8 +58,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         memberRepository.save(request.toEntity());
 
         log.info("{} 회원가입", request.getEmail());
-        log.info(request.getName());
-        return Signup.Response.toResponse(request.getName());
+
+        return Signup.Response.builder()
+            .name(request.getName())
+            .message("님 회원가입이 완료되었습니다.")
+            .build();
     }
 
     private void validateDuplicated(Request request) {
@@ -94,13 +97,13 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         String refreshToken =
             this.resolveTokenFromRequest(request);
 
-
         return ReissueResponse.builder()
             .accessToken(
                 tokenProvider.reIssueAccessToken(refreshToken))
             .refreshToken(refreshToken)
             .build();
     }
+
     private String resolveTokenFromRequest(String token) {
 
         if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
@@ -109,6 +112,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         return token;
     }
+
     @Override
     public UserInfoResponse userInfo(UserAdapter userAdapter) {
         Member member = memberRepository.findByEmail(userAdapter.getUsername())
@@ -151,6 +155,4 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             member.setBirthDay(request.getBirthDay());
         }
     }
-
-
 }

@@ -4,7 +4,6 @@ import com.soeun.GiftFunding.dto.SaveProduct;
 import com.soeun.GiftFunding.dto.SearchProduct;
 import com.soeun.GiftFunding.dto.SearchProduct.Response;
 import com.soeun.GiftFunding.service.ProductService;
-import com.soeun.GiftFunding.service.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

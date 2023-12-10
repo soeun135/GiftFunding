@@ -23,10 +23,6 @@ public class FriendRequest {
     @Builder
     public static class Response {
         private String email;
-        private static final String message = "님에게 친구요청을 보냈습니다.";
-        public static String toResponse(String email) {
-            return String.format(
-                "[%s] %s", email, message);
-        }
+        private String message;
     }
 }

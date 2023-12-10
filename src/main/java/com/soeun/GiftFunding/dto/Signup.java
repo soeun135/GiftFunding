@@ -56,10 +56,6 @@ public class Signup {
     @Builder
     public static class Response {
         private String name;
-        private static final String message = "님 회원가입이 완료되었습니다.";
-        public static String toResponse(String name) {
-
-            return String.format("[%s] %s", name, message);
-        }
+        private String message;
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FriendController {
     private final FriendService friendService;
     @PostMapping("/request")
-    public ResponseEntity<String> friendRequest(
+    public ResponseEntity<FriendRequest.Response> friendRequest(
         @RequestBody FriendRequest.Request request,
         @AuthenticationPrincipal UserAdapter userAdapter) {
 

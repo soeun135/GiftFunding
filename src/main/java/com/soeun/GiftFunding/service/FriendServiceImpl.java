@@ -28,7 +28,7 @@ public class FriendServiceImpl implements FriendService {
     private final FriendRepository friendRepository;
 
     @Override
-    public String request(
+    public FriendRequest.Response request(
         FriendRequest.Request request, UserAdapter userAdapter) {
         //친구 요청을 보내는 사용자
         Member sendMember = memberRepository.findByEmail(userAdapter.getUsername())
@@ -46,9 +46,10 @@ public class FriendServiceImpl implements FriendService {
             .friendState(FriendState.WAIT)
             .build());
 
-        return FriendRequest.Response.toResponse(
-            request.getEmail()
-        );
+        return FriendRequest.Response.builder()
+            .email(request.getEmail())
+            .message("님에게 친구요청을 보냈습니다.")
+            .build();
     }
 
     private void validateRequest(Member sendMember, Member receiveMember) {

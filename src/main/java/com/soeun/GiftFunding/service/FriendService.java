@@ -11,7 +11,7 @@ public interface FriendService {
      * 파라미터 : 요청 받는 대상 이메일, 로그인 한 사용자
      * 응답 : 대상 이메일 + "님에게 친구요청을 보냈습니다."
      */
-    String request(FriendRequest.Request request, UserAdapter userAdapter);
+    FriendRequest.Response request(FriendRequest.Request request, UserAdapter userAdapter);
 
     /**
      * 친구요청 목록 확인 메소드
