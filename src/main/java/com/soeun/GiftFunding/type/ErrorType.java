@@ -19,7 +19,9 @@ public enum ErrorType {
     PASSWORD_UNMATCHED(400, "비밀번호가 일치하지 않습니다."),
 
     NOT_ALLOWED_YOURSELF(400, "자기자신에게 요청을 보낼 수 없습니다."),
-    ALREADY_SEND_REQUEST(400, "이미 해당 사용자에게 친구 요청을 보냈습니다.");
+    ALREADY_SEND_REQUEST(400, "이미 해당 사용자에게 친구 요청을 보냈습니다."),
+
+    REQUEST_NOT_FOUND(400, "입력한 아이디로 들어온 친구 요청이 없습니다.");
     private final int code;
     private final String description;
 }
