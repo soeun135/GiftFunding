@@ -125,7 +125,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             .email(member.getEmail())
             .address(member.getAddress())
             .birthDay(member.getBirthDay())
-            .fundingProductList(fundingProductRepository.findByMemberId(member.getId()))
+            .fundingProductList(fundingProductRepository.findByMember(member))
             .build();
     }
 

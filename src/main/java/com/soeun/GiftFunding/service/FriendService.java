@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.service;
 
+import com.soeun.GiftFunding.dto.FriendListResponse;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.FriendRequestProcess;
@@ -32,4 +33,11 @@ public interface FriendService {
      */
     FriendRequestProcess.Response requestProcess(
         UserAdapter userAdapter, FriendRequestProcess.Request request);
+
+    /**
+     * 친구목록 + 친구의 펀딩상품 조회 메소드
+     * 파라미터 : 로그인한 사용자 정보
+     * 응답 : 친구 정보 + 친구가 등록한 펀딩상품 리스트
+     */
+    Page<FriendListResponse> friendList(UserAdapter userAdapter, Pageable pageable);
 }

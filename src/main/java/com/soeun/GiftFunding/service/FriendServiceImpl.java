@@ -5,7 +5,9 @@ import static com.soeun.GiftFunding.type.ErrorType.NOT_ALLOWED_YOURSELF;
 import static com.soeun.GiftFunding.type.ErrorType.REQUEST_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
+import static com.soeun.GiftFunding.type.FriendState.WAIT;
 
+import com.soeun.GiftFunding.dto.FriendListResponse;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.FriendRequestProcess;
@@ -16,6 +18,7 @@ import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.exception.FriendException;
 import com.soeun.GiftFunding.repository.FriendRepository;
+import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
@@ -23,9 +26,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class FriendServiceImpl implements FriendService {
 
     private final MemberRepository memberRepository;
     private final FriendRepository friendRepository;
+    private final FundingProductRepository fundingProductRepository;
 
     //todo 로그인한 사용자 에러처리 필요하다면 private 메소드 하나로 빼기
     @Override
@@ -87,14 +91,10 @@ public class FriendServiceImpl implements FriendService {
         Member member = memberRepository.findByEmail(userAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
-        return friendRepository.findByMember(member, pageable)
-            .map(friend -> {
-                if (friend.getFriendState().equals(FriendState.WAIT)) {
-                    return friend.toDto();
-                }
-
-                return null;
-            });
+        return new PageImpl<>(friendRepository.findByMember(member, pageable)
+            .stream().filter(friend -> WAIT.equals(friend.getFriendState()))
+            .map(friend -> friend.toFriendReqDto())
+            .collect(Collectors.toList()));
     }
 
     @Override
@@ -133,5 +133,25 @@ public class FriendServiceImpl implements FriendService {
             .email(sendMember.getEmail())
             .message("님의 친구요청을 업데이트 했습니다.")
             .build();
+    }
+
+    @Override
+    public Page<FriendListResponse> friendList(
+        UserAdapter userAdapter, Pageable pageable) {
+
+        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+            .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
+
+        List<Friend> friendList =
+            friendRepository.findByMember(member)
+                .stream()
+                .filter(fr -> ACCEPT.equals(fr.getFriendState()))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(friendList.stream()
+            .map(friend -> friend.toFriendDto(
+                fundingProductRepository.findByMember(friend.getMemberReqId())
+            ))
+            .collect(Collectors.toList()));
     }
 }

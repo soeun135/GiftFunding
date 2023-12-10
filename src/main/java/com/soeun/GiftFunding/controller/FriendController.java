@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.controller;
 
+import com.soeun.GiftFunding.dto.FriendListResponse;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.FriendRequestProcess;
@@ -46,5 +47,14 @@ public class FriendController {
         @RequestBody FriendRequestProcess.Request request) {
 
         return ResponseEntity.ok(friendService.requestProcess(userAdapter, request));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<FriendListResponse>> friendList(
+        @AuthenticationPrincipal UserAdapter userAdapter,
+        Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+            friendService.friendList(userAdapter, pageable));
     }
 }
