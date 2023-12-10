@@ -3,40 +3,21 @@ package com.soeun.GiftFunding.service;
 import com.soeun.GiftFunding.dto.SaveProduct;
 import com.soeun.GiftFunding.dto.SearchProduct;
 import com.soeun.GiftFunding.dto.SearchProduct.Response;
-import com.soeun.GiftFunding.entity.Product;
-import com.soeun.GiftFunding.entity.document.ProductDocument;
-import com.soeun.GiftFunding.repository.ProductRepository;
-import com.soeun.GiftFunding.repository.elastic.ProductSearchRepository;
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@RequiredArgsConstructor
-public class ProductService {
+public interface ProductService {
 
-    private final ProductRepository productRepository;
-    private final ProductSearchRepository productSearchRepository;
+    void saveProduct(SaveProduct saveProduct);
 
-    public void saveProduct(SaveProduct saveProduct) {
-        Product productEntity = productRepository.save(saveProduct.toEntity());
+    /**
+     * ES를 통해 상품명으로 검색하는 메소드
+     * 파라미터 : 상품명
+     *
+     */
 
-        productSearchRepository.save(
-            ProductDocument.from(productEntity));
-    }
+    Page<Response> findByProductName(SearchProduct.Request request, Pageable pageable);
 
-    public Page<Response> findByProductName(
-        SearchProduct.Request request, Pageable pageable) {
-
-        return new PageImpl<>(productSearchRepository.findByProductName(
-                request.getProductName(), pageable)
-            .stream()
-            .map(Response::from)
-            .collect(Collectors.toList()));
-    }
+    Page<Response> getProductList();
 }
