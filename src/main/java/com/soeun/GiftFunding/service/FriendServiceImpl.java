@@ -79,7 +79,7 @@ public class FriendServiceImpl implements FriendService {
         return friendRepository.findByMember(member, pageable)
             .map(friend -> {
                     if (friend.getFriendState().equals(FriendState.WAIT)) {
-                        friend.toDto();
+                        return friend.toDto();
                     }
                     return null;
                 });
