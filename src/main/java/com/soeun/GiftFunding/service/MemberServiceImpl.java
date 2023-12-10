@@ -12,11 +12,13 @@ import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
+import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -125,7 +127,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
             .email(member.getEmail())
             .address(member.getAddress())
             .birthDay(member.getBirthDay())
-            .fundingProductList(fundingProductRepository.findByMember(member))
+            .fundingProductList(
+                fundingProductRepository.findByMember(member)
+                    .stream()
+                    .map(FundingProduct::toDto)
+                    .collect(Collectors.toList()))
             .build();
     }
 

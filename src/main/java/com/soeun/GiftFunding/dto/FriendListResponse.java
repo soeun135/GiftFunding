@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.FundingProduct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +21,6 @@ public class FriendListResponse {
     private LocalDate birthDay;
     private LocalDateTime createdAt;
 
-    private List<FundingProduct> fundingProductList;
+    private List<FundingProductDto> fundingProductList;
 
 }

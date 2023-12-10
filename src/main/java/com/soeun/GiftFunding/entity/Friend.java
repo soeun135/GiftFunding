@@ -2,6 +2,7 @@ package com.soeun.GiftFunding.entity;
 
 import com.soeun.GiftFunding.dto.FriendListResponse;
 import com.soeun.GiftFunding.dto.FriendRequestList;
+import com.soeun.GiftFunding.dto.FundingProductDto;
 import com.soeun.GiftFunding.type.FriendState;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,7 +64,7 @@ public class Friend {
     }
 
     public FriendListResponse toFriendDto(
-        List<FundingProduct> fundingProductList) {
+        List<FundingProductDto> fundingProductList) {
         return FriendListResponse.builder()
             .name(this.memberReqId.getName())
             .phone(this.memberReqId.getPhone())

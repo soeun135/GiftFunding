@@ -15,6 +15,7 @@ import com.soeun.GiftFunding.dto.FriendRequestProcess.Request;
 import com.soeun.GiftFunding.dto.FriendRequestProcess.Response;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.entity.Friend;
+import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.exception.FriendException;
 import com.soeun.GiftFunding.repository.FriendRepository;
@@ -22,6 +23,7 @@ import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -118,7 +120,9 @@ public class FriendServiceImpl implements FriendService {
             throw new FriendException(REQUEST_NOT_FOUND);
         }
 
-        friendRequestList.get(0).setFriendState(request.getState());
+        Friend friend = friendRequestList.get(0);
+        friend.setFriendState(request.getState());
+        friend.setCreatedAt(LocalDateTime.now());
 
         if (ACCEPT.equals(request.getState())) {
             friendRepository.save(
@@ -126,6 +130,7 @@ public class FriendServiceImpl implements FriendService {
                     .member(sendMember)
                     .memberReqId(receiveMember)
                     .friendState(ACCEPT)
+                    .createdAt(LocalDateTime.now())
                     .build()
             );
         }
@@ -151,7 +156,10 @@ public class FriendServiceImpl implements FriendService {
         return new PageImpl<>(friendList.stream()
             .map(friend -> friend.toFriendDto(
                 fundingProductRepository.findByMember(friend.getMemberReqId())
-            ))
+                    .stream()
+                    .map(FundingProduct::toDto)
+                    .collect(Collectors.toList()
+            )))
             .collect(Collectors.toList()));
     }
 }
