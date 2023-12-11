@@ -3,7 +3,6 @@ package com.soeun.GiftFunding.service;
 import com.soeun.GiftFunding.dto.FriendFundingProduct;
 import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
-import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.FriendRequestProcess;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.type.FriendState;
@@ -24,7 +23,7 @@ public interface FriendService {
      * 파라미터 : 로그인한 사용자 정보, FriendState, 페이지 정보
      * 응답 : FriendState가 WAIT, ACCEPT에 따라 다른 결과 조회
      */
-    Page<FriendList> friendList(UserAdapter userAdapter, FriendState friendState, Pageable pageable)
+    Page<FriendList> friendList(UserAdapter userAdapter, FriendState friendState, Pageable pageable);
     /**
      * 친구요청 수락/거절 메소드
      * 파라미터 : 로그인한 사용자, FriendRequestProcess.Request : 수락할 이메일, 수락/거절여부
