@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.FundingProduct;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,5 +18,5 @@ public class UserInfoResponse {
     private String address;
     private LocalDate birthDay;
 
-    private List<FundingProduct> fundingProductList;
+    private List<FundingProductDto> fundingProductList;
 }

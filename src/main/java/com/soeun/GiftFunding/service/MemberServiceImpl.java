@@ -12,11 +12,15 @@ import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
+import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.entity.Wallet;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
+import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +41,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final FundingProductRepository fundingProductRepository;
+    private final WalletRepository walletRepository;
 
     @Override
     public UserDetails loadUserByUsername(String mail)
@@ -55,10 +60,18 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
         request.setPassword(passwordEncoder.encode(
             request.getPassword()));
-        memberRepository.save(request.toEntity());
+
+        Member memberEntity = request.toEntity();
+        memberRepository.save(memberEntity);
 
         log.info("{} 회원가입", request.getEmail());
 
+        walletRepository.save(
+            Wallet.builder()
+                .balance(0L)
+                .member(memberEntity)
+                .build()
+        );
         return Signup.Response.builder()
             .name(request.getName())
             .message("님 회원가입이 완료되었습니다.")
@@ -118,14 +131,17 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Member member = memberRepository.findByEmail(userAdapter.getUsername())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        //user 정보 + 해당 user의 펀딩 상품을 조회해서 dto객체로 리턴
         return UserInfoResponse.builder()
             .name(member.getName())
             .phone(member.getPhone())
             .email(member.getEmail())
             .address(member.getAddress())
             .birthDay(member.getBirthDay())
-            .fundingProductList(fundingProductRepository.findByMember(member))
+            .fundingProductList(
+                fundingProductRepository.findByMember(member)
+                    .stream()
+                    .map(FundingProduct::toDto)
+                    .collect(Collectors.toList()))
             .build();
     }
 

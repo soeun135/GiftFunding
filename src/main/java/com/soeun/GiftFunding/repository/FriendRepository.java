@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.repository;
 
 import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.Member;
-import java.util.List;
+import com.soeun.GiftFunding.type.FriendState;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,9 +11,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
-    Optional<Friend> findByMemberReqId(Member sendMember);
+    Page<Friend> findByMemberAndFriendState(Member member, FriendState friendState, Pageable pageable);
 
-    Page<Friend> findByMember(Member member, Pageable pageable);
+    Optional<Friend> findByFriendStateAndMemberRequest(FriendState friendState, Member sendMember);
 
-    List<Friend> findByMember(Member member);
+    boolean existsByMemberRequestAndMember(Member member, Member friend);
+
+    Optional<Friend> findByMemberRequestAndMember(Member sendMember, Member receiveMember);
 }

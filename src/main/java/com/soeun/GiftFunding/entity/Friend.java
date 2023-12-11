@@ -1,10 +1,8 @@
 package com.soeun.GiftFunding.entity;
 
-import com.soeun.GiftFunding.dto.FriendListResponse;
-import com.soeun.GiftFunding.dto.FriendRequestList;
+import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.type.FriendState;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -45,7 +43,7 @@ public class Friend {
 
     @OneToOne
     @JoinColumn(name = "member_req_id")
-    private Member memberReqId;
+    private Member memberRequest;
 
     @Enumerated(EnumType.STRING)
     private FriendState friendState;
@@ -54,23 +52,13 @@ public class Friend {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public FriendRequestList toFriendReqDto() {
-        return FriendRequestList.builder()
-            .memberName(this.memberReqId.getName())
-            .memberEmail(this.memberReqId.getEmail())
+    public FriendList toFriendReqDto() {
+        return FriendList.builder()
+            .memberName(this.memberRequest.getName())
+            .memberEmail(this.memberRequest.getEmail())
             .createdAt(this.createdAt)
             .build();
     }
 
-    public FriendListResponse toFriendDto(
-        List<FundingProduct> fundingProductList) {
-        return FriendListResponse.builder()
-            .name(this.memberReqId.getName())
-            .phone(this.memberReqId.getPhone())
-            .email(this.memberReqId.getEmail())
-            .birthDay(this.memberReqId.getBirthDay())
-            .createdAt(LocalDateTime.now())
-            .fundingProductList(fundingProductList)
-            .build();
-    }
+
 }

@@ -1,12 +1,12 @@
 package com.soeun.GiftFunding.service;
 
-import com.soeun.GiftFunding.dto.FriendListResponse;
+import com.soeun.GiftFunding.dto.FriendFundingProduct;
+import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.FriendRequestList;
 import com.soeun.GiftFunding.dto.FriendRequestProcess;
-import com.soeun.GiftFunding.dto.FriendRequestProcess.Request;
-import com.soeun.GiftFunding.dto.FriendRequestProcess.Response;
 import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.type.FriendState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,12 +20,11 @@ public interface FriendService {
         FriendRequest.Request request, UserAdapter userAdapter);
 
     /**
-     * 친구요청 목록 확인 메소드
-     * 파라미터 : 로그인한 사용자, 페이지 정보
-     * 응답 : 로그인한 사용자의 아이디로 FriendState가 WAIT인 컬럼 조회
+     * 친구 목록 확인 메소드
+     * 파라미터 : 로그인한 사용자 정보, FriendState, 페이지 정보
+     * 응답 : FriendState가 WAIT, ACCEPT에 따라 다른 결과 조회
      */
-    Page<FriendRequestList> requestList(UserAdapter userAdapter, Pageable pageable);
-
+    Page<FriendList> friendList(UserAdapter userAdapter, FriendState friendState, Pageable pageable)
     /**
      * 친구요청 수락/거절 메소드
      * 파라미터 : 로그인한 사용자, FriendRequestProcess.Request : 수락할 이메일, 수락/거절여부
@@ -35,9 +34,8 @@ public interface FriendService {
         UserAdapter userAdapter, FriendRequestProcess.Request request);
 
     /**
-     * 친구목록 + 친구의 펀딩상품 조회 메소드
-     * 파라미터 : 로그인한 사용자 정보
-     * 응답 : 친구 정보 + 친구가 등록한 펀딩상품 리스트
-     */
-    Page<FriendListResponse> friendList(UserAdapter userAdapter, Pageable pageable);
+     * 친구의 펀딩상품 조회 메소드
+     * 파라미터 : 로그인한 사용자 정보, 친구 아이디, 페이지 정보
+     * 응답 : 친구 정보 + 친구가 등록한 펀딩상품 중 진행중인 항목들     */
+    FriendFundingProduct friendProduct(UserAdapter userAdapter, Long id, Pageable pageable);
 }
