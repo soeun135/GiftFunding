@@ -60,9 +60,4 @@ public class MemberController {
 
         return ResponseEntity.ok(memberService.update(request, userAdapter));
     }
-
-    @GetMapping("/access/token")
-    public String test() {
-        return "정상토큰 접근";
-    }
 }
