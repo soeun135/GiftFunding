@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MemberException.class)
-    public ErrorResponse handleUseException(MemberException e) {
+    public ErrorResponse handleMemberException(MemberException e) {
         log.error("{} is occurred", e.getErrorCode());
 
         return new ErrorResponse(
@@ -22,6 +22,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenException.class)
     public ErrorResponse handleInvalidTokenException(TokenException e) {
+        log.error("{} is occurred", e.getErrorCode());
+
+        return new ErrorResponse(
+            e.getErrorCode(),
+            e.getErrorMessage(),
+            e.getErrorCode().getCode());
+    }
+
+    @ExceptionHandler(FriendException.class)
+    public ErrorResponse handleFriendException(FriendException e) {
+        log.error("{} is occurred", e.getErrorCode());
+
+        return new ErrorResponse(
+            e.getErrorCode(),
+            e.getErrorMessage(),
+            e.getErrorCode().getCode());
+    }
+
+    @ExceptionHandler(FundingException.class)
+    public ErrorResponse handleMemberException(FundingException e) {
         log.error("{} is occurred", e.getErrorCode());
 
         return new ErrorResponse(

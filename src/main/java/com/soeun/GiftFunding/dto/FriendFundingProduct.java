@@ -1,22 +1,24 @@
 package com.soeun.GiftFunding.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.domain.Page;
 
-@Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
+@Builder
+public class FriendFundingProduct {
     private String name;
     private String phone;
     private String email;
-    private String address;
     private LocalDate birthDay;
 
-    private List<FundingProductDto> fundingProductList;
+    private Page<FundingProductDto> fundingProductList;
+
 }

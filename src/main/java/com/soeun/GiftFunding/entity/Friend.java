@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.type.FriendState;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -14,9 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,7 +28,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
+@DynamicUpdate
 public class Friend {
 
     @Id
@@ -38,7 +43,7 @@ public class Friend {
 
     @OneToOne
     @JoinColumn(name = "member_req_id")
-    private Member memberReqId;
+    private Member memberRequest;
 
     @Enumerated(EnumType.STRING)
     private FriendState friendState;
@@ -46,4 +51,14 @@ public class Friend {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    public FriendList toFriendReqDto() {
+        return FriendList.builder()
+            .memberName(this.memberRequest.getName())
+            .memberEmail(this.memberRequest.getEmail())
+            .createdAt(this.createdAt)
+            .build();
+    }
+
+
 }
