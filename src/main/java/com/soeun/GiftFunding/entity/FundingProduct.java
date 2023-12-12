@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.entity;
 
+import com.soeun.GiftFunding.dto.FundingProductDto;
 import com.soeun.GiftFunding.type.FundingState;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -48,4 +49,15 @@ public class FundingProduct {
 
     @Enumerated(EnumType.STRING)
     private FundingState fundingState;
+
+    public FundingProductDto toDto() {
+        return FundingProductDto.builder()
+            .id(this.id)
+            .product(this.product)
+            .total(this.total)
+            .createdAt(this.createdAt)
+            .expiredAt(this.expiredAt)
+            .fundingState(this.fundingState)
+            .build();
+    }
 }

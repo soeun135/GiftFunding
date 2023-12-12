@@ -15,7 +15,7 @@ public interface MemberService extends UserDetailsService{
     /**
      * 회원가입 메소드
      */
-    String signUp(Signup.Request request);
+    Signup.Response signUp(Signup.Request request);
 
     /**
      * 로그인 메소드
