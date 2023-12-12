@@ -17,15 +17,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
+@DynamicUpdate
 public class FundingProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

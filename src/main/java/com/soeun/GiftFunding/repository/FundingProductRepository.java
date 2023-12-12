@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {
     List<FundingProduct> findByMember(Member Member);
     Page<FundingProduct> findByMemberAndFundingState(Member Member, FundingState friendState, Pageable pageable);
+
 }

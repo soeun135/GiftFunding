@@ -1,8 +1,11 @@
 package com.soeun.GiftFunding.entity;
 
 import com.soeun.GiftFunding.dto.FriendList;
+import com.soeun.GiftFunding.dto.FriendListResponse;
+import com.soeun.GiftFunding.dto.FundingProductDto;
 import com.soeun.GiftFunding.type.FriendState;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -59,6 +62,15 @@ public class Friend {
             .createdAt(this.createdAt)
             .build();
     }
-
-
+    public FriendListResponse toFriendDto(
+        List<FundingProductDto> fundingProductList) {
+        return FriendListResponse.builder()
+            .name(this.memberRequest.getName())
+            .phone(this.memberRequest.getPhone())
+            .email(this.memberRequest.getEmail())
+            .birthDay(this.memberRequest.getBirthDay())
+            .createdAt(LocalDateTime.now())
+            .fundingProductList(fundingProductList)
+            .build();
+    }
 }

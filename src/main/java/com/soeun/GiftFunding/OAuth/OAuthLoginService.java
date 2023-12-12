@@ -4,7 +4,9 @@ import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.entity.Wallet;
 import com.soeun.GiftFunding.repository.MemberRepository;
+import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ public class OAuthLoginService {
     private final MemberRepository memberRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final TokenProvider tokenProvider;
+    private final WalletRepository walletRepository;
 
     public Signin.Response login(OAuthLoginRequest request) {
         OAuthInfoResponse oAuthInfoResponse =
@@ -47,6 +50,12 @@ public class OAuthLoginService {
 
         member = request.makeUserEntity(member, oAuthInfoResponse);
 
+        walletRepository.save(
+            Wallet.builder()
+                .balance(0L)
+                .member(member)
+                .build()
+        );
         return memberRepository.save(member);
     }
 }
