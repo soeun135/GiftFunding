@@ -124,8 +124,8 @@ public class FriendServiceImpl implements FriendService {
 
 
         Friend friend =
-            friendRepository.findByFriendStateAndMemberRequest(
-                    WAIT, sendMember)
+            friendRepository.findByFriendStateAndMemberRequestAndMember(
+                    WAIT, sendMember, receiveMember)
                 .orElseThrow(() -> new FriendException(REQUEST_NOT_FOUND));
 
         friend.setFriendState(request.getState());
@@ -157,8 +157,8 @@ public class FriendServiceImpl implements FriendService {
         Member friend = memberRepository.findById(id)
             .orElseThrow(() -> new FriendException(USER_NOT_FOUND));
 
-        if (!friendRepository.existsByMemberRequestAndMember(
-            member, friend)) {
+        if (!friendRepository.existsByFriendStateAndMemberRequestAndMember(
+            ACCEPT, member, friend)) {
             throw new FriendException(FRIEND_INFO_NOT_FOUND);
         }
         return FriendFundingProduct.builder()
