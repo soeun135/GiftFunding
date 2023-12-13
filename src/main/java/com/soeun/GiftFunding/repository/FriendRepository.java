@@ -11,11 +11,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
-    Page<Friend> findByMemberAndFriendState(Member member, FriendState friendState, Pageable pageable);
+    Page<Friend> findByMemberAndFriendState(
+        Member member, FriendState friendState, Pageable pageable);
 
-    Optional<Friend> findByFriendStateAndMemberRequest(FriendState friendState, Member sendMember);
+    Optional<Friend> findByFriendStateAndMemberRequestAndMember(
+        FriendState friendState, Member sendMember, Member receiveMember);
 
-    boolean existsByMemberRequestAndMember(Member member, Member friend);
+    boolean existsByFriendStateAndMemberRequestAndMember(
+        FriendState friendState, Member member, Member friend);
 
     Optional<Friend> findByMemberRequestAndMember(Member sendMember, Member receiveMember);
 }
