@@ -76,3 +76,5 @@ replay_pid*
 *.wasm
 *.wat
 *.xhtml
+
+application.properties
