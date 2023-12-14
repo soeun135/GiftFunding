@@ -1,7 +1,7 @@
 package com.soeun.GiftFunding.service;
 
-import static com.soeun.GiftFunding.type.ErrorType.PRODUCT_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.FUNDING_NOT_FOUND;
+import static com.soeun.GiftFunding.type.ErrorType.PRODUCT_NOT_FOUND;
 import static com.soeun.GiftFunding.type.FundingState.CANCEL;
 import static com.soeun.GiftFunding.type.FundingState.ONGOING;
 
@@ -17,7 +17,7 @@ import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.ProductRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.type.ErrorType;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +43,7 @@ public class FundingServiceImpl implements FundingService{
                 .product(product)
                 .member(member)
                 .total(0L)
-                .expiredAt(LocalDateTime.now().plusYears(1))
+                .expiredAt(LocalDate.now().plusYears(1))
                 .fundingState(ONGOING)
                 .build()
         );
