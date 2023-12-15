@@ -1,11 +1,13 @@
 package com.soeun.GiftFunding.controller;
 
+import com.soeun.GiftFunding.dto.SupportCancelResponse;
 import com.soeun.GiftFunding.dto.SupportInfo;
 import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.service.SupportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,5 +29,14 @@ public class SupportController {
 
         return ResponseEntity.ok(
             supportService.support(userAdapter, id, request));
+    }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<SupportCancelResponse> supportCancel(
+        @AuthenticationPrincipal UserAdapter userAdapter,
+        @PathVariable long id) {
+
+        return ResponseEntity.ok(
+            supportService.supportCancel(userAdapter, id));
     }
 }

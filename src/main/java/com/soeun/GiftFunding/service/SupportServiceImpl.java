@@ -1,13 +1,17 @@
 package com.soeun.GiftFunding.service;
 
 import static com.soeun.GiftFunding.type.ErrorType.BALANCE_NOT_ENOUGH;
+import static com.soeun.GiftFunding.type.ErrorType.CANCEL_TIME_OUT;
 import static com.soeun.GiftFunding.type.ErrorType.FRIEND_INFO_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.FUNDING_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.SUPPORT_EXCEED_WHOLE_PRICE;
+import static com.soeun.GiftFunding.type.ErrorType.SUPPORT_NOT_FOUND;
 import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
+import static com.soeun.GiftFunding.type.SupportState.CANCEL;
 import static com.soeun.GiftFunding.type.SupportState.COMPLETE;
 
+import com.soeun.GiftFunding.dto.SupportCancelResponse;
 import com.soeun.GiftFunding.dto.SupportInfo.Request;
 import com.soeun.GiftFunding.dto.SupportInfo.Response;
 import com.soeun.GiftFunding.dto.UserAdapter;
@@ -23,6 +27,7 @@ import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.SupportDetailRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.type.FundingState;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,8 +93,49 @@ public class SupportServiceImpl implements SupportService {
             throw new SupportException(FRIEND_INFO_NOT_FOUND);
         }
 
-        if (fundingProduct.getTotal() < request.getSupportPrice()) {
+        if (fundingProduct.getProduct().getPrice() <
+            fundingProduct.getTotal() + request.getSupportPrice()) {
             throw new SupportException(SUPPORT_EXCEED_WHOLE_PRICE);
+        }
+    }
+
+    @Transactional
+    @Override
+    public SupportCancelResponse supportCancel(UserAdapter userAdapter, long id) {
+        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+            .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
+
+        Wallet wallet = walletRepository.findByMember(member);
+
+        SupportDetail supportDetail =
+            supportDetailRepository.findByIdAndWalletAndSupportState(
+                id, wallet, COMPLETE);
+
+        validateSupportCancel(supportDetail);
+
+        wallet.setBalance(
+            wallet.getBalance() + supportDetail.getSupportAmount());
+
+        supportDetail.setSupportState(CANCEL);
+
+        FundingProduct fundingProduct = supportDetail.getFundingProduct();
+        fundingProduct.setTotal(
+            fundingProduct.getTotal() - supportDetail.getSupportAmount()
+        );
+        return SupportCancelResponse.builder()
+            .supportDetailId(id)
+            .message("번 후원 내역의 취소가 완료되었습니다.")
+            .build();
+    }
+
+    private void validateSupportCancel(SupportDetail supportDetail) {
+        if (ObjectUtils.isEmpty(supportDetail)) {
+            throw new SupportException(SUPPORT_NOT_FOUND);
+        }
+
+        if (!LocalDateTime.now().isBefore(
+            supportDetail.getCreatedAt().plusHours(1))) {
+            throw new SupportException(CANCEL_TIME_OUT);
         }
     }
 }
