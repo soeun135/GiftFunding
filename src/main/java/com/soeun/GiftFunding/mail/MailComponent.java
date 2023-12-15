@@ -22,10 +22,8 @@ public class MailComponent {
     @Value("${spring.mail.sendname}")
     private String fromName;
 
-    public boolean send(String toEmail, String toName,
+    public void send(String toEmail, String toName,
         String title, String contents) {
-
-        boolean result = false;
 
         MimeMessagePreparator mimeMessagePreparator =
             new MimeMessagePreparator() {
@@ -50,10 +48,8 @@ public class MailComponent {
             };
         try {
             javaMailSender.send(mimeMessagePreparator);
-            result = true;
         } catch (Exception e) {
             log.info(e.getMessage());
         }
-        return result;
     }
 }
