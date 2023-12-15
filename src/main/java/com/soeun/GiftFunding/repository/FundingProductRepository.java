@@ -14,4 +14,6 @@ public interface FundingProductRepository extends JpaRepository<FundingProduct, 
     List<FundingProduct> findByMember(Member Member);
     Page<FundingProduct> findByMemberAndFundingState(Member Member, FundingState friendState, Pageable pageable);
 
+    FundingProduct findByIdAndFundingStateAndMember(
+        Long id, FundingState fundingState, Member member);
 }
