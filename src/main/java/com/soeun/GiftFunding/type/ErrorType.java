@@ -26,7 +26,13 @@ public enum ErrorType {
     FRIEND_INFO_NOT_FOUND(400, "친구가 아닌 사용자 입니다."),
 
     PRODUCT_NOT_FOUND(400, "존재하지 않는 상품입니다."),
-    FUNDING_NOT_FOUND(400, "진행 중인 펀딩이 없습니다.");
+    FUNDING_NOT_FOUND(400, "진행 중인 펀딩이 없습니다."),
+
+    BALANCE_NOT_ENOUGH(400, "지갑 잔액이 충분하지 않습니다."),
+    SUPPORT_EXCEED_WHOLE_PRICE(400, "후원 금액은 상품 금액을 초과할 수 없습니댜."),
+    SUPPORT_NOT_FOUND(400, "후원 내역이 존재하지 않습니다."),
+    CANCEL_TIME_OUT(400, "후원한지 1시간 이내의 내역만 취소할 수 있습니다.");
+
     private final int code;
     private final String description;
 }
