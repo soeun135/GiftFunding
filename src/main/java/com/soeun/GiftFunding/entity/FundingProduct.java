@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.entity;
 
 import com.soeun.GiftFunding.dto.FundingProductDto;
 import com.soeun.GiftFunding.type.FundingState;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -47,9 +47,9 @@ public class FundingProduct {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
-    private LocalDateTime expiredAt;
+    private LocalDate expiredAt;
 
     @Enumerated(EnumType.STRING)
     private FundingState fundingState;

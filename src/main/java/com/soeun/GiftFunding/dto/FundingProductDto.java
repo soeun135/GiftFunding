@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.dto;
 
 import com.soeun.GiftFunding.entity.Product;
 import com.soeun.GiftFunding.type.FundingState;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class FundingProductDto {
     private Long id;
     private Product product;
     private Long total;
-    private LocalDateTime createdAt;
-    private LocalDateTime expiredAt;
+    private LocalDate createdAt;
+    private LocalDate expiredAt;
     private FundingState fundingState;
 
 }
