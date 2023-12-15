@@ -86,12 +86,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 
     @Override
     public Response signIn(Signin.Request request) {
-        Member user = memberRepository.findByEmail(request.getEmail())
+        Member member = memberRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        validatedPassword(request, user);
+        validatedPassword(request, member);
 
-        String mail = user.getEmail();
+        String mail = member.getEmail();
 
         return Response.builder()
             .accessToken(tokenProvider.generateAccessToken(mail))

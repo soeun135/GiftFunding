@@ -59,4 +59,7 @@ public interface FundingProductRepository extends JpaRepository<FundingProduct, 
         + "where funding_state = 'SUCCESS';",
         nativeQuery = true)
     List<FundingProduct> findBySuccessFunding();
+
+    FundingProduct findByIdAndFundingStateAndMember(
+        Long id, FundingState fundingState, Member member);
 }
