@@ -9,14 +9,17 @@ import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.entity.Product;
+import com.soeun.GiftFunding.entity.Transaction;
 import com.soeun.GiftFunding.entity.Wallet;
 import com.soeun.GiftFunding.exception.FriendException;
 import com.soeun.GiftFunding.exception.FundingException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.ProductRepository;
+import com.soeun.GiftFunding.repository.TransactionRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.type.ErrorType;
+import com.soeun.GiftFunding.type.TransactionType;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +28,14 @@ import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
-public class FundingServiceImpl implements FundingService{
+public class FundingServiceImpl implements FundingService {
+
     private final ProductRepository productRepository;
     private final FundingProductRepository fundingProductRepository;
     private final MemberRepository memberRepository;
-
     private final WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
+
     @Override
     public void register(long productId, UserAdapter userAdapter) {
         Product product = productRepository.findById(productId)
@@ -67,11 +72,17 @@ public class FundingServiceImpl implements FundingService{
 
         long total = fundingProduct.getTotal();
 
-        Wallet walletInfo = walletRepository.findByMember(member);
+        Wallet wallet = walletRepository.findByMember(member);
         if (total > 0) {
-            walletInfo.setBalance(
-                walletInfo.getBalance() + total
+            wallet.setBalance(
+                wallet.getBalance() + total
             );
         }
+        transactionRepository.save(
+            Transaction.builder()
+                .wallet(wallet)
+                .transactionType(TransactionType.REFUND)
+                .transactionAmount(total)
+                .build());
     }
 }

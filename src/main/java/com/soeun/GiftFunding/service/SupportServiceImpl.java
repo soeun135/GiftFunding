@@ -18,6 +18,7 @@ import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.entity.SupportDetail;
+import com.soeun.GiftFunding.entity.Transaction;
 import com.soeun.GiftFunding.entity.Wallet;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.exception.SupportException;
@@ -25,8 +26,10 @@ import com.soeun.GiftFunding.repository.FriendRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.SupportDetailRepository;
+import com.soeun.GiftFunding.repository.TransactionRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.type.FundingState;
+import com.soeun.GiftFunding.type.TransactionType;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,11 +39,13 @@ import org.springframework.util.ObjectUtils;
 @Service
 @RequiredArgsConstructor
 public class SupportServiceImpl implements SupportService {
+
     private final SupportDetailRepository supportDetailRepository;
     private final MemberRepository memberRepository;
     private final FundingProductRepository fundingProductRepository;
     private final FriendRepository friendRepository;
     private final WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
 
     @Transactional
     @Override
@@ -74,6 +79,11 @@ public class SupportServiceImpl implements SupportService {
         wallet.setBalance(
             wallet.getBalance() - request.getSupportPrice()
         );
+        transactionRepository.save(Transaction.builder()
+            .wallet(wallet)
+            .transactionType(TransactionType.USE)
+            .transactionAmount(request.getSupportPrice()).build());
+
         return Response.builder()
             .fundingProductDto(fundingProduct.toDto())
             .build();
@@ -127,6 +137,13 @@ public class SupportServiceImpl implements SupportService {
         fundingProduct.setTotal(
             fundingProduct.getTotal() - supportDetail.getSupportAmount()
         );
+        transactionRepository.save(
+            Transaction.builder()
+                .wallet(wallet)
+                .transactionType(TransactionType.CANCEL)
+                .transactionAmount(supportDetail.getSupportAmount())
+                .build());
+
         return SupportCancelResponse.builder()
             .supportDetailId(id)
             .message("번 후원 내역의 취소가 완료되었습니다.")
