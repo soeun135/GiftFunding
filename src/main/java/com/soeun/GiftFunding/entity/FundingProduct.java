@@ -3,6 +3,7 @@ package com.soeun.GiftFunding.entity;
 import com.soeun.GiftFunding.dto.FundingProductDto;
 import com.soeun.GiftFunding.type.FundingState;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -48,6 +50,9 @@ public class FundingProduct {
     @CreatedDate
     @Column(updatable = false)
     private LocalDate createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     private LocalDate expiredAt;
 

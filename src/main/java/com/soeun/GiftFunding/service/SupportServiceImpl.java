@@ -97,6 +97,11 @@ public class SupportServiceImpl implements SupportService {
             fundingProduct.getTotal() + request.getSupportPrice()) {
             throw new SupportException(SUPPORT_EXCEED_WHOLE_PRICE);
         }
+
+        if (fundingProduct.getProduct().getPrice() ==
+            fundingProduct.getTotal() + request.getSupportPrice()) {
+            fundingProduct.setFundingState(FundingState.SUCCESS);
+        }
     }
 
     @Transactional

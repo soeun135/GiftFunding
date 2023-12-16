@@ -4,6 +4,8 @@ import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.mail.MailReceiverInterface;
 import com.soeun.GiftFunding.type.FundingState;
+import io.lettuce.core.dynamic.annotation.Param;
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {
@@ -48,17 +49,11 @@ public interface FundingProductRepository extends JpaRepository<FundingProduct, 
         nativeQuery = true)
     List<FundingProduct> findByFailFunding();
 
-    @Transactional
-    @Modifying
-    @Query(value = "update funding_product f set f.funding_state = 'SUCCESS' where f.total = ("
-        + "select p.price from product p where p.id = f.product_id);", nativeQuery = true)
-    void updateBySuccessFunding();
-
-    @Query(value = "select * "
-        + "from funding_product "
-        + "where funding_state = 'SUCCESS';",
+    @Query(value = "select * from funding_product where funding_state = 'SUCCESS' "
+        + "and ABS(TIMESTAMPDIFF(second, :send_at, updated_at)) <= 60;",
         nativeQuery = true)
-    List<FundingProduct> findBySuccessFunding();
+    List<FundingProduct> findBySuccessFunding(
+        @Param("send_at") Timestamp send_at);
 
     FundingProduct findByIdAndFundingStateAndMember(
         Long id, FundingState fundingState, Member member);
