@@ -91,7 +91,7 @@ public class FundingScheduler {
         //메일 레포지토리에 아무것도 없을 떄 지금으로부터 한 시간 전의 (1분)
         //시간을 lastestSendAt으로 지정. 있으면 그 항목의 updated 시간을 가져옴
         Timestamp lastestSendAt = Timestamp.valueOf(mail.getUpdatedAt());
-        log.info(String.valueOf(lastestSendAt));
+
         List<FundingProduct> successFunding =
             fundingProductRepository.findBySuccessFunding(lastestSendAt);
         // 펀딩이 완료돼 업데이트 된 시간과 메일을 마지막으로 보낸 시간을 비교핵서
@@ -122,4 +122,6 @@ public class FundingScheduler {
         }
         mailRepository.findByMailTitleAndUpdate();
     }
+
+
 }

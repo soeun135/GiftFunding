@@ -78,3 +78,4 @@ replay_pid*
 *.xhtml
 
 application.properties
+src/main/resources/application.properties

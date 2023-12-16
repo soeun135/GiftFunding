@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {
 
+    @Query(value = "select * from funding_product where "
+        + "funding_state != 'DELIVERY_SUCCESS';",
+    nativeQuery = true)
     List<FundingProduct> findByMember(Member Member);
 
     Page<FundingProduct> findByMemberAndFundingState(Member Member, FundingState friendState,
@@ -50,7 +53,7 @@ public interface FundingProductRepository extends JpaRepository<FundingProduct, 
     List<FundingProduct> findByFailFunding();
 
     @Query(value = "select * from funding_product where funding_state = 'SUCCESS' "
-        + "and ABS(TIMESTAMPDIFF(second, :send_at, updated_at)) <= 60;",
+        + "and ABS(TIMESTAMPDIFF(second, :send_at, updated_at)) <= 3600;",
         nativeQuery = true)
     List<FundingProduct> findBySuccessFunding(
         @Param("send_at") Timestamp send_at);

@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +56,13 @@ public class FundingServiceImpl implements FundingService{
         Member member = memberRepository.findByEmail(userAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
-        FundingProduct fundingProduct = fundingProductRepository.findById(fundingId)
-            .orElseThrow(() -> new FundingException(FUNDING_NOT_FOUND));
+        FundingProduct fundingProduct =
+            fundingProductRepository.findByIdAndFundingStateAndMember(
+                fundingId, ONGOING, member);
 
+        if (ObjectUtils.isEmpty(fundingProduct)) {
+            throw new FundingException(FUNDING_NOT_FOUND);
+        }
         fundingProduct.setFundingState(CANCEL);
 
         long total = fundingProduct.getTotal();
