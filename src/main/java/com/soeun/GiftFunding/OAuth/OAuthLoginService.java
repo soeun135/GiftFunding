@@ -22,9 +22,16 @@ public class OAuthLoginService {
     public Signin.Response login(OAuthLoginRequest request) {
         OAuthInfoResponse oAuthInfoResponse =
             requestOAuthInfoService.request(request);
-        String mail = findOrCreateMember(
-            oAuthInfoResponse, request).getEmail();
+        Member member = findOrCreateMember(
+            oAuthInfoResponse, request);
+        String mail = member.getEmail();
 
+        walletRepository.save(
+            Wallet.builder()
+                .balance(0L)
+                .member(member)
+                .build()
+        );
         String accessToken = tokenProvider.generateAccessToken(mail);
         String refreshToken = tokenProvider.generateRefreshToken(mail);
 
@@ -35,7 +42,7 @@ public class OAuthLoginService {
     }
 
     private Member findOrCreateMember(OAuthInfoResponse oAuthInfoResponse, OAuthLoginRequest request) {
-        return memberRepository.findByName(oAuthInfoResponse.getNickname())
+        return memberRepository.findByEmail(oAuthInfoResponse.getEmail())
             .orElseGet(() -> newMember(oAuthInfoResponse, request));
     }
 
@@ -50,12 +57,7 @@ public class OAuthLoginService {
 
         member = request.makeUserEntity(member, oAuthInfoResponse);
 
-        walletRepository.save(
-            Wallet.builder()
-                .balance(0L)
-                .member(member)
-                .build()
-        );
+
         return memberRepository.save(member);
     }
 }

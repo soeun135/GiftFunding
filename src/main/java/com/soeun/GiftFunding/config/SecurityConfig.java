@@ -43,8 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
-            /// TODO: 2023-11-23  
-            //상품 검색에 대해서는 로그인 안 한 사용자도 가능하도록 옵션추가
     }
 
     @Override
