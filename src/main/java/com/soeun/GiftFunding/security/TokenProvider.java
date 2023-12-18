@@ -14,15 +14,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TokenProvider {
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L * 60L; //1분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60L * 60L; //1시간
     private static final String TOKEN_TYPE = "token_type";
     private final RefreshTokenRepository refreshTokenRepository;
 

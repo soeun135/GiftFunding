@@ -23,7 +23,7 @@ public class RefreshTokenRepository {
             , refreshToken.getMail());
 
         redisTemplate.expire(
-            refreshToken.getRefreshToken(), 180L, TimeUnit.SECONDS);
+            refreshToken.getRefreshToken(), 14, TimeUnit.DAYS);
     }
 
     public Optional<RefreshToken> findByMail(
