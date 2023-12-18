@@ -91,6 +91,11 @@
   - 취소 후 후원자의 지갑으로 금액 반환.
   - 후원한 상품에도 취소 금액만큼 펀딩 총액 감소.
 
+### [거래]
+⭐ 지갑에 총액 변동시마다 거래 상세 내역 저장
+  - 후원 : transactionType = USE
+  - 후원 취소 : transactionType = CANCEL
+  - 펀딩 취소 : transactionType = REFUND
 
 ### [결제]
 ⭐ 내 지갑으로 금액 충전
