@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.Member;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

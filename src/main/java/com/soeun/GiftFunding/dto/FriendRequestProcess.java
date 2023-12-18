@@ -1,8 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
 import com.soeun.GiftFunding.type.FriendState;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

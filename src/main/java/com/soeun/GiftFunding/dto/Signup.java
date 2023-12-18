@@ -42,7 +42,7 @@ public class Signup {
                 .name(this.getName())
                 .phone(this.getPhone())
                 .email(this.getEmail())
-                .password(this.getPassword()) //인코딩해서 넣어야함
+                .password(this.getPassword())
                 .address(this.getAddress())
                 .birthDay(LocalDate.parse(this.getBirthDay()))
                 .build();

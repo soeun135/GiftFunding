@@ -4,7 +4,6 @@ import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -22,8 +21,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter

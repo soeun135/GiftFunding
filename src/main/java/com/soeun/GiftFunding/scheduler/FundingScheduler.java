@@ -59,11 +59,9 @@ public class FundingScheduler {
                     .replaceAll("\\{FUNDING_ID\\}", e.getId().toString()));
         }
 
-        //마감일 도래한 상품의 펀딩 목록
+        //마감일 도래한 펀딩
         fundingProductRepository.updateByExpiredWithFail();
-        // 1. 펀딩 상품 목록에서 숨겨짐 -> update Funding_state fail로 처리
 
-        // 2. 펀딩자의 지갑으로 펀딩 금액만큼 반환
         List<FundingProduct> failFunding =
             fundingProductRepository.findByFailFunding();
 
@@ -80,24 +78,20 @@ public class FundingScheduler {
         Optional<MailTemplate> optionalMailTemplate =
             mailTemplateRepository.findByTemplateId("funding_expired");
         MailTemplate m = optionalMailTemplate.get();
-        // 펀딩 금액 달성한 항목들 중에서 메일 가장 최근에 보낸 시간보다
-        //나중에 성공상태 된 것
+
         Mail mail = mailRepository.findByMailTitle("펀딩 성공 메일")
             .orElse(new Mail(1,
                 "펀딩 성공 메일",
                 LocalDateTime.now(),
                 LocalDateTime.now()));
 
-        //메일 레포지토리에 아무것도 없을 떄 지금으로부터 한 시간 전의 (1분)
-        //시간을 lastestSendAt으로 지정. 있으면 그 항목의 updated 시간을 가져옴
-        Timestamp lastestSendAt = Timestamp.valueOf(mail.getUpdatedAt());
+          Timestamp lastestSendAt = Timestamp.valueOf(mail.getUpdatedAt());
 
         List<FundingProduct> successFunding =
             fundingProductRepository.findBySuccessFunding(lastestSendAt);
         // 펀딩이 완료돼 업데이트 된 시간과 메일을 마지막으로 보낸 시간을 비교핵서
         //3600(60)초 이하이면 메일 보내야하는 대상들.
 
-        //유효한 시간에 해당하는 항목들에 메일을 보냄.
         if (successFunding.size() > 0) {
             for (FundingProduct e : successFunding) {
                 Member member = memberRepository.getReferenceById(e.getMember().getId());
