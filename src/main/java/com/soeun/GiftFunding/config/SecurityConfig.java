@@ -4,6 +4,7 @@ import com.soeun.GiftFunding.exception.CustomAuthenticationEntryPoint;
 import com.soeun.GiftFunding.security.JwtAuthenticationFilter;
 import com.soeun.GiftFunding.security.JwtExceptionFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers("/user/signup", "/user/signin", "/oauth/**").permitAll()
-            .antMatchers("/oauth/**").permitAll()
+            .antMatchers("/oauth/**", "/pay/**").permitAll()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/payment.html")).permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
