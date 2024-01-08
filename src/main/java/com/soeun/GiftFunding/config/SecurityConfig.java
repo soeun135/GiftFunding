@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/user/signup", "/user/signin", "/oauth/**").permitAll()
             .antMatchers("/oauth/**", "/pay/**").permitAll()
+//            .antMatchers("/domain/chat/**").permitAll()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers(new AntPathRequestMatcher("/payment.html")).permitAll()
+            //.requestMatchers(new AntPathRequestMatcher("/payment.html")).permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -47,6 +47,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers();
+        web.ignoring().antMatchers("/**");
     }
 }
