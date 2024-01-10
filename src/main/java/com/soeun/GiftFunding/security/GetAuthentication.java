@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class GetAuthentication {
-    private final MemberService userService;
+    private final MemberService memberService;
     private final TokenProvider tokenProvider;
 
     public Authentication getAuthentication(String jwt) {
         UserDetails userDetails =
-            this.userService.loadUserByUsername(
+            this.memberService.loadUserByUsername(
                 tokenProvider.getMail(jwt));
 
         return new UsernamePasswordAuthenticationToken(
