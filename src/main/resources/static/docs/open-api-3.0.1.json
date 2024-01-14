@@ -1,0 +1,53 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "RestDocs to Swagger 변환 테스트",
+    "description" : "RestDocs로 API 문서 작성 후 Swagger로 변환",
+    "version" : "0.0.1-SNAPSHOT"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/user" : {
+      "get" : {
+        "tags" : [ "테스트" ],
+        "summary" : "get test",
+        "description" : "get 테스트라고",
+        "operationId" : "test-get",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/testResponse"
+                },
+                "examples" : {
+                  "test-get" : {
+                    "value" : "{\r\n  \"message\" : \"냠\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "testResponse" : {
+        "title" : "testResponse",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "냠"
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.17'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.epages.restdocs-api-spec" version "0.16.4"
+	id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.soeun'
@@ -33,13 +35,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 // https://mvnrepository.com/artifact/org.springframework/spring-messaging
-	implementation group: 'org.springframework', name: 'spring-messaging', version: '6.0.11'
+//	implementation group: 'org.springframework', name: 'spring-messaging', version: '6.0.11'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.16.4'
+
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 }
 
 tasks.named('bootBuildImage') {
@@ -48,4 +55,24 @@ tasks.named('bootBuildImage') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+openapi3 {
+	server = 'http://localhost:8080'
+	title = 'RestDocs to Swagger 변환 테스트'
+	description = 'RestDocs로 API 문서 작성 후 Swagger로 변환'
+	version = '0.0.1-SNAPSHOT'
+	format = 'json'
+	outputFileNamePrefix = 'open-api-3.0.1'
+	outputDirectory= 'build/resources/main/static/docs'
+}
+
+tasks.withType(GenerateSwaggerUI).configureEach {
+	dependsOn 'openapi3'
+
+	delete file('src/main/resources/static/docs/')
+	copy {
+		from "build/resources/main/static/docs"
+		into "src/main/resources/static/docs/"
+	}
 }
