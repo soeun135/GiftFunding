@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  echo:
+  first-job:
     runs-on: ubuntu-latest
     steps:
       - run: echo 'Hello, Github Actions!'
