@@ -1,23 +1,8 @@
 package com.soeun.GiftFunding.service;
 
-import static com.soeun.GiftFunding.type.ErrorType.ALREADY_FRIEND_MEMBER;
-import static com.soeun.GiftFunding.type.ErrorType.ALREADY_RECEIVE_FRIEND_REQUEST;
-import static com.soeun.GiftFunding.type.ErrorType.ALREADY_SEND_REQUEST;
-import static com.soeun.GiftFunding.type.ErrorType.FRIEND_INFO_NOT_FOUND;
-import static com.soeun.GiftFunding.type.ErrorType.NOT_ALLOWED_YOURSELF;
-import static com.soeun.GiftFunding.type.ErrorType.REQUEST_NOT_FOUND;
-import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
-import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
-import static com.soeun.GiftFunding.type.FriendState.WAIT;
-import static com.soeun.GiftFunding.type.FundingState.ONGOING;
-
-import com.soeun.GiftFunding.dto.FriendFundingProduct;
-import com.soeun.GiftFunding.dto.FriendList;
-import com.soeun.GiftFunding.dto.FriendRequest;
-import com.soeun.GiftFunding.dto.FriendRequestProcess;
+import com.soeun.GiftFunding.dto.*;
 import com.soeun.GiftFunding.dto.FriendRequestProcess.Request;
 import com.soeun.GiftFunding.dto.FriendRequestProcess.Response;
-import com.soeun.GiftFunding.dto.UserAdapter;
 import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
@@ -27,14 +12,20 @@ import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.soeun.GiftFunding.type.ErrorType.*;
+import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
+import static com.soeun.GiftFunding.type.FriendState.WAIT;
+import static com.soeun.GiftFunding.type.FundingState.ONGOING;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +37,7 @@ public class FriendServiceImpl implements FriendService {
 
     //todo 로그인한 사용자 에러처리 필요하다면 private 메소드 하나로 빼기
     @Override
+
     public FriendRequest.Response request(
         FriendRequest.Request request, UserAdapter userAdapter) {
         //친구 요청을 보내는 사용자
