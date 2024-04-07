@@ -1,14 +1,11 @@
 package com.soeun.GiftFunding.mock;
 
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WithCustomMockUserSecurityContextFactory implements
         WithSecurityContextFactory<WithMockUser> {
@@ -18,21 +15,20 @@ public class WithCustomMockUserSecurityContextFactory implements
         SecurityContext context =
                 SecurityContextHolder.createEmptyContext();
 
-        UserAdapter userAdapter =
-//                new UserAdapter("soni@naver.com", "abcd");
+        MemberAdapter memberAdapter =
+//                new memberAdapter("sonfgi@naver.com", "abfgcd");
 //
-        UserAdapter.from(MemberFixture.soni.createMember());
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add((GrantedAuthority) () -> "ROLE_USER");
+                MemberAdapter.from(MemberFixture.soni.createMember());
+//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//        grantedAuthorities.add((GrantedAuthority) () -> "ROLE_USER");
 
-        UsernamePasswordAuthenticationToken authentication =
-//        Authentication authentication =
+//        UsernamePasswordAuthenticationToken authentication =
+        Authentication authentication =
                 new UsernamePasswordAuthenticationToken(
-                        userAdapter, "password", grantedAuthorities);
+                        memberAdapter, "password", null);
 
 
         context.setAuthentication(authentication);
-//        SecurityContextHolder.setContext(context);
         return context;
     }
 }
