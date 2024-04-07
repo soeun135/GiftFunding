@@ -22,7 +22,7 @@ Dirty Checking은 모든 필드의 업데이트를 기본으로 하고 있어 �
 ## 영속성 관리 문제
 UserDetailsService의 loadByUsername() 메소드를 통해 DB에서 조회되는 사용자 정보를 반환하기 위해 UserDetails를 엔티티에서 구현하였는데 이 경우 필터에서부터 entity를 들고다니게 되어 영속성 유지에서 문제 발생 가능성이 있었습니다.
 
-이를 해결하고자 UserDetails를 엔티티에서 구현하는 것이 아닌 UserAdapter객체를 생성하여 구현하도록 하고 필드로는 인증완료된 Member 객체와 id, password를 담을 수 있도록 하였습니다. 
+이를 해결하고자 UserDetails를 엔티티에서 구현하는 것이 아닌 memberAdapter객체를 생성하여 구현하도록 하고 필드로는 인증완료된 Member 객체와 id, password를 담을 수 있도록 하였습니다. 
 
-이를 통해 엔티티를 직접 필터에서부터 끌고다니는 문제를 없애고, 컨트롤러 단에서는 인증이 완료된 Authentication 객체를 UserAdapter를 통해 받아올 수 있게 됩니다.
+이를 통해 엔티티를 직접 필터에서부터 끌고다니는 문제를 없애고, 컨트롤러 단에서는 인증이 완료된 Authentication 객체를 memberAdapter를 통해 받아올 수 있게 됩니다.
 

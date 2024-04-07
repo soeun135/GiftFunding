@@ -4,7 +4,7 @@ import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.service.MemberService;
 import javax.validation.Valid;
@@ -49,15 +49,15 @@ public class MemberController {
 
     @GetMapping("/info")
     public ResponseEntity<UserInfoResponse> userInfo(
-        @AuthenticationPrincipal UserAdapter userAdapter) {
-        return ResponseEntity.ok(memberService.userInfo(userAdapter));
+        @AuthenticationPrincipal MemberAdapter memberAdapter) {
+        return ResponseEntity.ok(memberService.userInfo(memberAdapter));
     }
 
     @PatchMapping("/update")
     public ResponseEntity<UpdateInfo.Response> update(
         @RequestBody UpdateInfo.Request request,
-        @AuthenticationPrincipal UserAdapter userAdapter) {
+        @AuthenticationPrincipal MemberAdapter memberAdapter) {
 
-        return ResponseEntity.ok(memberService.update(request, userAdapter));
+        return ResponseEntity.ok(memberService.update(request, memberAdapter));
     }
 }

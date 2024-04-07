@@ -10,7 +10,7 @@ import com.soeun.GiftFunding.dto.Signin.Response;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.Signup.Request;
 import com.soeun.GiftFunding.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
         Member member = memberRepository.findByEmail(mail)
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
-        return new UserAdapter(member.getEmail(), member.getPassword());
+        return new MemberAdapter(member.getEmail(), member.getPassword());
 
     }
 
@@ -127,8 +127,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     }
 
     @Override
-    public UserInfoResponse userInfo(UserAdapter userAdapter) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+    public UserInfoResponse userInfo(MemberAdapter memberAdapter) {
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         return UserInfoResponse.builder()
@@ -148,8 +148,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     @Override
     @Transactional
     public UpdateInfo.Response update(UpdateInfo.Request request,
-        UserAdapter userAdapter) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+        MemberAdapter memberAdapter) {
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         updateCheck(request, member);

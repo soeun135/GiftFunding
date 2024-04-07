@@ -21,7 +21,7 @@ class FundingServiceImplTest {
 //    private WalletRepository walletRepository;
 //
 //    @Mock
-//    private UserAdapter userAdapter;
+//    private memberAdapter memberAdapter;
 //
 //    @Mock
 //    private MemberServiceImpl memberService;
@@ -70,7 +70,7 @@ class FundingServiceImplTest {
 //        ArgumentCaptor<FundingProduct> fundingCaptor =
 //            ArgumentCaptor.forClass(FundingProduct.class);
 //        //when
-//        fundingService.register(1L, (UserAdapter) userDetails);
+//        fundingService.register(1L, (memberAdapter) userDetails);
 //
 //        //then
 //        verify(fundingProductRepository, times(1))

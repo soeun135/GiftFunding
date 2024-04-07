@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -73,25 +72,5 @@ class FriendControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(request.getEmail()))
                 .andExpect(jsonPath("$.message").value("님에게 친구요청을 보냈습니다."));
-    }
-
-    @Test
-    @WithMockUser
-    void teest() throws Exception {
-        //given
-        MemberAdapter memberAdapter =
-//                memberAdapter.from(MemberFixture.soni.createMember());
-//
-                new MemberAdapter("sonfgi@naver.com", "abfgcd");
-        //when
-        //then
-        mockMvc.perform(get("/friend/hi")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer AccessToken")
-//                        .with(user(memberAdapter))
-                )
-                .andDo(print())
-                .andExpect(status().isOk());
     }
 }

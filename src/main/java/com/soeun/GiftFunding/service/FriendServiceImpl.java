@@ -39,9 +39,9 @@ public class FriendServiceImpl implements FriendService {
     @Override
 
     public FriendRequest.Response request(
-        FriendRequest.Request request, UserAdapter userAdapter) {
+        FriendRequest.Request request, MemberAdapter memberAdapter) {
         //친구 요청을 보내는 사용자
-        Member sendMember = memberRepository.findByEmail(userAdapter.getUsername())
+        Member sendMember = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
         //친구 요청을 받는 사용자
@@ -92,10 +92,10 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public Page<FriendList> friendList(
-        UserAdapter userAdapter,
+        MemberAdapter memberAdapter,
         FriendState friendState,
         Pageable pageable) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
         return friendRepository.findByMemberAndFriendState(
@@ -105,9 +105,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional
-    public Response requestProcess(UserAdapter userAdapter, Request request) {
+    public Response requestProcess(MemberAdapter memberAdapter, Request request) {
         //초기 친구요청을 받은 사용자 == 로그인한 사용자
-        Member receiveMember = memberRepository.findByEmail(userAdapter.getUsername())
+        Member receiveMember = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(USER_NOT_FOUND));
 
         //친구 요청을 보낸 사용자
@@ -141,9 +141,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public FriendFundingProduct friendProduct(
-        UserAdapter userAdapter, Long id, Pageable pageable) {
+            MemberAdapter memberAdapter, Long id, Pageable pageable) {
 
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
         Member friend = memberRepository.findById(id)

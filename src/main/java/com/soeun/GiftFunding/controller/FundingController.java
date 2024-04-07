@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.controller;
 
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.service.FundingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +20,18 @@ public class FundingController {
     @PostMapping("/register/{id}")
     public ResponseEntity<Void> register(
         @PathVariable long id,
-        @AuthenticationPrincipal UserAdapter userAdapter) {
+        @AuthenticationPrincipal MemberAdapter memberAdapter) {
 
-        fundingService.register(id, userAdapter);
+        fundingService.register(id, memberAdapter);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/cancel/{id}")
     public ResponseEntity<Void> cancel(
         @PathVariable long id,
-        @AuthenticationPrincipal UserAdapter userAdapter) {
+        @AuthenticationPrincipal MemberAdapter memberAdapter) {
 
-        fundingService.cancel(id, userAdapter);
+        fundingService.cancel(id, memberAdapter);
         return ResponseEntity.ok().build();
     }
 }

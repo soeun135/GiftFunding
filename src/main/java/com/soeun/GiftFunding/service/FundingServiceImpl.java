@@ -5,7 +5,7 @@ import static com.soeun.GiftFunding.type.ErrorType.PRODUCT_NOT_FOUND;
 import static com.soeun.GiftFunding.type.FundingState.CANCEL;
 import static com.soeun.GiftFunding.type.FundingState.ONGOING;
 
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.entity.Product;
@@ -37,11 +37,11 @@ public class FundingServiceImpl implements FundingService {
     private final TransactionRepository transactionRepository;
 
     @Override
-    public void register(long productId, UserAdapter userAdapter) {
+    public void register(long productId, MemberAdapter memberAdapter) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new FundingException(PRODUCT_NOT_FOUND));
 
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
         fundingProductRepository.save(
@@ -57,8 +57,8 @@ public class FundingServiceImpl implements FundingService {
 
     @Override
     @Transactional
-    public void cancel(long fundingId, UserAdapter userAdapter) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+    public void cancel(long fundingId, MemberAdapter memberAdapter) {
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(ErrorType.USER_NOT_FOUND));
 
         FundingProduct fundingProduct =
