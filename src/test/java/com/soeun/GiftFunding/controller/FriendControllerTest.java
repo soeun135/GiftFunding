@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soeun.GiftFunding.config.SecurityConfig;
 import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
+import com.soeun.GiftFunding.dto.FriendRequestProcess;
 import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.mock.WithMockUser;
 import com.soeun.GiftFunding.security.JwtAuthenticationFilter;
@@ -31,8 +32,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -125,6 +125,34 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.content.[1].memberName").value("벅스"))
                 .andExpect(jsonPath("$.content.[1].memberEmail").value("bucks@naver.com"));
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("친구 요청 처리 성공 테스트")
+    void requestProcessSuccessTest() throws Exception {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request("buni@naver.com", ACCEPT);
+
+        given(friendService.requestProcess(any(), any()))
+                .willReturn(FriendRequestProcess.Response
+                        .builder()
+                        .email("buni@naver.com")
+                        .message("님의 친구요청 상태를 업데이트 했습니다.")
+                        .build());
+        //when
+        //then
+        mockMvc.perform(patch(("/friend/process"))
+                        .header("Authorization", "Bearer AccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("buni@naver.com"))
+                .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."));
+    }
+
     @Test
     @DisplayName("친구 요청 동시성 테스트")
     void redissonLockTest() {
@@ -132,5 +160,5 @@ class FriendControllerTest {
 
         //when
         //then
-     }
+    }
 }
