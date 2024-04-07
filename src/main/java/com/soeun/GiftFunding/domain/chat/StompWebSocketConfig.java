@@ -18,8 +18,8 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         public void registerStompEndpoints(StompEndpointRegistry registry) {
             registry.addEndpoint("/stomp/chat")
                 .setAllowedOriginPatterns("*")
-                .setHandshakeHandler(new CustomPrincipalHandshakeHandler())
-                .withSockJS();
+                .setHandshakeHandler(new CustomPrincipalHandshakeHandler());
+             //   .withSockJS();
         }
 
         @Override

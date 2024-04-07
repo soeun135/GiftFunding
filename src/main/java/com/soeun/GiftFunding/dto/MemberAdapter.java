@@ -9,17 +9,17 @@ import java.util.Collection;
 
 @Getter
 @Builder
-public class UserAdapter implements UserDetails {
+public class MemberAdapter implements UserDetails {
     private final String username; //인증완료된 Member ID
     private final String password; //인증완료된 Member 패스워드
 
-    public UserAdapter(String username, String password) {
+    public MemberAdapter(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public static UserAdapter from(final Member member) {
-        return UserAdapter.builder()
+    public static MemberAdapter from(final Member member) {
+        return MemberAdapter.builder()
                 .username(member.getEmail())
                 .password(member.getPassword())
                 .build();

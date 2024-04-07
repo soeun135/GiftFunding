@@ -14,7 +14,7 @@ import static com.soeun.GiftFunding.type.SupportState.COMPLETE;
 import com.soeun.GiftFunding.dto.SupportCancelResponse;
 import com.soeun.GiftFunding.dto.SupportInfo.Request;
 import com.soeun.GiftFunding.dto.SupportInfo.Response;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.entity.SupportDetail;
@@ -50,8 +50,8 @@ public class SupportServiceImpl implements SupportService {
     @Transactional
     @Override
     public Response support(
-        UserAdapter userAdapter, long id, Request request) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+            MemberAdapter memberAdapter, long id, Request request) {
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         Member friend = memberRepository.findById(request.getFriendId())
@@ -116,8 +116,8 @@ public class SupportServiceImpl implements SupportService {
 
     @Transactional
     @Override
-    public SupportCancelResponse supportCancel(UserAdapter userAdapter, long id) {
-        Member member = memberRepository.findByEmail(userAdapter.getUsername())
+    public SupportCancelResponse supportCancel(MemberAdapter memberAdapter, long id) {
+        Member member = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new MemberException(USER_NOT_FOUND));
 
         Wallet wallet = walletRepository.findByMember(member);
