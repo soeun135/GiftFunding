@@ -2,10 +2,8 @@ package com.soeun.GiftFunding.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soeun.GiftFunding.config.SecurityConfig;
-import com.soeun.GiftFunding.dto.FriendList;
-import com.soeun.GiftFunding.dto.FriendRequest;
-import com.soeun.GiftFunding.dto.FriendRequestProcess;
-import com.soeun.GiftFunding.dto.MemberAdapter;
+import com.soeun.GiftFunding.dto.*;
+import com.soeun.GiftFunding.entity.Product;
 import com.soeun.GiftFunding.mock.WithMockUser;
 import com.soeun.GiftFunding.security.JwtAuthenticationFilter;
 import com.soeun.GiftFunding.service.FriendServiceImpl;
@@ -24,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -153,6 +152,51 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."));
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("친구의 펀딩상품 조회 성공 테스트")
+    void friendProductSuccessTest() throws Exception {
+        //given
+        Product product1 = new Product(1L, "반지", 10000L, 1);
+        Product product2 = new Product(2L, "목걸이", 20000L, 2);
+
+        List fundingProductDtoList = Arrays.asList(
+                FundingProductDto.builder()
+                        .id(1L)
+                        .product(product1)
+                        .total(5000L)
+                        .build(),
+                FundingProductDto.builder()
+                        .id(2L)
+                        .product(product2)
+                        .total(1000L)
+                        .build()
+        );
+        FriendFundingProduct friendFundingProduct =
+                FriendFundingProduct.builder()
+                        .name("버니")
+                        .phone("010-1111-1111")
+                        .email("buni@naver.com")
+                        .birthDay(LocalDate.of(2013, 07, 31))
+                        .fundingProductList(new PageImpl<>(fundingProductDtoList))
+                        .build();
+        given(friendService.friendProduct(any(), any(), any()))
+                .willReturn(friendFundingProduct);
+
+        Long friendId = 2L;
+        //when
+        //then
+        mockMvc.perform(get("/friend/funding-product/" + friendId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("버니"))
+                .andExpect(jsonPath("$.phone").value("010-1111-1111"))
+                .andExpect(jsonPath("$.email").value("buni@naver.com"))
+                .andExpect(jsonPath("$.birthDay").value("2013-07-31"))
+                .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
+                .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"));
+
+     }
     @Test
     @DisplayName("친구 요청 동시성 테스트")
     void redissonLockTest() {
