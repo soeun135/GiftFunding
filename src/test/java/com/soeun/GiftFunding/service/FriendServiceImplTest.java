@@ -1,25 +1,13 @@
 package com.soeun.GiftFunding.service;
 
-import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
-import static com.soeun.GiftFunding.type.FriendState.WAIT;
-import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.repository.FriendRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
-import java.util.Collections;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +18,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
+import static com.soeun.GiftFunding.type.FriendState.WAIT;
+import static java.time.LocalDateTime.now;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FriendServiceImplTest {
@@ -42,7 +41,7 @@ class FriendServiceImplTest {
     private FundingProductRepository fundingProductRepository;
 
     @Mock
-    private UserAdapter userAdapter;
+    private MemberAdapter memberAdapter;
 
     @Mock
     private Pageable pageable;
@@ -51,9 +50,9 @@ class FriendServiceImplTest {
     private FriendServiceImpl friendService;
 
     @BeforeEach
-    public void setUserAdapter() {
-        this.userAdapter =
-            new UserAdapter("bunny@naver.com", "1234");
+    public void setmemberAdapter() {
+        this.memberAdapter =
+            new MemberAdapter("bunny@naver.com", "1234");
         this.pageable = Pageable.unpaged();
 
     }
@@ -82,7 +81,7 @@ class FriendServiceImplTest {
             .thenReturn(Optional.of(receiveMember));
 
         FriendRequest.Response result =
-            friendService.request(friendRequest, userAdapter);
+            friendService.request(friendRequest, memberAdapter);
 
         // then
         assertNotNull(result);
@@ -97,7 +96,7 @@ class FriendServiceImplTest {
         //given
         Member member = new Member();
         member.setId(1L);
-        member.setEmail(userAdapter.getUsername());
+        member.setEmail(memberAdapter.getUsername());
 
         Member requestMember = new Member();
         requestMember.setId(2L);
@@ -106,14 +105,14 @@ class FriendServiceImplTest {
        Friend f =
            new Friend(1L, member, requestMember, WAIT, now());
        //when
-        when(memberRepository.findByEmail(userAdapter.getUsername()))
+        when(memberRepository.findByEmail(memberAdapter.getUsername()))
             .thenReturn(Optional.of(member));
         when(friendRepository.findByMemberAndFriendState(
             member, WAIT, pageable))
             .thenReturn(new PageImpl(Collections.singletonList(f)));
 
         Page<FriendList> result =
-            friendService.friendList(userAdapter, WAIT, pageable);
+            friendService.friendList(memberAdapter, WAIT, pageable);
 
         //then
         assertNotNull(result);
@@ -126,7 +125,7 @@ class FriendServiceImplTest {
         //given
         Member member = new Member();
         member.setId(1L);
-        member.setEmail(userAdapter.getUsername());
+        member.setEmail(memberAdapter.getUsername());
 
         Member requestMember = new Member();
         requestMember.setId(2L);
@@ -135,14 +134,14 @@ class FriendServiceImplTest {
         Friend f =
             new Friend(1L, member, requestMember, ACCEPT, now());
         //when
-        when(memberRepository.findByEmail(userAdapter.getUsername()))
+        when(memberRepository.findByEmail(memberAdapter.getUsername()))
             .thenReturn(Optional.of(member));
         when(friendRepository.findByMemberAndFriendState(
             member, ACCEPT, pageable))
             .thenReturn(new PageImpl(Collections.singletonList(f)));
 
         Page<FriendList> result =
-            friendService.friendList(userAdapter, ACCEPT, pageable);
+            friendService.friendList(memberAdapter, ACCEPT, pageable);
 
         //then
         assertNotNull(result);

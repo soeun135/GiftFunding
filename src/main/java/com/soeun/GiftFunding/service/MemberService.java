@@ -5,7 +5,7 @@ import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.dto.Signup;
 import com.soeun.GiftFunding.dto.UpdateInfo;
 import com.soeun.GiftFunding.dto.UpdateInfo.Response;
-import com.soeun.GiftFunding.dto.UserAdapter;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.dto.UserInfoResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -30,10 +30,10 @@ public interface MemberService extends UserDetailsService{
     /**
      * 사용자 정보 + 펀딩 상품 조회 메소드
      */
-    UserInfoResponse userInfo(UserAdapter userAdapter);
+    UserInfoResponse userInfo(MemberAdapter memberAdapter);
 
     /**
      * 사용자 정보 변경 메소드
      */
-    Response update(UpdateInfo.Request request, UserAdapter userAdapter);
+    Response update(UpdateInfo.Request request, MemberAdapter memberAdapter);
 }
