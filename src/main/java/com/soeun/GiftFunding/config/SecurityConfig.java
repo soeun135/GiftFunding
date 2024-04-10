@@ -19,28 +19,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtExceptionFilter jwtExceptionFilter;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .httpBasic().disable()
-            .csrf().disable()
-            .sessionManagement()
-            .sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/user/signup", "/user/signin", "/oauth/**").permitAll()
-            .antMatchers("/oauth/**", "/pay/**").permitAll()
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .antMatchers("/user/signup", "/user/signin", "/oauth/**").permitAll()
+                .antMatchers("/oauth/**", "/pay/**").permitAll()
 //            .antMatchers("/domain/chat/**").permitAll()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            //.requestMatchers(new AntPathRequestMatcher("/payment.html")).permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .exceptionHandling()
-            .authenticationEntryPoint(authenticationEntryPoint)
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                //.requestMatchers(new AntPathRequestMatcher("/payment.html")).permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
 
-            .and()
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
     }
 }
