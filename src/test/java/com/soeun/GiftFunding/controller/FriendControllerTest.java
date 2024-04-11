@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,16 +34,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,6 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         }
 )
 @AutoConfigureRestDocs
+@AutoConfigureMockMvc
 class FriendControllerTest {
     @MockBean
     private FriendServiceImpl friendService;
@@ -63,7 +66,6 @@ class FriendControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
 
     @Test
     @WithMockUser
@@ -101,12 +103,12 @@ class FriendControllerTest {
                                         .tag("friend")
                                         .summary("friend request API")
                                         .description("친구 요청")
-                                        .requestHeaders(
-                                                headerWithName("Authorization").description("Bearer AccessToken"))
                                         .requestSchema(Schema.schema("FriendRequest.Request"))
                                         .responseSchema(Schema.schema("FriendRequest.Response"))
                                 , preprocessRequest(prettyPrint())
                                 , preprocessResponse(prettyPrint())
+                                , requestHeaders(
+                                        headerWithName("Authorization").description("Bearer AccessToken"))
                                 , requestFields(
                                         fieldWithPath("email").type(JsonFieldType.STRING).description("친구 요청 걸 상대방 이메일"))
                                 , responseFields(
@@ -145,8 +147,8 @@ class FriendControllerTest {
         //then
         mockMvc.perform(RestDocumentationRequestBuilders.get("/friend")
                         .header("Authorization", "Bearer AccessToken")
-                        .param("page", "0")
-                        .param("size", "10")
+                        .queryParam("page", "0")
+                        .queryParam("size", "10")
                         .param("friendState", "ACCEPT"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -154,11 +156,43 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.content.[0].memberEmail").value("buni@naver.com"))
                 .andExpect(jsonPath("$.content.[1].memberName").value("벅스"))
                 .andExpect(jsonPath("$.content.[1].memberEmail").value("bucks@naver.com"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/List",
-                        ResourceSnippetParameters.builder()
-                                .tag("friend")
-                                .summary("friend List API")
-                                .description("친구 목록 조회 ")));
+                .andDo(MockMvcRestDocumentationWrapper.document("/friend/list",
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("friend")
+                                        .summary("friend list API")
+                                        .description("친구 목록 조회 ")
+                                        .requestHeaders(
+                                                headerWithName("Authorization").description("Bearer Access Token"))
+                                        .requestParameters(
+                                                parameterWithName("friendState").description("친구 상태")
+                                                , parameterWithName("size").description("한 페이지 당 노출될 항목 수")
+                                                , parameterWithName("page").description("현재 페이지")
+                                        )
+                                        .responseSchema(Schema.schema("FriendList"))
+                                        .build())
+                                , responseFields(
+                                        fieldWithPath("content[].memberName").description("친구 이름")
+                                        , fieldWithPath("content[].memberEmail").description("친구 이메일")
+                                        , fieldWithPath("content[].createdAt").description("항목 생성 일시")
+
+                                        , fieldWithPath("pageable").type(JsonFieldType.STRING).description("페이지 정보")
+                                        , fieldWithPath("totalElements").description("테이블 총 데이터 갯수")
+                                        , fieldWithPath("totalPages").description("전체 페이지 갯수")
+                                        , fieldWithPath("last").description("마지막 페이지인지 여부")
+                                        , fieldWithPath("size").description("한 페이지당 조회할 데이터 갯수")
+                                        , fieldWithPath("number").description("현재 페이지 번호")
+
+                                        , fieldWithPath("sort.empty").description("데이터 비었는지 여부")
+                                        , fieldWithPath("sort.sorted").description("정렬 여부")
+                                        , fieldWithPath("sort.unsorted").description("정렬 안 됐는지 여부")
+
+                                        , fieldWithPath("first").description("첫 번째 페이지인지 여부")
+                                        , fieldWithPath("numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
+                                        , fieldWithPath("empty").description("데이터 비었는지 여부")
+                                )
+
+                        )
+                );
     }
 
     @Test
@@ -177,7 +211,7 @@ class FriendControllerTest {
                         .build());
         //when
         //then
-        mockMvc.perform(patch(("/friend/process"))
+        mockMvc.perform(RestDocumentationRequestBuilders.patch(("/friend/process"))
                         .header("Authorization", "Bearer AccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -185,7 +219,25 @@ class FriendControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("buni@naver.com"))
-                .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."));
+                .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."))
+                .andDo(MockMvcRestDocumentationWrapper.document("/friend/process",
+                                ResourceSnippetParameters.builder()
+                                        .tag("friend")
+                                        .summary("friend process API")
+                                        .description("친구 요청 처리")
+                                        .requestSchema(Schema.schema("FriendRequestProcess.Request"))
+                                        .responseSchema(Schema.schema("FriendRequestProcess.Response"))
+                                , requestHeaders(
+                                        headerWithName("Authorization").description("Bearer Access Token"))
+                                , requestFields(
+                                        fieldWithPath("email").description("친구 이메일")
+                                        , fieldWithPath("state").description("요청 상태"))
+                                , responseFields(
+                                        fieldWithPath("email").description("친구 이메일")
+                                        , fieldWithPath("message").description("메세지")
+                                )
+                        )
+                );
     }
 
     @Test
@@ -222,7 +274,11 @@ class FriendControllerTest {
         Long friendId = 2L;
         //when
         //then
-        mockMvc.perform(get("/friend/funding-product/" + friendId))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/friend/funding-product/{friendId}", friendId)
+                        .header("Authorization", "Bearer AccessToken")
+                        .param("page", "0")
+                        .param("size", "10")
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("버니"))
@@ -230,7 +286,60 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.email").value("buni@naver.com"))
                 .andExpect(jsonPath("$.birthDay").value("2013-07-31"))
                 .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
-                .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"));
+                .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"))
+                .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}",
+                        ResourceSnippetParameters.builder()
+                                .tag("friend")
+                                .summary("friend fundingProduct API")
+                                .description("친구의 펀딩 상품 조회")
+                                .pathParameters(
+                                        parameterWithName("friendId").description("친구 아이디")
+                                        , parameterWithName("size").description("한 페이지당 노출 될 항목")
+                                        , parameterWithName("page").description("현재 페이지")
+
+                                )
+//                                .requestParameters(
+//                                        parameterWithName("size").description("한 페이지 당 노출될 항목 수")
+//                                        , parameterWithName("page").description("현재 페이지")
+
+//                                )
+                                .responseSchema(Schema.schema("FriendFundingProduct"))
+                        , requestHeaders(
+                                headerWithName("Authorization").description("Bearer Access Token")
+                        )
+                        , responseFields(
+                                fieldWithPath("name").description("친구 이름")
+                                , fieldWithPath("phone").description("친구 전화번호")
+                                , fieldWithPath("email").description("친구 이메일")
+                                , fieldWithPath("birthDay").description("친구 생일")
+
+                                , fieldWithPath("fundingProductList.content[].id").description("df")
+                                , fieldWithPath("fundingProductList.content[].product.id").description("df")
+                                , fieldWithPath("fundingProductList.content[].product.productName").description("df")
+                                , fieldWithPath("fundingProductList.content[].product.price").description("df")
+                                , fieldWithPath("fundingProductList.content[].product.ranking").description("df")
+                                , fieldWithPath("fundingProductList.content[].total").description("df")
+                                , fieldWithPath("fundingProductList.content[].createdAt").description("df")
+                                , fieldWithPath("fundingProductList.content[].expiredAt").description("df")
+                                , fieldWithPath("fundingProductList.content[].fundingState").description("df")
+
+                                , fieldWithPath("fundingProductList.pageable").type(JsonFieldType.STRING).description("페이지 정보")
+                                , fieldWithPath("fundingProductList.totalElements").description("테이블 총 데이터 갯수")
+                                , fieldWithPath("fundingProductList.totalPages").description("전체 페이지 갯수")
+                                , fieldWithPath("fundingProductList.last").description("마지막 페이지인지 여부")
+                                , fieldWithPath("fundingProductList.size").description("한 페이지당 조회할 데이터 갯수")
+                                , fieldWithPath("fundingProductList.number").description("현재 페이지 번호")
+
+                                , fieldWithPath("fundingProductList.sort.empty").description("데이터 비었는지 여부")
+                                , fieldWithPath("fundingProductList.sort.sorted").description("정렬 여부")
+                                , fieldWithPath("fundingProductList.sort.unsorted").description("정렬 안 됐는지 여부")
+
+                                , fieldWithPath("fundingProductList.first").description("첫 번째 페이지인지 여부")
+                                , fieldWithPath("fundingProductList.numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
+                                , fieldWithPath("fundingProductList.empty").description("데이터 비었는지 여부")
+
+                        )
+                ));
 
     }
 
