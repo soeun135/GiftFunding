@@ -37,6 +37,7 @@ import static com.soeun.GiftFunding.type.FriendState.ACCEPT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -100,7 +101,8 @@ class FriendControllerTest {
                                         .tag("friend")
                                         .summary("friend request API")
                                         .description("친구 요청")
-
+                                        .requestHeaders(
+                                                headerWithName("Authorization").description("Bearer AccessToken"))
                                         .requestSchema(Schema.schema("FriendRequest.Request"))
                                         .responseSchema(Schema.schema("FriendRequest.Response"))
                                 , preprocessRequest(prettyPrint())
