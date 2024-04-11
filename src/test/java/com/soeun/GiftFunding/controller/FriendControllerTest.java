@@ -276,8 +276,8 @@ class FriendControllerTest {
         //then
         mockMvc.perform(RestDocumentationRequestBuilders.get("/friend/funding-product/{friendId}", friendId)
                         .header("Authorization", "Bearer AccessToken")
-                        .param("page", "0")
-                        .param("size", "10")
+                        .queryParam("page", "0")
+                        .queryParam("size", "10")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -288,22 +288,22 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
                 .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"))
                 .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}",
-                        ResourceSnippetParameters.builder()
+                        resource(ResourceSnippetParameters.builder()
                                 .tag("friend")
                                 .summary("friend fundingProduct API")
                                 .description("친구의 펀딩 상품 조회")
+                                .requestHeaders(
+                                        headerWithName("Authorization").description("Bearer Access Token")
+                                )
                                 .pathParameters(
                                         parameterWithName("friendId").description("친구 아이디")
-                                        , parameterWithName("size").description("한 페이지당 노출 될 항목")
-                                        , parameterWithName("page").description("현재 페이지")
-
                                 )
-//                                .requestParameters(
-//                                        parameterWithName("size").description("한 페이지 당 노출될 항목 수")
-//                                        , parameterWithName("page").description("현재 페이지")
-
-//                                )
+                                .requestParameters(
+                                        parameterWithName("size").description("한 페이지 당 노출될 항목 수")
+                                        , parameterWithName("page").description("현재 페이지")
+                                )
                                 .responseSchema(Schema.schema("FriendFundingProduct"))
+                                .build())
                         , requestHeaders(
                                 headerWithName("Authorization").description("Bearer Access Token")
                         )
