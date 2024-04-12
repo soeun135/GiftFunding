@@ -169,29 +169,29 @@ class FriendControllerTest {
                                                 , parameterWithName("page").description("현재 페이지")
                                         )
                                         .responseSchema(Schema.schema("FriendList"))
+                                        .responseFields(
+                                                fieldWithPath("content[].memberName").description("친구 이름")
+                                                , fieldWithPath("content[].memberEmail").description("친구 이메일")
+                                                , fieldWithPath("content[].createdAt").description("항목 생성 일시")
+
+                                                , fieldWithPath("pageable").type(JsonFieldType.STRING).description("페이지 정보")
+                                                , fieldWithPath("totalElements").description("테이블 총 데이터 갯수")
+                                                , fieldWithPath("totalPages").description("전체 페이지 갯수")
+                                                , fieldWithPath("last").description("마지막 페이지인지 여부")
+                                                , fieldWithPath("size").description("한 페이지당 조회할 데이터 갯수")
+                                                , fieldWithPath("number").description("현재 페이지 번호")
+
+                                                , fieldWithPath("sort.empty").description("데이터 비었는지 여부")
+                                                , fieldWithPath("sort.sorted").description("정렬 여부")
+                                                , fieldWithPath("sort.unsorted").description("정렬 안 됐는지 여부")
+
+                                                , fieldWithPath("first").description("첫 번째 페이지인지 여부")
+                                                , fieldWithPath("numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
+                                                , fieldWithPath("empty").description("데이터 비었는지 여부"))
                                         .build())
-                                , responseFields(
-                                        fieldWithPath("content[].memberName").description("친구 이름")
-                                        , fieldWithPath("content[].memberEmail").description("친구 이메일")
-                                        , fieldWithPath("content[].createdAt").description("항목 생성 일시")
-
-                                        , fieldWithPath("pageable").type(JsonFieldType.STRING).description("페이지 정보")
-                                        , fieldWithPath("totalElements").description("테이블 총 데이터 갯수")
-                                        , fieldWithPath("totalPages").description("전체 페이지 갯수")
-                                        , fieldWithPath("last").description("마지막 페이지인지 여부")
-                                        , fieldWithPath("size").description("한 페이지당 조회할 데이터 갯수")
-                                        , fieldWithPath("number").description("현재 페이지 번호")
-
-                                        , fieldWithPath("sort.empty").description("데이터 비었는지 여부")
-                                        , fieldWithPath("sort.sorted").description("정렬 여부")
-                                        , fieldWithPath("sort.unsorted").description("정렬 안 됐는지 여부")
-
-                                        , fieldWithPath("first").description("첫 번째 페이지인지 여부")
-                                        , fieldWithPath("numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
-                                        , fieldWithPath("empty").description("데이터 비었는지 여부")
-                                )
-
                         )
+
+
                 );
     }
 
@@ -303,42 +303,37 @@ class FriendControllerTest {
                                         , parameterWithName("page").description("현재 페이지")
                                 )
                                 .responseSchema(Schema.schema("FriendFundingProduct"))
+                                .responseFields(
+                                        fieldWithPath("name").description("친구 이름")
+                                        , fieldWithPath("phone").description("친구 전화번호")
+                                        , fieldWithPath("email").description("친구 이메일")
+                                        , fieldWithPath("birthDay").description("친구 생일")
+
+                                        , fieldWithPath("fundingProductList.content[].id").description("펀딩 상품 아이디")
+                                        , fieldWithPath("fundingProductList.content[].product.id").description("상품 아이디")
+                                        , fieldWithPath("fundingProductList.content[].product.productName").description("상품 이름")
+                                        , fieldWithPath("fundingProductList.content[].product.price").description("상품 가격")
+                                        , fieldWithPath("fundingProductList.content[].product.ranking").description("상품 순위")
+                                        , fieldWithPath("fundingProductList.content[].total").description("펀딩 총액")
+                                        , fieldWithPath("fundingProductList.content[].createdAt").description("펀딩 생성일")
+                                        , fieldWithPath("fundingProductList.content[].expiredAt").description("펀딩 종료일")
+                                        , fieldWithPath("fundingProductList.content[].fundingState").description("펀딩 상태")
+
+                                        , fieldWithPath("fundingProductList.pageable").type(JsonFieldType.STRING).description("페이지 정보")
+                                        , fieldWithPath("fundingProductList.totalElements").description("테이블 총 데이터 갯수")
+                                        , fieldWithPath("fundingProductList.totalPages").description("전체 페이지 갯수")
+                                        , fieldWithPath("fundingProductList.last").description("마지막 페이지인지 여부")
+                                        , fieldWithPath("fundingProductList.size").description("한 페이지당 조회할 데이터 갯수")
+                                        , fieldWithPath("fundingProductList.number").description("현재 페이지 번호")
+
+                                        , fieldWithPath("fundingProductList.sort.empty").description("데이터 비었는지 여부")
+                                        , fieldWithPath("fundingProductList.sort.sorted").description("정렬 여부")
+                                        , fieldWithPath("fundingProductList.sort.unsorted").description("정렬 안 됐는지 여부")
+
+                                        , fieldWithPath("fundingProductList.first").description("첫 번째 페이지인지 여부")
+                                        , fieldWithPath("fundingProductList.numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
+                                        , fieldWithPath("fundingProductList.empty").description("데이터 비었는지 여부"))
                                 .build())
-                        , requestHeaders(
-                                headerWithName("Authorization").description("Bearer Access Token")
-                        )
-                        , responseFields(
-                                fieldWithPath("name").description("친구 이름")
-                                , fieldWithPath("phone").description("친구 전화번호")
-                                , fieldWithPath("email").description("친구 이메일")
-                                , fieldWithPath("birthDay").description("친구 생일")
-
-                                , fieldWithPath("fundingProductList.content[].id").description("df")
-                                , fieldWithPath("fundingProductList.content[].product.id").description("df")
-                                , fieldWithPath("fundingProductList.content[].product.productName").description("df")
-                                , fieldWithPath("fundingProductList.content[].product.price").description("df")
-                                , fieldWithPath("fundingProductList.content[].product.ranking").description("df")
-                                , fieldWithPath("fundingProductList.content[].total").description("df")
-                                , fieldWithPath("fundingProductList.content[].createdAt").description("df")
-                                , fieldWithPath("fundingProductList.content[].expiredAt").description("df")
-                                , fieldWithPath("fundingProductList.content[].fundingState").description("df")
-
-                                , fieldWithPath("fundingProductList.pageable").type(JsonFieldType.STRING).description("페이지 정보")
-                                , fieldWithPath("fundingProductList.totalElements").description("테이블 총 데이터 갯수")
-                                , fieldWithPath("fundingProductList.totalPages").description("전체 페이지 갯수")
-                                , fieldWithPath("fundingProductList.last").description("마지막 페이지인지 여부")
-                                , fieldWithPath("fundingProductList.size").description("한 페이지당 조회할 데이터 갯수")
-                                , fieldWithPath("fundingProductList.number").description("현재 페이지 번호")
-
-                                , fieldWithPath("fundingProductList.sort.empty").description("데이터 비었는지 여부")
-                                , fieldWithPath("fundingProductList.sort.sorted").description("정렬 여부")
-                                , fieldWithPath("fundingProductList.sort.unsorted").description("정렬 안 됐는지 여부")
-
-                                , fieldWithPath("fundingProductList.first").description("첫 번째 페이지인지 여부")
-                                , fieldWithPath("fundingProductList.numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
-                                , fieldWithPath("fundingProductList.empty").description("데이터 비었는지 여부")
-
-                        )
                 ));
 
     }
