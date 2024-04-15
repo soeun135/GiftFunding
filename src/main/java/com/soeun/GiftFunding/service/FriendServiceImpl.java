@@ -37,7 +37,6 @@ public class FriendServiceImpl implements FriendService {
 
     //todo 로그인한 사용자 에러처리 필요하다면 private 메소드 하나로 빼기
     @Override
-
     public FriendRequest.Response request(
         FriendRequest.Request request, MemberAdapter memberAdapter) {
         //친구 요청을 보내는 사용자
