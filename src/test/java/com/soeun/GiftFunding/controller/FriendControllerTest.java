@@ -72,10 +72,6 @@ class FriendControllerTest {
     @DisplayName("친구요청 성공 테스트")
     void successRequestTest() throws Exception {
         //given
-        MemberAdapter memberAdapter =
-                new MemberAdapter("sodfni@naver.com", "afdfbcd");
-//                MemberAdapter.from(MemberFixture.soni.createMember());
-
         FriendRequest.Request request
                 = FriendRequest.Request.builder()
                 .email("buny@naver.com")
