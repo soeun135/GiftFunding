@@ -16,11 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class FriendController {
 
     private final FriendService friendService;
-    @GetMapping("/hi")
-    public String test(//@AuthenticationPrincipal memberAdapter memberAdapter
-    ) {
-        return "hi";
-    }
+    
     @PostMapping("/request")
     //@RedissonLock
     public ResponseEntity<FriendRequest.Response> friendRequest(

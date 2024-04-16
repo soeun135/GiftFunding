@@ -37,7 +37,6 @@ public class FriendServiceImpl implements FriendService {
 
     //todo 로그인한 사용자 에러처리 필요하다면 private 메소드 하나로 빼기
     @Override
-
     public FriendRequest.Response request(
         FriendRequest.Request request, MemberAdapter memberAdapter) {
         //친구 요청을 보내는 사용자
@@ -105,7 +104,8 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional
-    public Response requestProcess(MemberAdapter memberAdapter, Request request) {
+    public Response requestProcess(
+            MemberAdapter memberAdapter, Request request) {
         //초기 친구요청을 받은 사용자 == 로그인한 사용자
         Member receiveMember = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(USER_NOT_FOUND));
