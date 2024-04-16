@@ -1,17 +1,17 @@
 package com.soeun.GiftFunding.service;
 
-import com.soeun.GiftFunding.dto.FriendList;
-import com.soeun.GiftFunding.dto.FriendRequest;
-import com.soeun.GiftFunding.dto.FriendRequestProcess;
-import com.soeun.GiftFunding.dto.MemberAdapter;
+import com.soeun.GiftFunding.dto.*;
 import com.soeun.GiftFunding.entity.Friend;
+import com.soeun.GiftFunding.entity.FundingProduct;
 import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.entity.Product;
 import com.soeun.GiftFunding.exception.FriendException;
 import com.soeun.GiftFunding.repository.FriendRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FriendState;
+import com.soeun.GiftFunding.type.FundingState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.soeun.GiftFunding.type.ErrorType.REQUEST_NOT_FOUND;
-import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
+import static com.soeun.GiftFunding.type.ErrorType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -566,5 +565,132 @@ class FriendServiceImplTest {
 
         //then
         assertEquals(REQUEST_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("친구의 펀딩상품 조회 성공 테스트")
+    void friendProductSuccessTest() {
+        //given
+        Pageable pageable = PageRequest.of(0, 10);
+        Long friendId = 1L;
+
+        Member member = member1();
+        Member friend = member2();
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member));
+
+        given(memberRepository.findById(friendId))
+                .willReturn(Optional.of(friend));
+
+        given(friendRepository.existsByFriendStateAndMemberRequestAndMember(
+                FriendState.ACCEPT, member, friend))
+                .willReturn(true);
+
+        List<FundingProduct> fundingProductList =
+                Arrays.asList(
+                        FundingProduct.builder()
+                                .id(1L)
+                                .product(new Product(1L, "반지", 10000L, 1))
+                                .member(friend)
+                                .total(5000L)
+                                .fundingState(FundingState.ONGOING)
+                                .build(),
+                        FundingProduct.builder()
+                                .id(2L)
+                                .product(new Product(2L, "목걸이", 20000L, 2))
+                                .member(friend)
+                                .total(1000L)
+                                .fundingState(FundingState.ONGOING)
+                                .build()
+                );
+
+        given(fundingProductRepository.findByMemberAndFundingState(
+                friend, FundingState.ONGOING, pageable))
+                .willReturn(new PageImpl(fundingProductList));
+
+        //when
+        FriendFundingProduct response =
+                friendService.friendProduct(
+                        memberAdapter1(), friendId, pageable);
+
+        //then
+        assertEquals(member2().getEmail(), response.getEmail());
+        assertEquals("반지", response.getFundingProductList().getContent().get(0).getProduct().getProductName());
+        verify(fundingProductRepository, times(1)).findByMemberAndFundingState(friend, FundingState.ONGOING, pageable);
+    }
+
+    @Test
+    @DisplayName("친구의 펀딩상품 조회 실패 테스트")
+    void friendProductFailTest_UserNotFound() {
+        //given
+        Pageable pageable = PageRequest.of(0, 10);
+        Long friendId = 1L;
+
+        Member member = member1();
+        Member friend = member2();
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.friendProduct(memberAdapter1(), friendId, pageable));
+        //then
+        assertEquals(USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("친구의 펀딩상품 조회 실패 테스트 - 친구를 찾을 수 없음")
+    void friendProductFailTest_FriendUserNotFound() {
+        //given
+        Pageable pageable = PageRequest.of(0, 10);
+        Long friendId = 1L;
+
+        Member member = member1();
+        Member friend = member2();
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member));
+
+        given(memberRepository.findById(friendId))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.friendProduct(
+                        memberAdapter1(), friendId, pageable));
+
+        //then
+        assertEquals(USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("친구의 펀딩상품 조회 실패 테스트 - 친구가 아닌 사용자에 대해 조회")
+    void friendProductFailTest_FriendInfoNotFound() {
+        //given
+        Pageable pageable = PageRequest.of(0, 10);
+        Long friendId = 1L;
+
+        Member member = member1();
+        Member friend = member2();
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member));
+
+        given(memberRepository.findById(friendId))
+                .willReturn(Optional.of(friend));
+
+        given(friendRepository.existsByFriendStateAndMemberRequestAndMember(
+                FriendState.ACCEPT, member, friend))
+                .willReturn(false);
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.friendProduct(
+                        memberAdapter1(), friendId, pageable));
+
+        //then
+        assertEquals(FRIEND_INFO_NOT_FOUND, exception.getErrorCode());
     }
 }
