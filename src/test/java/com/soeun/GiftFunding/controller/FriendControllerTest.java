@@ -120,7 +120,7 @@ class FriendControllerTest {
         FriendState friendState = ACCEPT;
         Pageable pageable = PageRequest.of(0, 10);
 
-        List friendList = Arrays.asList(
+        List<FriendList> friendList = Arrays.asList(
                 FriendList.builder()
                         .memberName("버니")
                         .memberEmail("buni@naver.com")
