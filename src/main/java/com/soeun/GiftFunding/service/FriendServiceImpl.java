@@ -104,7 +104,8 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional
-    public Response requestProcess(MemberAdapter memberAdapter, Request request) {
+    public Response requestProcess(
+            MemberAdapter memberAdapter, Request request) {
         //초기 친구요청을 받은 사용자 == 로그인한 사용자
         Member receiveMember = memberRepository.findByEmail(memberAdapter.getUsername())
             .orElseThrow(() -> new FriendException(USER_NOT_FOUND));
