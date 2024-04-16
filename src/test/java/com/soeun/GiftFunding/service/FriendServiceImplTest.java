@@ -2,6 +2,7 @@ package com.soeun.GiftFunding.service;
 
 import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
+import com.soeun.GiftFunding.dto.FriendRequestProcess;
 import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.entity.Friend;
 import com.soeun.GiftFunding.entity.Member;
@@ -28,6 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.soeun.GiftFunding.type.ErrorType.REQUEST_NOT_FOUND;
+import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -359,7 +362,7 @@ class FriendServiceImplTest {
                                 .friendState(FriendState.WAIT)
                                 .build(),
                         Friend.builder()
-                                .id(1L)
+                                .id(2L)
                                 .member(member1)
                                 .memberRequest(member3)
                                 .friendState(FriendState.WAIT)
@@ -369,15 +372,19 @@ class FriendServiceImplTest {
                 member1, FriendState.WAIT, pageable))
                 .willReturn(new PageImpl(friendList));
 
+        ArgumentCaptor<String> captor =
+                ArgumentCaptor.forClass(String.class);
+
         //when
         Page<FriendList> resultFriendList = friendService.friendList(
                 memberAdapter1(), FriendState.WAIT, pageable);
 
         //then
         assertEquals(2, resultFriendList.getSize());
+        verify(memberRepository, times(1)).findByEmail(captor.capture());
+        assertEquals(memberAdapter1().getUsername(), captor.getValue());
         assertEquals("buni@naver.com", resultFriendList.getContent().get(0).getMemberEmail());
         assertEquals("bucks@naver.com", resultFriendList.getContent().get(1).getMemberEmail());
-        verify(memberRepository, times(1)).findByEmail(member1.getEmail());
         verify(friendRepository, times(1)).findByMemberAndFriendState(member1, FriendState.WAIT, pageable);
         verify(friendRepository, times(0)).save(any());
     }
@@ -401,5 +408,163 @@ class FriendServiceImplTest {
 
         //then
         assertEquals(ErrorType.USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("요청 처리 성공 테스트 - ACCEPT")
+    void requestProcessSuccessTest_ACCEPT() {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request(
+                        "buni@naver.com", FriendState.ACCEPT);
+
+        Member sender = member2();
+        Member receiver = member1();
+
+        //로그인한 사용자 member1 == 초기 요청을 받은 사용자
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(receiver));
+
+        given(memberRepository.findByEmail(request.getEmail()))
+                .willReturn(Optional.of(sender));
+
+        given(friendRepository.findByFriendStateAndMemberRequestAndMember(
+                FriendState.WAIT, sender, receiver))
+                .willReturn(Optional.of(
+                        Friend.builder()
+                                .id(1L)
+                                .member(receiver)
+                                .memberRequest(sender)
+                                .friendState(FriendState.WAIT)
+                                .build()
+                ));
+
+        ArgumentCaptor<Friend> captor =
+                ArgumentCaptor.forClass(Friend.class);
+
+        //when
+        FriendRequestProcess.Response response =
+                friendService.requestProcess(memberAdapter1(), request);
+
+        //then
+        assertEquals(sender.getEmail(), response.getEmail());
+        verify(friendRepository, times(1)).save(captor.capture());
+        assertEquals(sender, captor.getValue().getMember());
+        assertEquals(receiver, captor.getValue().getMemberRequest());
+    }
+
+    @Test
+    @DisplayName("요청 처리 성공 테스트 - REJECT")
+    void requestProcessSuccessTest_REJECT() {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request(
+                        "buni@naver.com", FriendState.REJECT);
+
+        Member sender = member2();
+        Member receiver = member1();
+
+        //로그인한 사용자 member1 == 초기 요청을 받은 사용자
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(receiver));
+
+        given(memberRepository.findByEmail(request.getEmail()))
+                .willReturn(Optional.of(sender));
+
+        given(friendRepository.findByFriendStateAndMemberRequestAndMember(
+                FriendState.WAIT, sender, receiver))
+                .willReturn(Optional.of(
+                        Friend.builder()
+                                .id(1L)
+                                .member(receiver)
+                                .memberRequest(sender)
+                                .friendState(FriendState.WAIT)
+                                .build()
+                ));
+
+        //when
+        FriendRequestProcess.Response response =
+                friendService.requestProcess(memberAdapter1(), request);
+
+        //then
+        assertEquals(sender.getEmail(), response.getEmail());
+        verify(friendRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("요청처리 실패 테스트 - 로그인 한 사용자를 찾지 못 함")
+    void requestProcessFailTest_ReceiveUserNotFound() {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request(
+                        "buni@naver.com", FriendState.REJECT);
+
+
+        //로그인한 사용자 member1 == 초기 요청을 받은 사용자
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.requestProcess(
+                        memberAdapter1(), request));
+
+        //then
+        assertEquals(USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("요청처리 실패 테스트 - 요청 보낸 사용자를 찾지 못 함")
+    void requestProcessFailTest_SendUserNotFound() {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request(
+                        "buni@naver.com", FriendState.REJECT);
+
+        //로그인한 사용자 member1 == 초기 요청을 받은 사용자
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member1()));
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.requestProcess(
+                        memberAdapter1(), request));
+
+        //then
+        assertEquals(USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("요청처리 실패 테스트 - 요청을 찾지 못 함")
+    void requestProcessFailTest_RequestNotFound() {
+        //given
+        FriendRequestProcess.Request request =
+                new FriendRequestProcess.Request(
+                        "buni@naver.com", FriendState.REJECT);
+
+        Member sender = member2();
+        Member receiver = member1();
+
+        //로그인한 사용자 member1 == 초기 요청을 받은 사용자
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(receiver));
+
+        given(memberRepository.findByEmail(request.getEmail()))
+                .willReturn(Optional.of(sender));
+
+        given(friendRepository.findByFriendStateAndMemberRequestAndMember(
+                FriendState.WAIT, sender, receiver))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception = assertThrows(FriendException.class,
+                () -> friendService.requestProcess(
+                        memberAdapter1(), request));
+
+        //then
+        assertEquals(REQUEST_NOT_FOUND, exception.getErrorCode());
     }
 }
