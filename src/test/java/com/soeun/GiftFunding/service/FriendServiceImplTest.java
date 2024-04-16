@@ -384,7 +384,7 @@ class FriendServiceImplTest {
 
     @Test
     @DisplayName("친구 목록 조회 실패 테스트 - 로그인 한 사용자를 찾을 수 없음")
-    void friendListFAilTest_UserNotFound() {
+    void friendListFailTest_UserNotFound() {
         //given
         Member member1 = member1();
 
