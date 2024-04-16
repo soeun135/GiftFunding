@@ -1,5 +1,6 @@
 package com.soeun.GiftFunding.service;
 
+import com.soeun.GiftFunding.dto.FriendList;
 import com.soeun.GiftFunding.dto.FriendRequest;
 import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.entity.Friend;
@@ -17,12 +18,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -69,6 +77,18 @@ class FriendServiceImplTest {
                 .name("버니")
                 .phone("010-2222-2222")
                 .email("buni@naver.com")
+                .password("qwerty")
+                .address("서울특별시 강남구")
+                .birthDay(LocalDate.of(2000, 01, 28))
+                .build();
+    }
+
+    private Member member3() {
+        return Member.builder()
+                .id(3L)
+                .name("벅스")
+                .phone("010-3333-3333")
+                .email("bucks@naver.com")
                 .password("qwerty")
                 .address("서울특별시 강남구")
                 .birthDay(LocalDate.of(2000, 01, 28))
@@ -270,5 +290,116 @@ class FriendServiceImplTest {
 
         //then
         assertEquals(ErrorType.ALREADY_RECEIVE_FRIEND_REQUEST, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("친구 목록 조회 성공 테스트 - ACCEPT")
+    void friendListSuccessTest_ACCEPT() {
+        //given
+        Member member1 = member1();
+        Member member2 = member2();
+        Member member3 = member3();
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member1));
+
+        List<Friend> friendList =
+                Arrays.asList(
+                        Friend.builder()
+                                .id(1L)
+                                .member(member1)
+                                .memberRequest(member2)
+                                .friendState(FriendState.ACCEPT)
+                                .build(),
+                        Friend.builder()
+                                .id(1L)
+                                .member(member1)
+                                .memberRequest(member3)
+                                .friendState(FriendState.ACCEPT)
+                                .build());
+
+        given(friendRepository.findByMemberAndFriendState(
+                member1, FriendState.ACCEPT, pageable))
+                .willReturn(new PageImpl(friendList));
+
+        //when
+        Page<FriendList> resultFriendList = friendService.friendList(
+                memberAdapter1(), FriendState.ACCEPT, pageable);
+
+        //then
+        assertEquals(2, resultFriendList.getSize());
+        assertEquals("buni@naver.com", resultFriendList.getContent().get(0).getMemberEmail());
+        assertEquals("bucks@naver.com", resultFriendList.getContent().get(1).getMemberEmail());
+        verify(memberRepository, times(1)).findByEmail(member1.getEmail());
+        verify(friendRepository, times(1)).findByMemberAndFriendState(member1, FriendState.ACCEPT, pageable);
+        verify(friendRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("친구 목록 조회 성공 테스트 - WAIT")
+    void friendListSuccessTest_WAIT() {
+        //given
+        Member member1 = member1();
+        Member member2 = member2();
+        Member member3 = member3();
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.of(member1));
+
+        List<Friend> friendList =
+                Arrays.asList(
+                        Friend.builder()
+                                .id(1L)
+                                .member(member1)
+                                .memberRequest(member2)
+                                .friendState(FriendState.WAIT)
+                                .build(),
+                        Friend.builder()
+                                .id(1L)
+                                .member(member1)
+                                .memberRequest(member3)
+                                .friendState(FriendState.WAIT)
+                                .build());
+
+        given(friendRepository.findByMemberAndFriendState(
+                member1, FriendState.WAIT, pageable))
+                .willReturn(new PageImpl(friendList));
+
+        //when
+        Page<FriendList> resultFriendList = friendService.friendList(
+                memberAdapter1(), FriendState.WAIT, pageable);
+
+        //then
+        assertEquals(2, resultFriendList.getSize());
+        assertEquals("buni@naver.com", resultFriendList.getContent().get(0).getMemberEmail());
+        assertEquals("bucks@naver.com", resultFriendList.getContent().get(1).getMemberEmail());
+        verify(memberRepository, times(1)).findByEmail(member1.getEmail());
+        verify(friendRepository, times(1)).findByMemberAndFriendState(member1, FriendState.WAIT, pageable);
+        verify(friendRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("친구 목록 조회 실패 테스트 - 로그인 한 사용자를 찾을 수 없음")
+    void friendListFAilTest_UserNotFound() {
+        //given
+        Member member1 = member1();
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        given(memberRepository.findByEmail(memberAdapter1().getUsername()))
+                .willReturn(Optional.empty());
+
+        //when
+        FriendException exception =
+                assertThrows(FriendException.class,
+                        () -> friendService.friendList(
+                                memberAdapter1(), FriendState.ACCEPT, pageable));
+
+        //then
+        assertEquals(ErrorType.USER_NOT_FOUND, exception.getErrorCode());
     }
 }
