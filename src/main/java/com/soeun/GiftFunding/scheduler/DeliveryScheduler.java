@@ -1,7 +1,7 @@
 package com.soeun.GiftFunding.scheduler;
 
-import com.soeun.GiftFunding.entity.Delivery;
-import com.soeun.GiftFunding.entity.FundingProduct;
+import com.soeun.GiftFunding.domain.delivery.Delivery;
+import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
 import com.soeun.GiftFunding.repository.DeliveryRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.type.DeliveryState;

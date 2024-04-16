@@ -1,12 +1,13 @@
 package com.soeun.GiftFunding.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soeun.GiftFunding.dto.Signup;
+import com.soeun.GiftFunding.domain.member.controller.MemberController;
+import com.soeun.GiftFunding.domain.member.dto.Signup;
 import com.soeun.GiftFunding.exception.CustomAuthenticationEntryPoint;
 import com.soeun.GiftFunding.security.GetAuthentication;
 import com.soeun.GiftFunding.security.JwtAuthenticationFilter;
 import com.soeun.GiftFunding.security.TokenProvider;
-import com.soeun.GiftFunding.service.MemberServiceImpl;
+import com.soeun.GiftFunding.domain.member.service.MemberServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.OAuth.kakao;
 
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
-import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.domain.member.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

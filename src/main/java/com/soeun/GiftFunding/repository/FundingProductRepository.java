@@ -1,7 +1,7 @@
 package com.soeun.GiftFunding.repository;
 
-import com.soeun.GiftFunding.entity.FundingProduct;
-import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
+import com.soeun.GiftFunding.domain.member.entity.Member;
 import com.soeun.GiftFunding.mail.MailReceiverInterface;
 import com.soeun.GiftFunding.type.FundingState;
 import io.lettuce.core.dynamic.annotation.Param;

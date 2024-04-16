@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.mock;
 
-import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.domain.member.entity.Member;
 
 import java.time.LocalDate;
 
