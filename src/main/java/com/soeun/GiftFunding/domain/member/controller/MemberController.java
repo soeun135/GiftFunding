@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/member")
 @Slf4j
 public class MemberController {
     private final MemberService memberService;
