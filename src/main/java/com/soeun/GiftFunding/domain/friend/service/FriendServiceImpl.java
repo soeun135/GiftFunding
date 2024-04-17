@@ -9,7 +9,6 @@ import com.soeun.GiftFunding.domain.friend.repository.FriendRepository;
 import com.soeun.GiftFunding.dto.*;
 import com.soeun.GiftFunding.domain.friend.dto.FriendRequestProcess.Request;
 import com.soeun.GiftFunding.domain.friend.dto.FriendRequestProcess.Response;
-import com.soeun.GiftFunding.domain.chat.Friend.Friend;
 import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
 import com.soeun.GiftFunding.domain.member.entity.Member;
 import com.soeun.GiftFunding.exception.FriendException;
