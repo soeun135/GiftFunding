@@ -1,13 +1,10 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.entity.Product;
+import com.soeun.GiftFunding.domain.product.entity.Product;
 import com.soeun.GiftFunding.type.FundingState;
+import lombok.*;
+
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter

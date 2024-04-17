@@ -2,10 +2,10 @@ package com.soeun.GiftFunding.OAuth;
 
 import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
-import com.soeun.GiftFunding.dto.Signin;
-import com.soeun.GiftFunding.entity.Member;
-import com.soeun.GiftFunding.entity.Wallet;
-import com.soeun.GiftFunding.repository.MemberRepository;
+import com.soeun.GiftFunding.domain.member.dto.Signin;
+import com.soeun.GiftFunding.domain.member.entity.Member;
+import com.soeun.GiftFunding.domain.wallet.Wallet;
+import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import lombok.RequiredArgsConstructor;

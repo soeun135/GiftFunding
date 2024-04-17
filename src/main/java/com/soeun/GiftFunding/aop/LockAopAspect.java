@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.aop;
 
-import com.soeun.GiftFunding.dto.FriendRequest;
+import com.soeun.GiftFunding.domain.friend.dto.FriendRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

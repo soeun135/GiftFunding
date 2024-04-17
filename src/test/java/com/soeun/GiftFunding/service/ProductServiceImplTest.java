@@ -7,11 +7,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.soeun.GiftFunding.domain.product.service.ProductServiceImpl;
 import com.soeun.GiftFunding.dto.SaveProduct;
 import com.soeun.GiftFunding.dto.SearchProduct;
-import com.soeun.GiftFunding.entity.Product;
+import com.soeun.GiftFunding.domain.product.entity.Product;
 import com.soeun.GiftFunding.entity.document.ProductDocument;
-import com.soeun.GiftFunding.repository.ProductRepository;
+import com.soeun.GiftFunding.domain.product.repository.ProductRepository;
 import com.soeun.GiftFunding.repository.elastic.ProductSearchRepository;
 import java.util.ArrayList;
 import java.util.Arrays;

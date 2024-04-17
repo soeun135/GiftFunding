@@ -1,10 +1,10 @@
 package com.soeun.GiftFunding.scheduler;
 
 
-import com.soeun.GiftFunding.entity.Delivery;
-import com.soeun.GiftFunding.entity.FundingProduct;
-import com.soeun.GiftFunding.entity.Member;
-import com.soeun.GiftFunding.entity.Wallet;
+import com.soeun.GiftFunding.domain.delivery.Delivery;
+import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
+import com.soeun.GiftFunding.domain.member.entity.Member;
+import com.soeun.GiftFunding.domain.wallet.Wallet;
 import com.soeun.GiftFunding.mail.Mail;
 import com.soeun.GiftFunding.mail.MailComponent;
 import com.soeun.GiftFunding.mail.MailReceiverInterface;
@@ -13,7 +13,7 @@ import com.soeun.GiftFunding.mail.MailTemplate;
 import com.soeun.GiftFunding.mail.MailTemplateRepository;
 import com.soeun.GiftFunding.repository.DeliveryRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
-import com.soeun.GiftFunding.repository.MemberRepository;
+import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.type.DeliveryState;
 import java.sql.Timestamp;
