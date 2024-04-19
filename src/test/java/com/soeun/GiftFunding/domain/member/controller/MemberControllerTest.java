@@ -1,11 +1,13 @@
 package com.soeun.GiftFunding.domain.member.controller;
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soeun.GiftFunding.config.SecurityConfig;
 import com.soeun.GiftFunding.domain.member.dto.Signin;
 import com.soeun.GiftFunding.domain.member.dto.Signup;
+import com.soeun.GiftFunding.domain.member.dto.UpdateInfo;
 import com.soeun.GiftFunding.domain.member.dto.UserInfoResponse;
 import com.soeun.GiftFunding.domain.member.service.MemberServiceImpl;
 import com.soeun.GiftFunding.domain.product.entity.Product;
@@ -39,8 +41,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -253,25 +254,85 @@ class MemberControllerTest {
                                 .summary("user info API")
                                 .description("로그인 한 사용자 정보 조회")
                                 .responseSchema(Schema.schema("UserInfoResponse"))
-                                .responseFields(
-                                        fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
-                                        , fieldWithPath("phone").type(JsonFieldType.STRING).description("전화번호")
-                                        , fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
-                                        , fieldWithPath("address").type(JsonFieldType.STRING).description("주소")
-                                        , fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일")
-                                        , fieldWithPath("fundingProductList[].id").type(JsonFieldType.NUMBER).description("펀딩상품 리스트 아이디")
-                                        , fieldWithPath("fundingProductList[].product.id").type(JsonFieldType.NUMBER).description("상품 아이디")
-                                        , fieldWithPath("fundingProductList[].product.productName").type(JsonFieldType.STRING).description("상품 이름")
-                                        , fieldWithPath("fundingProductList[].product.price").type(JsonFieldType.NUMBER).description("상품 가격")
-                                        , fieldWithPath("fundingProductList[].product.ranking").type(JsonFieldType.NUMBER).description("상품 순위")
-                                        , fieldWithPath("fundingProductList[].total").type(JsonFieldType.NUMBER).description("펀딩 총 금액")
-                                        , fieldWithPath("fundingProductList[].createdAt").type(JsonFieldType.STRING).description("펀딩 시작일")
-                                        , fieldWithPath("fundingProductList[].expiredAt").type(JsonFieldType.STRING).description("펀딩 종료일")
-                                        , fieldWithPath("fundingProductList[].fundingState").type(JsonFieldType.STRING).description("펀딩 상태"))
                         , requestHeaders(
-                                headerWithName("Authorization").description("4eeBearer AccessToken")
-                        )
-                ));
+                                headerWithName("Authorization").description("Bearer AccessToken"))
+                        , responseFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
+                                , fieldWithPath("phone").type(JsonFieldType.STRING).description("전화번호")
+                                , fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                                , fieldWithPath("address").type(JsonFieldType.STRING).description("주소")
+                                , fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일")
+                                , fieldWithPath("fundingProductList[].id").type(JsonFieldType.NUMBER).description("펀딩상품 리스트 아이디")
+                                , fieldWithPath("fundingProductList[].product.id").type(JsonFieldType.NUMBER).description("상품 아이디")
+                                , fieldWithPath("fundingProductList[].product.productName").type(JsonFieldType.STRING).description("상품 이름")
+                                , fieldWithPath("fundingProductList[].product.price").type(JsonFieldType.NUMBER).description("상품 가격")
+                                , fieldWithPath("fundingProductList[].product.ranking").type(JsonFieldType.NUMBER).description("상품 순위")
+                                , fieldWithPath("fundingProductList[].total").type(JsonFieldType.NUMBER).description("펀딩 총 금액")
+                                , fieldWithPath("fundingProductList[].createdAt").type(JsonFieldType.STRING).description("펀딩 시작일")
+                                , fieldWithPath("fundingProductList[].expiredAt").type(JsonFieldType.STRING).description("펀딩 종료일")
+                                , fieldWithPath("fundingProductList[].fundingState").type(JsonFieldType.STRING).description("펀딩 상태"))
 
+                ));
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 성공 테스트")
+    void updateSuccessTest() throws Exception {
+        //given
+        UpdateInfo.Request request =
+                UpdateInfo.Request.builder()
+                        .name("소은")
+                        .phone("010-1111-1111")
+                        .address("서울특별시 강남구")
+                        .birthDay(LocalDate.of(2000, 01, 28))
+                        .build();
+
+        given(memberService.update(any(), any()))
+                .willReturn(UpdateInfo.Response.builder()
+                        .name("소은")
+                        .phone("010-1111-1111")
+                        .email("soni@naver.com")
+                        .address("서울특별시 강남구")
+                        .birthDay(LocalDate.of(2000, 01, 28))
+                        .build());
+
+
+        //when
+        //then
+        mockMvc.perform(patch("/member/update")
+                        .header("Authorization", "Bearer AccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("소은"))
+                .andExpect(jsonPath("$.phone").value("010-1111-1111"))
+                .andExpect(jsonPath("$.email").value("soni@naver.com"))
+                .andExpect(jsonPath("$.address").value("서울특별시 강남구"))
+                .andExpect(jsonPath("$.birthDay").value("2000-01-28"))
+                .andDo(MockMvcRestDocumentationWrapper.document("/member/update",
+                        ResourceSnippetParameters.builder()
+                                .tag("member")
+                                .summary("update info API")
+                                .description("회원정보 수정")
+                                .requestSchema(Schema.schema("UpdateInfo.Request"))
+                                .responseSchema(Schema.schema("UpdateInfo.Response"))
+                        , preprocessRequest(prettyPrint())
+                        , preprocessResponse(prettyPrint())
+                        , requestHeaders(
+                                headerWithName("Authorization").description("Bearer AccessToken"))
+                        , requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("이름").optional()
+                                , fieldWithPath("phone").type(JsonFieldType.STRING).description("전화번호").optional()
+                                , fieldWithPath("address").type(JsonFieldType.STRING).description("주소").optional()
+                                , fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일").optional())
+                        , responseFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("이름")
+                                , fieldWithPath("phone").type(JsonFieldType.STRING).description("전화번호")
+                                , fieldWithPath("email").type(JsonFieldType.STRING).description("메일")
+                                , fieldWithPath("address").type(JsonFieldType.STRING).description("주소")
+                                , fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일")))
+                );
     }
 }
