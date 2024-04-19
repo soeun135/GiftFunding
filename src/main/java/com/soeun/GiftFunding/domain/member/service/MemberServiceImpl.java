@@ -1,26 +1,21 @@
 package com.soeun.GiftFunding.domain.member.service;
 
-import static com.soeun.GiftFunding.type.ErrorType.PASSWORD_UNMATCHED;
-import static com.soeun.GiftFunding.type.ErrorType.USER_DUPLICATED;
-import static com.soeun.GiftFunding.type.ErrorType.USER_NOT_FOUND;
-
-import com.soeun.GiftFunding.domain.member.entity.Member;
-import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
-import com.soeun.GiftFunding.dto.ReissueResponse;
+import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
 import com.soeun.GiftFunding.domain.member.dto.Signin;
 import com.soeun.GiftFunding.domain.member.dto.Signin.Response;
 import com.soeun.GiftFunding.domain.member.dto.Signup;
 import com.soeun.GiftFunding.domain.member.dto.Signup.Request;
 import com.soeun.GiftFunding.domain.member.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.domain.member.dto.UserInfoResponse;
-import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
+import com.soeun.GiftFunding.domain.member.entity.Member;
+import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
 import com.soeun.GiftFunding.domain.wallet.Wallet;
+import com.soeun.GiftFunding.dto.MemberAdapter;
+import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.stream.Collectors;
+
+import static com.soeun.GiftFunding.type.ErrorType.*;
 
 @Service
 @RequiredArgsConstructor

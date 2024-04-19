@@ -155,8 +155,10 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.content.[0].memberEmail").value("buni@naver.com"))
                 .andExpect(jsonPath("$.content.[1].memberName").value("벅스"))
                 .andExpect(jsonPath("$.content.[1].memberEmail").value("bucks@naver.com"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/list",
-                                resource(ResourceSnippetParameters.builder()
+                .andDo(MockMvcRestDocumentationWrapper.document("/friend/list"
+                                , preprocessRequest(prettyPrint())
+                                , preprocessResponse(prettyPrint())
+                                , resource(ResourceSnippetParameters.builder()
                                         .tag("friend")
                                         .summary("friend list API")
                                         .description("친구 목록 조회 ")
@@ -187,10 +189,9 @@ class FriendControllerTest {
                                                 , fieldWithPath("first").description("첫 번째 페이지인지 여부")
                                                 , fieldWithPath("numberOfElements").description("요청 페이지에서 조회된 데이터 갯수")
                                                 , fieldWithPath("empty").description("데이터 비었는지 여부"))
-                                        .build())
+                                        .build()
+                                )
                         )
-
-
                 );
     }
 
@@ -226,6 +227,8 @@ class FriendControllerTest {
                                         .description("친구 요청 처리")
                                         .requestSchema(Schema.schema("FriendRequestProcess.Request"))
                                         .responseSchema(Schema.schema("FriendRequestProcess.Response"))
+                                , preprocessRequest(prettyPrint())
+                                , preprocessResponse(prettyPrint())
                                 , requestHeaders(
                                         headerWithName("Authorization").description("Bearer Access Token"))
                                 , requestFields(
@@ -286,8 +289,9 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.birthDay").value("2013-07-31"))
                 .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
                 .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}",
-                        resource(ResourceSnippetParameters.builder()
+                .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}"
+                        , preprocessResponse(prettyPrint())
+                        , resource(ResourceSnippetParameters.builder()
                                 .tag("friend")
                                 .summary("friend fundingProduct API")
                                 .description("친구의 펀딩 상품 조회")
