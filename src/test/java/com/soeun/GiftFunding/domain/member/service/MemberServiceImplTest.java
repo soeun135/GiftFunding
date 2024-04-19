@@ -1,10 +1,15 @@
 package com.soeun.GiftFunding.domain.member.service;
 
+import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
 import com.soeun.GiftFunding.domain.member.dto.Signin;
 import com.soeun.GiftFunding.domain.member.dto.Signup;
+import com.soeun.GiftFunding.domain.member.dto.UpdateInfo;
+import com.soeun.GiftFunding.domain.member.dto.UserInfoResponse;
 import com.soeun.GiftFunding.domain.member.entity.Member;
 import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
+import com.soeun.GiftFunding.domain.product.entity.Product;
 import com.soeun.GiftFunding.domain.wallet.Wallet;
+import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.exception.TokenException;
@@ -13,6 +18,7 @@ import com.soeun.GiftFunding.repository.FundingProductRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
 import com.soeun.GiftFunding.type.ErrorType;
+import com.soeun.GiftFunding.type.FundingState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -241,5 +248,258 @@ class MemberServiceImplTest {
 
         //then
         assertEquals(ErrorType.REFRESHTOKEN_EXPIRED, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회 성공 테스트")
+    void userInfoSuccessTest() {
+        //given
+        MemberAdapter memberAdapter = getMemberAdapter();
+
+        Member member = getMember();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(member));
+
+        given(fundingProductRepository.findByMember(member))
+                .willReturn(Arrays.asList(
+                        FundingProduct.builder()
+                                .id(1L)
+                                .product(new Product(1L, "반지", 10000L, 1))
+                                .member(member)
+                                .total(5000L)
+                                .fundingState(FundingState.ONGOING)
+                                .build(),
+                        FundingProduct.builder()
+                                .id(2L)
+                                .product(new Product(2L, "목걸이", 20000L, 2))
+                                .member(member)
+                                .total(1000L)
+                                .fundingState(FundingState.ONGOING)
+                                .build()
+                ));
+
+        ArgumentCaptor<String> captor =
+                ArgumentCaptor.forClass(String.class);
+
+        //when
+        UserInfoResponse response =
+                memberService.userInfo(memberAdapter);
+
+        //then
+        verify(memberRepository, times(1)).findByEmail(captor.capture());
+        assertEquals(memberAdapter.getUsername(), captor.getValue());
+        assertEquals(member.getName(), response.getName());
+        assertEquals(member.getPhone(), response.getPhone());
+        assertEquals(member.getEmail(), response.getEmail());
+        assertEquals(member.getAddress(), response.getAddress());
+        assertEquals("반지", response.getFundingProductList().get(0).getProduct().getProductName());
+        assertEquals("목걸이", response.getFundingProductList().get(1).getProduct().getProductName());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 조회 실패 테스트 - 사용자를 찾을 수 없음")
+    void userInfoFailTest_UserNotFound() {
+        //given
+        MemberAdapter memberAdapter = getMemberAdapter();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.empty());
+
+        //when
+        MemberException exception = assertThrows(MemberException.class,
+                () -> memberService.userInfo(memberAdapter));
+
+        //then
+        assertEquals(ErrorType.USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    private MemberAdapter getMemberAdapter() {
+        MemberAdapter memberAdapter = new MemberAdapter("soni@naver.com", "qwerty");
+        return memberAdapter;
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 성공 테스트")
+    void updateSuccessTest() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "버니", "010-1111-1111", "서울특별시 강남구", LocalDate.of(2000, 01, 28));
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(getMember()));
+
+        ArgumentCaptor<String> captor =
+                ArgumentCaptor.forClass(String.class);
+
+        //when
+        UpdateInfo.Response response =
+                memberService.update(request, memberAdapter);
+
+        //then
+        verify(memberRepository, times(1)).findByEmail(captor.capture());
+        assertEquals(memberAdapter.getUsername(), captor.getValue());
+        assertEquals(request.getName(), response.getName());
+        assertEquals(memberAdapter.getUsername(), response.getEmail());
+        assertEquals(request.getPhone(), response.getPhone());
+        assertEquals(request.getAddress(), response.getAddress());
+        assertEquals(request.getBirthDay(), response.getBirthDay());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 성공 테스트 - 이름만 변경할 때")
+    void updateSuccessTest_UpdateName() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "버니", "", "", null);
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+        Member member = getMember();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(member));
+
+        //when
+        UpdateInfo.Response response =
+                memberService.update(request, memberAdapter);
+
+        //then
+        assertEquals(request.getName(), response.getName());
+
+        assertEquals(memberAdapter.getUsername(), response.getEmail());
+
+        assertEquals(member.getPhone(), response.getPhone());
+        assertNotEquals(request.getPhone(), response.getPhone());
+
+        assertEquals(member.getAddress(), response.getAddress());
+        assertNotEquals(request.getAddress(), response.getAddress());
+
+        assertEquals(member.getBirthDay(), response.getBirthDay());
+        assertNotEquals(request.getBirthDay(), response.getBirthDay());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 성공 테스트 - 전화번호만 변경할 때")
+    void updateSuccessTest_UpdatePhone() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "", "010-2222-2222", "", null);
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+        Member member = getMember();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(member));
+
+        //when
+        UpdateInfo.Response response =
+                memberService.update(request, memberAdapter);
+
+        //then
+        assertEquals(member.getName(), response.getName());
+        assertNotEquals(request.getName(), response.getName());
+
+        assertEquals(memberAdapter.getUsername(), response.getEmail());
+
+        assertEquals(request.getPhone(), response.getPhone());
+
+        assertEquals(member.getAddress(), response.getAddress());
+        assertNotEquals(request.getAddress(), response.getAddress());
+
+        assertEquals(member.getBirthDay(), response.getBirthDay());
+        assertNotEquals(request.getBirthDay(), response.getBirthDay());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 성공 테스트 - 주소만 변경할 때")
+    void updateSuccessTest_UpdateAddress() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "", "", "경기도 성남시", null);
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+        Member member = getMember();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(member));
+
+        //when
+        UpdateInfo.Response response =
+                memberService.update(request, memberAdapter);
+
+        //then
+        assertEquals(member.getName(), response.getName());
+        assertNotEquals(request.getName(), response.getName());
+
+        assertEquals(memberAdapter.getUsername(), response.getEmail());
+
+        assertEquals(member.getPhone(), response.getPhone());
+        assertNotEquals(request.getPhone(), response.getPhone());
+
+        assertEquals(request.getAddress(), response.getAddress());
+
+        assertEquals(member.getBirthDay(), response.getBirthDay());
+        assertNotEquals(request.getBirthDay(), response.getBirthDay());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 성공 테스트 - 생일만 변경할 때")
+    void updateSuccessTest_UpdateBirthDay() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "", "", "", LocalDate.of(2024, 04, 20));
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+        Member member = getMember();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.of(member));
+
+        //when
+        UpdateInfo.Response response =
+                memberService.update(request, memberAdapter);
+
+        //then
+        assertEquals(member.getName(), response.getName());
+        assertNotEquals(request.getName(), response.getName());
+
+        assertEquals(memberAdapter.getUsername(), response.getEmail());
+
+        assertEquals(member.getPhone(), response.getPhone());
+        assertNotEquals(request.getPhone(), response.getPhone());
+
+        assertEquals(member.getAddress(), response.getAddress());
+        assertNotEquals(request.getAddress(), response.getAddress());
+
+        assertEquals(request.getBirthDay(), response.getBirthDay());
+    }
+
+    @Test
+    @DisplayName("사용자 정보 수정 실패 테스트 - 사용자를 찾을 수 없음")
+    void updateFailTest_UserNotFound() {
+        //given
+        UpdateInfo.Request request =
+                new UpdateInfo.Request(
+                        "버니", "010-1111-1111", "서울특별시 강남구", LocalDate.of(2000, 01, 28));
+
+        MemberAdapter memberAdapter = getMemberAdapter();
+
+        given(memberRepository.findByEmail(memberAdapter.getUsername()))
+                .willReturn(Optional.empty());
+
+
+        //when
+        MemberException exception = assertThrows(MemberException.class,
+                () -> memberService.update(request, memberAdapter));
+
+        //then
+        assertEquals(ErrorType.USER_NOT_FOUND, exception.getErrorCode());
     }
 }
