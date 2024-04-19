@@ -16,9 +16,9 @@ public class WithCustomMockUserSecurityContextFactory implements
                 SecurityContextHolder.createEmptyContext();
 
         MemberAdapter memberAdapter =
-//                new memberAdapter("sonfgi@naver.com", "abfgcd");
-//
-                MemberAdapter.from(MemberFixture.soni.createMember());
+                new MemberAdapter("sonfgi@naver.com", "abfgcd");
+
+//                MemberAdapter.from(MemberFixture.soni.createMember());
 //        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 //        grantedAuthorities.add((GrantedAuthority) () -> "ROLE_USER");
 
