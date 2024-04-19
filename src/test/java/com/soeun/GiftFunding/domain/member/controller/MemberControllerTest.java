@@ -280,12 +280,8 @@ class MemberControllerTest {
     void updateSuccessTest() throws Exception {
         //given
         UpdateInfo.Request request =
-                UpdateInfo.Request.builder()
-                        .name("소은")
-                        .phone("010-1111-1111")
-                        .address("서울특별시 강남구")
-                        .birthDay(LocalDate.of(2000, 01, 28))
-                        .build();
+                new UpdateInfo.Request(
+                        "소은", "010-1111-1111", "서울특별시 강남구", LocalDate.of(2000, 01, 28));
 
         given(memberService.update(any(), any()))
                 .willReturn(UpdateInfo.Response.builder()
