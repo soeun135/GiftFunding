@@ -590,7 +590,7 @@ class FriendServiceImplTest {
 
         given(friendRepository.existsByFriendStateAndMemberRequestAndMember(
                 FriendState.ACCEPT, member, friend))
-                .willReturn(true);
+                .willReturn(false);
 
         List<FundingProduct> fundingProductList =
                 Arrays.asList(
