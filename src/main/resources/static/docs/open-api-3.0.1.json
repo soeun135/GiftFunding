@@ -1,7 +1,7 @@
 {
   "openapi" : "3.0.1",
   "info" : {
-    "title" : "RestDocs to Swagger 변환 테스트",
+    "title" : "GiftFunding API 문서입니다.",
     "description" : "RestDocs로 API 문서 작성 후 Swagger로 변환",
     "version" : "0.0.1-SNAPSHOT"
   },
@@ -10,6 +10,419 @@
   } ],
   "tags" : [ ],
   "paths" : {
+    "/friend" : {
+      "get" : {
+        "tags" : [ "friend" ],
+        "summary" : "friend list API",
+        "description" : "친구 목록 조회 ",
+        "operationId" : "/friend/list",
+        "parameters" : [ {
+          "name" : "friendState",
+          "in" : "query",
+          "description" : "친구 상태",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "한 페이지 당 노출될 항목 수",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "현재 페이지",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer Access Token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FriendList"
+                },
+                "examples" : {
+                  "/friend/list" : {
+                    "value" : "{\r\n  \"content\" : [ {\r\n    \"memberName\" : \"버니\",\r\n    \"memberEmail\" : \"buni@naver.com\",\r\n    \"createdAt\" : null\r\n  }, {\r\n    \"memberName\" : \"벅스\",\r\n    \"memberEmail\" : \"bucks@naver.com\",\r\n    \"createdAt\" : null\r\n  } ],\r\n  \"pageable\" : \"INSTANCE\",\r\n  \"last\" : true,\r\n  \"totalPages\" : 1,\r\n  \"totalElements\" : 2,\r\n  \"first\" : true,\r\n  \"numberOfElements\" : 2,\r\n  \"size\" : 2,\r\n  \"number\" : 0,\r\n  \"sort\" : {\r\n    \"sorted\" : false,\r\n    \"unsorted\" : true,\r\n    \"empty\" : true\r\n  },\r\n  \"empty\" : false\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/process" : {
+      "patch" : {
+        "tags" : [ "friend" ],
+        "summary" : "friend process API",
+        "description" : "친구 요청 처리",
+        "operationId" : "/friend/process",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer Access Token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FriendRequestProcess.Request"
+              },
+              "examples" : {
+                "/friend/process" : {
+                  "value" : "{\r\n  \"email\" : \"buni@naver.com\",\r\n  \"state\" : \"ACCEPT\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FriendRequestProcess.Response"
+                },
+                "examples" : {
+                  "/friend/process" : {
+                    "value" : "{\r\n  \"email\" : \"buni@naver.com\",\r\n  \"message\" : \"님의 친구요청 상태를 업데이트 했습니다.\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/request" : {
+      "post" : {
+        "tags" : [ "friend" ],
+        "summary" : "friend request API",
+        "description" : "친구 요청",
+        "operationId" : "/friend/request",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer AccessToken",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FriendRequest.Request"
+              },
+              "examples" : {
+                "/friend/request" : {
+                  "value" : "{\r\n  \"email\" : \"buny@naver.com\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FriendRequest.Response"
+                },
+                "examples" : {
+                  "/friend/request" : {
+                    "value" : "{\r\n  \"email\" : \"buny@naver.com\",\r\n  \"message\" : \"님에게 친구요청을 보냈습니다.\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friend/funding-product/{friendId}" : {
+      "get" : {
+        "tags" : [ "friend" ],
+        "summary" : "friend fundingProduct API",
+        "description" : "친구의 펀딩 상품 조회",
+        "operationId" : "/friend/funding-product/{id}",
+        "parameters" : [ {
+          "name" : "friendId",
+          "in" : "path",
+          "description" : "친구 아이디",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "한 페이지 당 노출될 항목 수",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "현재 페이지",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer Access Token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FriendFundingProduct"
+                },
+                "examples" : {
+                  "/friend/funding-product/{id}" : {
+                    "value" : "{\r\n  \"name\" : \"버니\",\r\n  \"phone\" : \"010-1111-1111\",\r\n  \"email\" : \"buni@naver.com\",\r\n  \"birthDay\" : \"2013-07-31\",\r\n  \"fundingProductList\" : {\r\n    \"content\" : [ {\r\n      \"id\" : 1,\r\n      \"product\" : {\r\n        \"id\" : 1,\r\n        \"productName\" : \"반지\",\r\n        \"price\" : 10000,\r\n        \"ranking\" : 1\r\n      },\r\n      \"total\" : 5000,\r\n      \"createdAt\" : null,\r\n      \"expiredAt\" : null,\r\n      \"fundingState\" : null\r\n    }, {\r\n      \"id\" : 2,\r\n      \"product\" : {\r\n        \"id\" : 2,\r\n        \"productName\" : \"목걸이\",\r\n        \"price\" : 20000,\r\n        \"ranking\" : 2\r\n      },\r\n      \"total\" : 1000,\r\n      \"createdAt\" : null,\r\n      \"expiredAt\" : null,\r\n      \"fundingState\" : null\r\n    } ],\r\n    \"pageable\" : \"INSTANCE\",\r\n    \"last\" : true,\r\n    \"totalPages\" : 1,\r\n    \"totalElements\" : 2,\r\n    \"first\" : true,\r\n    \"numberOfElements\" : 2,\r\n    \"size\" : 2,\r\n    \"number\" : 0,\r\n    \"sort\" : {\r\n      \"sorted\" : false,\r\n      \"unsorted\" : true,\r\n      \"empty\" : true\r\n    },\r\n    \"empty\" : false\r\n  }\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/member/info" : {
+      "get" : {
+        "tags" : [ "member" ],
+        "summary" : "user info API",
+        "description" : "로그인 한 사용자 정보 조회",
+        "operationId" : "/member/info",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer AccessToken",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserInfoResponse"
+                },
+                "examples" : {
+                  "/member/info" : {
+                    "value" : "{\"name\":\"소은\",\"phone\":\"010-1111-1111\",\"email\":\"soni@naver.com\",\"address\":\"서울특별시 강남구\",\"birthDay\":\"2000-01-28\",\"fundingProductList\":[{\"id\":1,\"product\":{\"id\":1,\"productName\":\"반지\",\"price\":10000,\"ranking\":1},\"total\":5000,\"createdAt\":\"2024-04-19\",\"expiredAt\":\"2025-04-19\",\"fundingState\":\"ONGOING\"},{\"id\":2,\"product\":{\"id\":2,\"productName\":\"목걸이\",\"price\":20000,\"ranking\":2},\"total\":1000,\"createdAt\":\"2024-04-19\",\"expiredAt\":\"2025-04-19\",\"fundingState\":\"ONGOING\"}]}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/member/reissue" : {
+      "post" : {
+        "tags" : [ "member" ],
+        "summary" : "reissue API",
+        "description" : "토큰 재발급",
+        "operationId" : "/member/reissue",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Refresh Token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "RefreshToken for Reissue AccessToken"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ReissueResponse"
+                },
+                "examples" : {
+                  "/member/reissue" : {
+                    "value" : "{\r\n  \"accessToken\" : \"AccessToken\",\r\n  \"refreshToken\" : \"RefreshToken\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/member/signin" : {
+      "post" : {
+        "tags" : [ "member" ],
+        "summary" : "signin API",
+        "description" : "로그인",
+        "operationId" : "/member/signin",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Signin.Request"
+              },
+              "examples" : {
+                "/member/signin" : {
+                  "value" : "{\r\n  \"email\" : \"soni@naver.com\",\r\n  \"password\" : \"qwerty\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Signin.Response"
+                },
+                "examples" : {
+                  "/member/signin" : {
+                    "value" : "{\r\n  \"accessToken\" : \"AccessToken\",\r\n  \"refreshToken\" : \"RefreshToken\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/member/signup" : {
+      "post" : {
+        "tags" : [ "member" ],
+        "summary" : "signup API",
+        "description" : "회원가입",
+        "operationId" : "/member/signup",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Signup.Request"
+              },
+              "examples" : {
+                "/member/signup" : {
+                  "value" : "{\r\n  \"name\" : \"소은\",\r\n  \"phone\" : \"010-1111-1111\",\r\n  \"email\" : \"soni@naver.com\",\r\n  \"password\" : \"qwerty\",\r\n  \"address\" : \"서울특별시 강남구\",\r\n  \"birthDay\" : \"2000-01-28\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Signup.Response"
+                },
+                "examples" : {
+                  "/member/signup" : {
+                    "value" : "{\r\n  \"name\" : \"소은\",\r\n  \"message\" : \"님 회원가입이 완료되었습니다.\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/member/update" : {
+      "patch" : {
+        "tags" : [ "member" ],
+        "summary" : "update info API",
+        "description" : "회원정보 수정",
+        "operationId" : "/member/update",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Bearer AccessToken",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "Bearer AccessToken"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateInfo.Request"
+              },
+              "examples" : {
+                "/member/update" : {
+                  "value" : "{\r\n  \"name\" : \"소은\",\r\n  \"phone\" : \"010-1111-1111\",\r\n  \"address\" : \"서울특별시 강남구\",\r\n  \"birthDay\" : \"2000-01-28\"\r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UpdateInfo.Response"
+                },
+                "examples" : {
+                  "/member/update" : {
+                    "value" : "{\r\n  \"name\" : \"소은\",\r\n  \"phone\" : \"010-1111-1111\",\r\n  \"email\" : \"soni@naver.com\",\r\n  \"address\" : \"서울특별시 강남구\",\r\n  \"birthDay\" : \"2000-01-28\"\r\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user" : {
       "get" : {
         "tags" : [ "테스트" ],
@@ -38,6 +451,393 @@
   },
   "components" : {
     "schemas" : {
+      "Signin.Request" : {
+        "title" : "Signin.Request",
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string",
+            "description" : "비밀번호"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "이메일"
+          }
+        }
+      },
+      "FriendList" : {
+        "title" : "FriendList",
+        "type" : "object",
+        "properties" : {
+          "number" : {
+            "type" : "number",
+            "description" : "현재 페이지 번호"
+          },
+          "numberOfElements" : {
+            "type" : "number",
+            "description" : "요청 페이지에서 조회된 데이터 갯수"
+          },
+          "size" : {
+            "type" : "number",
+            "description" : "한 페이지당 조회할 데이터 갯수"
+          },
+          "last" : {
+            "type" : "boolean",
+            "description" : "마지막 페이지인지 여부"
+          },
+          "totalPages" : {
+            "type" : "number",
+            "description" : "전체 페이지 갯수"
+          },
+          "pageable" : {
+            "type" : "string",
+            "description" : "페이지 정보"
+          },
+          "sort" : {
+            "type" : "object",
+            "properties" : {
+              "unsorted" : {
+                "type" : "boolean",
+                "description" : "정렬 안 됐는지 여부"
+              },
+              "sorted" : {
+                "type" : "boolean",
+                "description" : "정렬 여부"
+              },
+              "empty" : {
+                "type" : "boolean",
+                "description" : "데이터 비었는지 여부"
+              }
+            }
+          },
+          "first" : {
+            "type" : "boolean",
+            "description" : "첫 번째 페이지인지 여부"
+          },
+          "content" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "memberName" : {
+                  "type" : "string",
+                  "description" : "친구 이름"
+                },
+                "memberEmail" : {
+                  "type" : "string",
+                  "description" : "친구 이메일"
+                }
+              }
+            }
+          },
+          "empty" : {
+            "type" : "boolean",
+            "description" : "데이터 비었는지 여부"
+          },
+          "totalElements" : {
+            "type" : "number",
+            "description" : "테이블 총 데이터 갯수"
+          }
+        }
+      },
+      "Signup.Request" : {
+        "title" : "Signup.Request",
+        "type" : "object",
+        "properties" : {
+          "birthDay" : {
+            "type" : "string",
+            "description" : "생일"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "비밀번호"
+          },
+          "address" : {
+            "type" : "string",
+            "description" : "주소"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "전화번호"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "이메일"
+          }
+        }
+      },
+      "UpdateInfo.Request" : {
+        "title" : "UpdateInfo.Request",
+        "type" : "object",
+        "properties" : {
+          "birthDay" : {
+            "type" : "string",
+            "description" : "생일"
+          },
+          "address" : {
+            "type" : "string",
+            "description" : "주소"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "전화번호"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          }
+        }
+      },
+      "FriendFundingProduct" : {
+        "title" : "FriendFundingProduct",
+        "type" : "object",
+        "properties" : {
+          "fundingProductList" : {
+            "type" : "object",
+            "properties" : {
+              "number" : {
+                "type" : "number",
+                "description" : "현재 페이지 번호"
+              },
+              "numberOfElements" : {
+                "type" : "number",
+                "description" : "요청 페이지에서 조회된 데이터 갯수"
+              },
+              "size" : {
+                "type" : "number",
+                "description" : "한 페이지당 조회할 데이터 갯수"
+              },
+              "last" : {
+                "type" : "boolean",
+                "description" : "마지막 페이지인지 여부"
+              },
+              "totalPages" : {
+                "type" : "number",
+                "description" : "전체 페이지 갯수"
+              },
+              "pageable" : {
+                "type" : "string",
+                "description" : "페이지 정보"
+              },
+              "sort" : {
+                "type" : "object",
+                "properties" : {
+                  "unsorted" : {
+                    "type" : "boolean",
+                    "description" : "정렬 안 됐는지 여부"
+                  },
+                  "sorted" : {
+                    "type" : "boolean",
+                    "description" : "정렬 여부"
+                  },
+                  "empty" : {
+                    "type" : "boolean",
+                    "description" : "데이터 비었는지 여부"
+                  }
+                }
+              },
+              "first" : {
+                "type" : "boolean",
+                "description" : "첫 번째 페이지인지 여부"
+              },
+              "content" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "total" : {
+                      "type" : "number",
+                      "description" : "펀딩 총액"
+                    },
+                    "product" : {
+                      "type" : "object",
+                      "properties" : {
+                        "price" : {
+                          "type" : "number",
+                          "description" : "상품 가격"
+                        },
+                        "ranking" : {
+                          "type" : "number",
+                          "description" : "상품 순위"
+                        },
+                        "id" : {
+                          "type" : "number",
+                          "description" : "상품 아이디"
+                        },
+                        "productName" : {
+                          "type" : "string",
+                          "description" : "상품 이름"
+                        }
+                      }
+                    },
+                    "id" : {
+                      "type" : "number",
+                      "description" : "펀딩 상품 아이디"
+                    }
+                  }
+                }
+              },
+              "empty" : {
+                "type" : "boolean",
+                "description" : "데이터 비었는지 여부"
+              },
+              "totalElements" : {
+                "type" : "number",
+                "description" : "테이블 총 데이터 갯수"
+              }
+            }
+          },
+          "birthDay" : {
+            "type" : "string",
+            "description" : "친구 생일"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "친구 전화번호"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "친구 이름"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "친구 이메일"
+          }
+        }
+      },
+      "UpdateInfo.Response" : {
+        "title" : "UpdateInfo.Response",
+        "type" : "object",
+        "properties" : {
+          "birthDay" : {
+            "type" : "string",
+            "description" : "생일"
+          },
+          "address" : {
+            "type" : "string",
+            "description" : "주소"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "전화번호"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "메일"
+          }
+        }
+      },
+      "Signin.Response" : {
+        "title" : "Signin.Response",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "AccessToken"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "RefreshToken"
+          }
+        }
+      },
+      "ReissueResponse" : {
+        "title" : "ReissueResponse",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "AccessToken"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "RefreshToken"
+          }
+        }
+      },
+      "UserInfoResponse" : {
+        "title" : "UserInfoResponse",
+        "type" : "object",
+        "properties" : {
+          "fundingProductList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "expiredAt" : {
+                  "type" : "string",
+                  "description" : "펀딩 종료일"
+                },
+                "createdAt" : {
+                  "type" : "string",
+                  "description" : "펀딩 시작일"
+                },
+                "total" : {
+                  "type" : "number",
+                  "description" : "펀딩 총 금액"
+                },
+                "product" : {
+                  "type" : "object",
+                  "properties" : {
+                    "price" : {
+                      "type" : "number",
+                      "description" : "상품 가격"
+                    },
+                    "ranking" : {
+                      "type" : "number",
+                      "description" : "상품 순위"
+                    },
+                    "id" : {
+                      "type" : "number",
+                      "description" : "상품 아이디"
+                    },
+                    "productName" : {
+                      "type" : "string",
+                      "description" : "상품 이름"
+                    }
+                  }
+                },
+                "id" : {
+                  "type" : "number",
+                  "description" : "펀딩상품 리스트 아이디"
+                },
+                "fundingState" : {
+                  "type" : "string",
+                  "description" : "펀딩 상태"
+                }
+              }
+            }
+          },
+          "birthDay" : {
+            "type" : "string",
+            "description" : "생일"
+          },
+          "address" : {
+            "type" : "string",
+            "description" : "주소"
+          },
+          "phone" : {
+            "type" : "string",
+            "description" : "전화번호"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "이메일"
+          }
+        }
+      },
       "testResponse" : {
         "title" : "testResponse",
         "type" : "object",
@@ -45,6 +845,72 @@
           "message" : {
             "type" : "string",
             "description" : "냠"
+          }
+        }
+      },
+      "FriendRequestProcess.Response" : {
+        "title" : "FriendRequestProcess.Response",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "메세지"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "친구 이메일"
+          }
+        }
+      },
+      "Signup.Response" : {
+        "title" : "Signup.Response",
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "성공메세지"
+          }
+        }
+      },
+      "FriendRequest.Response" : {
+        "title" : "FriendRequest.Response",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "메세지"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "친구 요청 걸 상대방 이메일"
+          }
+        }
+      },
+      "FriendRequestProcess.Request" : {
+        "title" : "FriendRequestProcess.Request",
+        "type" : "object",
+        "properties" : {
+          "state" : {
+            "type" : "string",
+            "description" : "요청 상태"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "친구 이메일"
+          }
+        }
+      },
+      "FriendRequest.Request" : {
+        "title" : "FriendRequest.Request",
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "description" : "친구 요청 걸 상대방 이메일"
           }
         }
       }
