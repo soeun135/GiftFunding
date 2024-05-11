@@ -19,6 +19,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3307
+          container port: 3306
+          mysql database: 'giftfunding'
+          mysql user: 'giftfunding'
+          mysql password: ${{ secrets.DatabasePassword}}
+
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
 
