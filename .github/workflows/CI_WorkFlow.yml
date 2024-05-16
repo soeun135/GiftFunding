@@ -19,10 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: grant modify external tool
-        run: find . -type d -exec chmod a+rwx {} \;
+        run: chmod +777 gradlew
 
       - name: Test with Gradle
         run: ./gradlew --info test
