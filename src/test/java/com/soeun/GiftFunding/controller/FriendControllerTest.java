@@ -97,7 +97,7 @@ class FriendControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(request.getEmail()))
                 .andExpect(jsonPath("$.message").value("님에게 친구요청을 보냈습니다."))
-                .andDo(document("/friend/request",
+                .andDo(document("friend/request",
                                 ResourceSnippetParameters.builder()
                                         .tag("friend")
                                         .summary("friend request API")
@@ -155,7 +155,7 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.content.[0].memberEmail").value("buni@naver.com"))
                 .andExpect(jsonPath("$.content.[1].memberName").value("벅스"))
                 .andExpect(jsonPath("$.content.[1].memberEmail").value("bucks@naver.com"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/list"
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/list"
                                 , preprocessRequest(prettyPrint())
                                 , preprocessResponse(prettyPrint())
                                 , resource(ResourceSnippetParameters.builder()
