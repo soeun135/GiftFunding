@@ -99,7 +99,7 @@ class MemberControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("소은"))
-                .andDo(document("build/generated-snippets/member/signup",
+                .andDo(document("member/signup",
                         ResourceSnippetParameters.builder()
                                 .tag("member")
                                 .summary("signup API")
