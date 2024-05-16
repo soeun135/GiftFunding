@@ -21,6 +21,9 @@ jobs:
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: grant modify external tool
+        run: find . -type d -exec chmod a+rwx {} \;
+
       - name: Test with Gradle
         run: ./gradlew --info test
 
