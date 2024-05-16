@@ -220,7 +220,7 @@ class FriendControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("buni@naver.com"))
                 .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/process",
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/process",
                                 ResourceSnippetParameters.builder()
                                         .tag("friend")
                                         .summary("friend process API")
@@ -289,7 +289,7 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.birthDay").value("2013-07-31"))
                 .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
                 .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}"
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/funding-product/{id}"
                         , preprocessResponse(prettyPrint())
                         , resource(ResourceSnippetParameters.builder()
                                 .tag("friend")

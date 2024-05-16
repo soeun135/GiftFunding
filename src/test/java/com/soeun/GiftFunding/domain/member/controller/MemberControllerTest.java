@@ -143,7 +143,7 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("AccessToken"))
                 .andExpect(jsonPath("$.refreshToken").value("RefreshToken"))
-                .andDo(document("/member/signin",
+                .andDo(document("member/signin",
                                 ResourceSnippetParameters.builder()
                                         .tag("member")
                                         .summary("signin API")
@@ -182,7 +182,7 @@ class MemberControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value("AccessToken"))
                 .andExpect(jsonPath("$.refreshToken").value("RefreshToken"))
-                .andDo(document("/member/reissue",
+                .andDo(document("member/reissue",
                         ResourceSnippetParameters.builder()
                                 .tag("member")
                                 .summary("reissue API")
@@ -248,7 +248,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.fundingProductList.[0].product.productName").value("반지"))
                 .andExpect(jsonPath("$.fundingProductList.[1].id").value(2L))
                 .andExpect(jsonPath("$.fundingProductList.[1].product.productName").value("목걸이"))
-                .andDo(document("/member/info",
+                .andDo(document("member/info",
                         ResourceSnippetParameters.builder()
                                 .tag("member")
                                 .summary("user info API")
@@ -307,7 +307,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.email").value("soni@naver.com"))
                 .andExpect(jsonPath("$.address").value("서울특별시 강남구"))
                 .andExpect(jsonPath("$.birthDay").value("2000-01-28"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/member/update",
+                .andDo(MockMvcRestDocumentationWrapper.document("member/update",
                         ResourceSnippetParameters.builder()
                                 .tag("member")
                                 .summary("update info API")
