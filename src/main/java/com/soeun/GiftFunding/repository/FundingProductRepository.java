@@ -4,15 +4,16 @@ import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
 import com.soeun.GiftFunding.domain.member.entity.Member;
 import com.soeun.GiftFunding.mail.MailReceiverInterface;
 import com.soeun.GiftFunding.type.FundingState;
-import io.lettuce.core.dynamic.annotation.Param;
-import java.sql.Timestamp;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public interface FundingProductRepository extends JpaRepository<FundingProduct, Long> {

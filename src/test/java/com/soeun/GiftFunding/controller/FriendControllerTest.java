@@ -97,7 +97,7 @@ class FriendControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(request.getEmail()))
                 .andExpect(jsonPath("$.message").value("님에게 친구요청을 보냈습니다."))
-                .andDo(document("/friend/request",
+                .andDo(document("friend/request",
                                 ResourceSnippetParameters.builder()
                                         .tag("friend")
                                         .summary("friend request API")
@@ -155,7 +155,7 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.content.[0].memberEmail").value("buni@naver.com"))
                 .andExpect(jsonPath("$.content.[1].memberName").value("벅스"))
                 .andExpect(jsonPath("$.content.[1].memberEmail").value("bucks@naver.com"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/list"
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/list"
                                 , preprocessRequest(prettyPrint())
                                 , preprocessResponse(prettyPrint())
                                 , resource(ResourceSnippetParameters.builder()
@@ -220,7 +220,7 @@ class FriendControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("buni@naver.com"))
                 .andExpect(jsonPath("$.message").value("님의 친구요청 상태를 업데이트 했습니다."))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/process",
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/process",
                                 ResourceSnippetParameters.builder()
                                         .tag("friend")
                                         .summary("friend process API")
@@ -289,7 +289,7 @@ class FriendControllerTest {
                 .andExpect(jsonPath("$.birthDay").value("2013-07-31"))
                 .andExpect(jsonPath("$.fundingProductList.content.[0].product.productName").value("반지"))
                 .andExpect(jsonPath("$.fundingProductList.content.[1].product.productName").value("목걸이"))
-                .andDo(MockMvcRestDocumentationWrapper.document("/friend/funding-product/{id}"
+                .andDo(MockMvcRestDocumentationWrapper.document("friend/funding-product/{id}"
                         , preprocessResponse(prettyPrint())
                         , resource(ResourceSnippetParameters.builder()
                                 .tag("friend")
