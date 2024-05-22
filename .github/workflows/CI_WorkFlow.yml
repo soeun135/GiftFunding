@@ -33,3 +33,6 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
+
+      - run: ls -al
+      - run: cat .github/workflows/CI_WorkFlow.yml
