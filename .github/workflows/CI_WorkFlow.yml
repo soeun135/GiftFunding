@@ -11,8 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: ls -al
       - uses: actions/checkout@v4
+
+      - name: Cache Gradle Packages
+        uses: actions/cache@v3
+        with:
+          path: ~./gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - name: Set up JDK 8
         uses: actions/setup-java@v4
@@ -34,6 +39,3 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
-
-      - run: ls -al
-      - run: cat .github/workflows/CI_WorkFlow.yml
