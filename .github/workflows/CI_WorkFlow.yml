@@ -11,9 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: ls -al
       - uses: actions/checkout@v4
-      - run: ls -al
 
       - name: Cache Gradle Packages
         uses: actions/cache@v3
