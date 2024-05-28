@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.dto;
 
-import com.soeun.GiftFunding.domain.member.entity.Member;
+import com.soeun.GiftFunding.entity.Member;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

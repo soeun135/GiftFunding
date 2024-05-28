@@ -2,7 +2,7 @@ package com.soeun.GiftFunding.OAuth;
 
 import com.soeun.GiftFunding.OAuth.kakao.KakaoLoginRequest;
 import com.soeun.GiftFunding.OAuth.naver.NaverLoginRequest;
-import com.soeun.GiftFunding.domain.member.dto.Signin;
+import com.soeun.GiftFunding.dto.Signin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

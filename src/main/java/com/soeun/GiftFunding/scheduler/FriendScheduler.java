@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.scheduler;
 
-import com.soeun.GiftFunding.domain.friend.repository.FriendRepository;
+import com.soeun.GiftFunding.repository.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

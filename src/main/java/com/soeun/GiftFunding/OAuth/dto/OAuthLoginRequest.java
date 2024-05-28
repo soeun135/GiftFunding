@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.OAuth.dto;
 
-import com.soeun.GiftFunding.domain.member.entity.Member;
+import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import org.springframework.util.MultiValueMap;
 

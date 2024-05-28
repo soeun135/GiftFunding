@@ -1,16 +1,15 @@
 package com.soeun.GiftFunding.service;
 
-import com.soeun.GiftFunding.domain.friend.dto.FriendFundingProduct;
-import com.soeun.GiftFunding.domain.friend.dto.FriendList;
-import com.soeun.GiftFunding.domain.friend.dto.FriendRequest;
-import com.soeun.GiftFunding.domain.friend.dto.FriendRequestProcess;
-import com.soeun.GiftFunding.domain.friend.entity.Friend;
-import com.soeun.GiftFunding.domain.friend.repository.FriendRepository;
-import com.soeun.GiftFunding.domain.friend.service.FriendServiceImpl;
-import com.soeun.GiftFunding.domain.fundingProduct.entity.FundingProduct;
-import com.soeun.GiftFunding.domain.member.entity.Member;
-import com.soeun.GiftFunding.domain.member.repository.MemberRepository;
-import com.soeun.GiftFunding.domain.product.entity.Product;
+import com.soeun.GiftFunding.dto.FriendFundingProduct;
+import com.soeun.GiftFunding.dto.FriendList;
+import com.soeun.GiftFunding.dto.FriendRequest;
+import com.soeun.GiftFunding.dto.FriendRequestProcess;
+import com.soeun.GiftFunding.entity.Friend;
+import com.soeun.GiftFunding.repository.FriendRepository;
+import com.soeun.GiftFunding.entity.FundingProduct;
+import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.repository.MemberRepository;
+import com.soeun.GiftFunding.entity.Product;
 import com.soeun.GiftFunding.dto.MemberAdapter;
 import com.soeun.GiftFunding.exception.FriendException;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
