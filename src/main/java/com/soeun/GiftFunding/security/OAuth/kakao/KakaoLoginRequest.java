@@ -1,7 +1,7 @@
-package com.soeun.GiftFunding.OAuth.kakao;
+package com.soeun.GiftFunding.security.OAuth.kakao;
 
-import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;

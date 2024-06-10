@@ -1,7 +1,7 @@
-package com.soeun.GiftFunding.OAuth;
+package com.soeun.GiftFunding.security.OAuth;
 
-import com.soeun.GiftFunding.OAuth.kakao.KakaoLoginRequest;
-import com.soeun.GiftFunding.OAuth.naver.NaverLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.kakao.KakaoLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.naver.NaverLoginRequest;
 import com.soeun.GiftFunding.dto.Signin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

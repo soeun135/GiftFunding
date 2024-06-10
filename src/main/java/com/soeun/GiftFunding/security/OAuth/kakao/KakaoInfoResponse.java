@@ -1,53 +1,57 @@
-package com.soeun.GiftFunding.OAuth.naver;
+package com.soeun.GiftFunding.security.OAuth.kakao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthInfoResponse;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NaverInfoResponse implements OAuthInfoResponse {
-    @JsonProperty("response")
-    private Response response;
+public class KakaoInfoResponse implements OAuthInfoResponse {
+    @JsonProperty("kakao_account")
+    private KakaoAccount kakaoAccount;
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Response {
-        private String email;
-        private String nickname;
-        private String birthday;
-        private String birthyear;
-        private String mobile;
+    static class KakaoAccount {
+        private KakaoProfile profile;
     }
+
+    @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class KakaoProfile {
+        private String nickname;
+    }
+
+
     @Override
     public String getNickname() {
-        return response.nickname;
+        return kakaoAccount.profile.nickname;
     }
 
     @Override
     public String getEmail() {
-        return response.email;
+        return null;
     }
 
     @Override
     public String getBirthDay() {
-        return response.birthday;
+        return null;
     }
 
     @Override
     public String getMobile() {
-        return response.mobile;
+        return null;
     }
 
     @Override
     public String getBirthYear() {
-        return response.birthyear;
+        return null;
     }
 
     @Override
     public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.NAVER;
+        return OAuthProvider.KAKAO;
     }
 }

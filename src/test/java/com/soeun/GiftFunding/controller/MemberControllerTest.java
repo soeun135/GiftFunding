@@ -1,4 +1,4 @@
-package com.soeun.GiftFunding.domain.member.controller;
+package com.soeun.GiftFunding.controller;
 
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;

@@ -1,7 +1,7 @@
-package com.soeun.GiftFunding.OAuth.naver;
+package com.soeun.GiftFunding.security.OAuth.naver;
 
-import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import java.time.LocalDate;

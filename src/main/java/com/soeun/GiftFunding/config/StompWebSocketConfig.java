@@ -1,6 +1,5 @@
 package com.soeun.GiftFunding.config;
 
-import com.soeun.GiftFunding.domain.chat.CustomPrincipalHandshakeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;

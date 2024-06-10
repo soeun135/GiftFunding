@@ -1,10 +1,10 @@
-package com.soeun.GiftFunding.OAuth.naver;
+package com.soeun.GiftFunding.security.OAuth.naver;
 
 import static com.soeun.GiftFunding.type.ErrorType.OAUTH_ERROR;
 
-import com.soeun.GiftFunding.OAuth.OAuthApiClient;
-import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.OAuthApiClient;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.type.OAuthProvider;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
-package com.soeun.GiftFunding.OAuth;
+package com.soeun.GiftFunding.security.OAuth;
 
-import com.soeun.GiftFunding.OAuth.dto.OAuthInfoResponse;
-import com.soeun.GiftFunding.OAuth.dto.OAuthLoginRequest;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthInfoResponse;
+import com.soeun.GiftFunding.security.OAuth.dto.OAuthLoginRequest;
 import com.soeun.GiftFunding.dto.Signin;
 import com.soeun.GiftFunding.entity.Member;
 import com.soeun.GiftFunding.entity.Wallet;

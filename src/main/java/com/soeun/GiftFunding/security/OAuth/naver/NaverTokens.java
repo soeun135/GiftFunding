@@ -1,4 +1,4 @@
-package com.soeun.GiftFunding.OAuth.naver;
+package com.soeun.GiftFunding.security.OAuth.naver;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

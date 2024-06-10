@@ -1,4 +1,4 @@
-package com.soeun.GiftFunding.OAuth.dto;
+package com.soeun.GiftFunding.security.OAuth.dto;
 
 import com.soeun.GiftFunding.type.OAuthProvider;
 

@@ -1,4 +1,4 @@
-package com.soeun.GiftFunding.OAuth.kakao;
+package com.soeun.GiftFunding.security.OAuth.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
