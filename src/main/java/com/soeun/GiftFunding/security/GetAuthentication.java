@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.security;
 
-import com.soeun.GiftFunding.domain.member.service.MemberService;
+import com.soeun.GiftFunding.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

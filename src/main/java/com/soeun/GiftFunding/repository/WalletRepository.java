@@ -1,7 +1,7 @@
 package com.soeun.GiftFunding.repository;
 
-import com.soeun.GiftFunding.domain.member.entity.Member;
-import com.soeun.GiftFunding.domain.wallet.Wallet;
+import com.soeun.GiftFunding.entity.Member;
+import com.soeun.GiftFunding.entity.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

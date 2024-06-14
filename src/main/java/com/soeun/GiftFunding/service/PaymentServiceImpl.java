@@ -3,9 +3,9 @@ package com.soeun.GiftFunding.service;
 import static com.soeun.GiftFunding.type.ErrorType.WALLET_NOT_FOUND;
 import static com.soeun.GiftFunding.type.TransactionType.CHARGE;
 
-import com.soeun.GiftFunding.domain.payment.entity.Payment;
-import com.soeun.GiftFunding.domain.transaction.Transaction;
-import com.soeun.GiftFunding.domain.wallet.Wallet;
+import com.soeun.GiftFunding.entity.Payment;
+import com.soeun.GiftFunding.entity.Transaction;
+import com.soeun.GiftFunding.entity.Wallet;
 import com.soeun.GiftFunding.exception.PaymentException;
 import com.soeun.GiftFunding.repository.PaymentRepository;
 import com.soeun.GiftFunding.repository.TransactionRepository;

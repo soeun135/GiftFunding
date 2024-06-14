@@ -1,6 +1,6 @@
 package com.soeun.GiftFunding.repository;
 
-import com.soeun.GiftFunding.domain.payment.entity.Payment;
+import com.soeun.GiftFunding.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
