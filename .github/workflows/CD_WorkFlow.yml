@@ -1,0 +1,42 @@
+name : Java CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  PROJECT_NAME: giftfunding_project #프로젝트 이름 설정. S3 경로 설정에 사용됨.
+  BUCKET_NAME: giftfunding-cicd-bucket #앞에서 생성한 S3 버킷 이름을 넣어줌.
+  CODE_DEPLOY_APP_NAME: giftfunding-cicd #CodeDeploy '애플리케이션 이름'
+  DEPLOYMENT_GROUP_NAME: giftfunding_production #CodeDeploy '배포 그룹 이름'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+        #프로젝트 파일 압축
+      - name: Make Zip File
+        run: zip -qq -r ./$GITHUB_SHA.zip
+        shell: bash
+
+        #AWS 인증
+      - name: Configure AWS credentials
+        uses: aws-actions.configure-aws-credential@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+        #S3에 압축파일 업로드
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
+        #CodeDeploy 배포
+      - name: Code Deploy To EC2 instance
+        run: aws deploy create-deployment
+                --application-name $CODE_DEPLOY_APP_NAME
+                --deployment-config-name CodeDeployDefault.ALLAtOnce
+                --deployment-group-name $DEPLOYMENT_GROUP_NAME
+                --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
