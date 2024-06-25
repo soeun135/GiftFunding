@@ -20,7 +20,7 @@ jobs:
 
         #프로젝트 파일 압축
       - name: Make Zip File
-        run: zip -qq -r ./$GITHUB_SHA.zip
+        run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
 
         #AWS 인증
