@@ -1,0 +1,18 @@
+version: 0.0 # 버전 고정
+os: linux
+
+# 서버의 destination 경로에 source 파일을 배포하겠다는 얘기. 현재는 서버의 ~/build 위치에 디렉토리 전체룰 올리겠다는 말
+files:
+  - source: /
+    destination: /home/ec2-user/build
+
+permissions:
+  - object: /home/ec2-user/build/
+    owner: root
+    group: root
+
+hooks: # CodeDeploy의 프로세스 진행 도중, hook을 사용하여 특정 이벤트에 수행 될 작업 지정
+  AfterInstall: # AfterInstall은 CodeDeplooy의 프로젝트 배포가 완ㄹ됴ㅚㄴ 시점의 이ㅔㄴ트
+    - location: deploy.sh #프로젝트 배포가 완료되면 location으로 지정된 파일 실행
+    - timeout: 60 #timeout 초단위
+      runas: root
