@@ -3,6 +3,8 @@ name : Java CD
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   PROJECT_NAME: giftfunding_project #프로젝트 이름 설정. S3 경로 설정에 사용됨.
