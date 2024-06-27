@@ -18,6 +18,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: corretto
+
+      - name: Build With Gradle Wrapper
+        run: ./gradlew build -x test
+
         #프로젝트 파일 압축
       - name: Make Zip File
         run: zip -qq -r ./$GITHUB_SHA.zip .
