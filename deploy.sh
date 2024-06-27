@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BUILD_PATH=$(ls /home/ec2-user/build/*.jar)
+BUILD_PATH=$(ls /home/ec2-user/build/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 echo "> build 파일명: $JAR_NAME  $BUILD_PATH"
 
