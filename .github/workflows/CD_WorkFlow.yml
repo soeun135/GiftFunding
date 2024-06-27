@@ -24,6 +24,9 @@ jobs:
           java-version: '8'
           distribution: corretto
 
+      - name: grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build With Gradle Wrapper
         run: ./gradlew build -x test
 
