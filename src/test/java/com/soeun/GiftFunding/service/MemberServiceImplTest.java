@@ -1,23 +1,17 @@
-package com.soeun.GiftFunding.domain.member.service;
+package com.soeun.GiftFunding.service;
 
+import com.soeun.GiftFunding.dto.*;
 import com.soeun.GiftFunding.entity.FundingProduct;
-import com.soeun.GiftFunding.dto.Signin;
-import com.soeun.GiftFunding.dto.Signup;
-import com.soeun.GiftFunding.dto.UpdateInfo;
-import com.soeun.GiftFunding.dto.UserInfoResponse;
 import com.soeun.GiftFunding.entity.Member;
-import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.entity.Product;
 import com.soeun.GiftFunding.entity.Wallet;
-import com.soeun.GiftFunding.dto.MemberAdapter;
-import com.soeun.GiftFunding.dto.ReissueResponse;
 import com.soeun.GiftFunding.exception.MemberException;
 import com.soeun.GiftFunding.exception.TokenException;
 import com.soeun.GiftFunding.redis.RefreshTokenRepository;
 import com.soeun.GiftFunding.repository.FundingProductRepository;
+import com.soeun.GiftFunding.repository.MemberRepository;
 import com.soeun.GiftFunding.repository.WalletRepository;
 import com.soeun.GiftFunding.security.TokenProvider;
-import com.soeun.GiftFunding.service.MemberServiceImpl;
 import com.soeun.GiftFunding.type.ErrorType;
 import com.soeun.GiftFunding.type.FundingState;
 import org.junit.jupiter.api.DisplayName;

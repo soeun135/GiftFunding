@@ -31,5 +31,5 @@ fi
 
 echo "> $APPLICATION_JAR_NAME 배포"
 nohup java -jar \
-  -Dspring.config.location=classpath:/config/application-prod.yml \
+  --spring.config.location=classpath:/config/application-prod.yml \
   $APPLICATION_JAR > /dev/null 2> /dev/null < /dev/null &

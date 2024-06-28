@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PRIV_GIT_TOKEN }}
+          submodules: true
 
       - name: Set up JDK 8
         uses: actions/setup-java@v4
@@ -28,7 +31,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build With Gradle Wrapper
-        run: ./gradlew build -x test
+        run: ./gradlew clean build -x test
 
         #프로젝트 파일 압축
       - name: Make Zip File
