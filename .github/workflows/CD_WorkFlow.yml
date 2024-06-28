@@ -24,9 +24,6 @@ jobs:
           java-version: '8'
           distribution: corretto
 
-      - name: Submodule Update
-        run: git submodule update
-        
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
 
