@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-#        with:
-#          token: ${{ secrets.PRIV_GIT_TOKEN }}
-#          submodules: true
+        with:
+          token: ${{ secrets.PRIV_GIT_TOKEN }}
+          submodules: true
 
       - name: Set up JDK 8
         uses: actions/setup-java@v4
