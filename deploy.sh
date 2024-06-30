@@ -32,4 +32,3 @@ fi
 echo "> $APPLICATION_JAR_NAME 배포"
 nohup java -jar   -Dspring.profiles.active=prod \
   $APPLICATION_JAR > /dev/null 2> /dev/null < /dev/null &
-#  --spring.config.location=classpath:/config/application-prod.yml \
