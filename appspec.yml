@@ -4,11 +4,11 @@ os: linux
 # 서버의 destination 경로에 source 파일을 배포하겠다는 얘기. 현재는 서버의 ~/build 위치에 디렉토리 전체룰 올리겠다는 말
 files:
   - source: /
-    destination: /home/ec2-user/build
+    destination: /home/ec2-user/giftfunding
     overwrite: yes
 
 permissions:
-  - object: /home/ec2-user/build/
+  - object: /home/ec2-user/giftfunding/
     owner: ec2-user
     group: ec2-user
 
