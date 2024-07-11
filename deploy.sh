@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BUILD_PATH=$(ls /home/ec2-user/build/build/libs/*.jar)
+BUILD_PATH=$(ls /home/ec2-user/giftfunding/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_PATH)
 echo "> build 파일명: $JAR_NAME  $BUILD_PATH"
 
@@ -30,6 +30,5 @@ else
 fi
 
 echo "> $APPLICATION_JAR_NAME 배포"
-nohup java -jar \
-  --spring.config.location=classpath:/config/application-prod.yml \
+nohup java -jar   -Dspring.profiles.active=prod \
   $APPLICATION_JAR > /dev/null 2> /dev/null < /dev/null &
